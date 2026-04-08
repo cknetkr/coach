@@ -20,27 +20,23 @@
   </nav>
 </header>
 
-<div class="step-rail">
-  <div class="step-node active" id="sn-0" onclick="goStep(0)">
-    <div class="step-circle active" id="sc-0">📖</div>
-    <span class="step-label-text">책 선정</span>
-  </div>
-  <div class="step-connector"></div>
-  <div class="step-node" id="sn-1" onclick="goStep(1)">
-    <div class="step-circle" id="sc-1">1</div>
-    <span class="step-label-text">수행1</span>
-  </div>
-  <div class="step-connector"></div>
-  <div class="step-node" id="sn-2" onclick="goStep(2)">
-    <div class="step-circle" id="sc-2">2</div>
-    <span class="step-label-text">수행2</span>
-  </div>
-  <div class="step-connector"></div>
-  <div class="step-node" id="sn-3" onclick="goStep(3)">
-    <div class="step-circle" id="sc-3">✍</div>
-    <span class="step-label-text">수행3</span>
-  </div>
-</div>
+<nav class="sub-tabbar">
+  <button class="sub-tab lit active" id="sn-0" onclick="goStep(0)">
+    <span class="step-label">STEP 0</span><span id="sc-0">책 선정</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit" id="sn-1" onclick="goStep(1)">
+    <span class="step-label">STEP 1</span><span id="sc-1">수행1</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit" id="sn-2" onclick="goStep(2)">
+    <span class="step-label">STEP 2</span><span id="sc-2">수행2</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit" id="sn-3" onclick="goStep(3)">
+    <span class="step-label">STEP 3</span><span id="sc-3">수행3</span>
+  </button>
+</nav>
 
 <div class="coach-wrap">
 
@@ -643,11 +639,11 @@ function goStep(n) {
   document.querySelectorAll('.section-card').forEach(c => c.classList.remove('visible', 'active-section'));
   document.getElementById('step-' + n)?.classList.add('visible', 'active-section');
   for (let i = 0; i <= 3; i++) {
-    const nd = document.getElementById('sn-' + i), sc = document.getElementById('sc-' + i);
-    if (!nd || !sc) continue;
-    nd.classList.remove('active', 'done'); sc.classList.remove('active', 'done');
-    if (i < n) { nd.classList.add('done'); sc.classList.add('done'); }
-    else if (i === n) { nd.classList.add('active'); sc.classList.add('active'); }
+    const nd = document.getElementById('sn-' + i);
+    if (!nd) continue;
+    nd.classList.remove('active', 'done');
+    if (i < n) nd.classList.add('done');
+    else if (i === n) nd.classList.add('active');
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -923,7 +919,7 @@ function togglePart(prefix, n, total) {
   if (!wasActive) {
     item.classList.add('active');
     setTimeout(() => {
-      const stickyOffset = 57 + 47 + 12; // page-header + step-rail + margin
+      const stickyOffset = 57 + 47 + 12; // page-header + sub-tabbar + margin
       const top = item.getBoundingClientRect().top + window.scrollY - stickyOffset;
       window.scrollTo({ top, behavior: 'smooth' });
     }, 50);
