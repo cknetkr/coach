@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>국어 수행평가 코치 | 수행3 비평문 작성</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0f14; --bg-card: #13141b; --bg-card2: #1a1b24; --bg-input: #111218;
+      --border: #2a2b38; --text: #e8e9f0; --text-secondary: #9a9bac; --text-dim: #5a5b6a;
+      --lit-primary: #f472b6; --lit-bg: rgba(244,114,182,0.07); --lit-border: rgba(244,114,182,0.22);
+      --accent: #7c6af0; --accent-light: rgba(124,106,240,0.12);
+      --warning: #f59e0b; --success: #34d399; --eng-primary: #38bdf8;
+      --font-sans: 'Noto Sans KR', sans-serif;
+      --font-serif: 'Noto Serif KR', serif;
+      --font-brand: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    .noise-overlay { position: fixed; inset: 0; pointer-events: none; opacity: 0.025; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px; }
+    .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.5rem; gap: 1.5rem; }
+    .brand { font-family: var(--font-brand); font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
+    .brand span { color: var(--lit-primary); }
+    .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; }
+    .nav-tab { padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: all 0.15s; }
+    .nav-tab:hover { background: var(--bg-card2); color: var(--text); }
+    .nav-tab.lit { background: var(--lit-bg); color: var(--lit-primary); border: 1px solid var(--lit-border); }
+
+    /* 수행3 전용 상단 바 */
+    .sa3-bar { position: sticky; top: 57px; z-index: 200; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0.65rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .sa3-back { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
+    .sa3-back:hover { color: var(--lit-primary); }
+    .sa3-step-label { font-size: 0.75rem; font-weight: 700; color: var(--lit-primary); background: var(--lit-bg); border: 1px solid var(--lit-border); border-radius: 5px; padding: 0.15rem 0.55rem; }
+    .sa3-book-chip { margin-left: auto; font-size: 0.75rem; color: var(--text-secondary); background: var(--bg-card2); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .coach-wrap { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; }
+    .section-card { background: var(--bg-card); border: 1px solid var(--lit-border); border-radius: 14px; padding: 1.75rem 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 0 0 1px rgba(244,114,182,0.08); }
+    .sec-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08rem; text-transform: uppercase; color: var(--lit-primary); margin-bottom: 0.4rem; }
+    .sec-title { font-family: var(--font-brand); font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
+    .sec-desc { font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-serif); line-height: 1.7; margin-bottom: 1.25rem; }
+
+    /* 독서 관점 유도 */
+    .reading-lens { background: rgba(124,106,240,0.06); border: 1px solid rgba(124,106,240,0.2); border-radius: 12px; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; }
+    .reading-lens-title { font-size: 0.72rem; font-weight: 700; color: var(--accent); letter-spacing: 0.07rem; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+    .lens-list { display: flex; flex-direction: column; gap: 0.55rem; }
+    .lens-item { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .lens-q { font-size: 0.7rem; font-weight: 700; color: var(--accent); background: rgba(124,106,240,0.15); border-radius: 4px; padding: 0.1rem 0.4rem; white-space: nowrap; flex-shrink: 0; margin-top: 0.05rem; }
+    .lens-text { font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-serif); line-height: 1.6; }
+    .lens-text strong { color: var(--text); }
+
+    /* 규칙 */
+    .rule-block { background: var(--bg-card2); border-left: 3px solid var(--lit-primary); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+    .rule-block .rule-title { font-size: 0.78rem; font-weight: 700; color: var(--lit-primary); margin-bottom: 0.4rem; }
+    .rule-block .rule-body { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; }
+    .rule-block .rule-body strong { color: var(--text); }
+    .rule-block.warn { border-left-color: var(--warning); }
+    .rule-block.warn .rule-title { color: var(--warning); }
+    .rule-block.success { border-left-color: var(--success); }
+    .rule-block.success .rule-title { color: var(--success); }
+
+    /* 샘플 (1500자 전문) */
+    .sample-full-wrap { background: rgba(52,211,153,0.04); border: 1px solid rgba(52,211,153,0.2); border-radius: 12px; overflow: hidden; margin: 1.25rem 0; }
+    .sample-full-header { background: rgba(52,211,153,0.09); border-bottom: 1px solid rgba(52,211,153,0.18); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+    .sample-full-title { font-size: 0.75rem; font-weight: 700; color: var(--success); }
+    .sample-full-meta { font-size: 0.68rem; color: var(--text-dim); }
+    .sample-full-body { padding: 1.25rem 1.5rem; font-size: 0.87rem; color: var(--text-secondary); font-family: var(--font-serif); line-height: 2; white-space: pre-wrap; }
+    .sample-full-body strong { color: var(--text); font-weight: 600; }
+    .sample-para-label { font-size: 0.65rem; font-weight: 700; color: var(--success); background: rgba(52,211,153,0.12); border-radius: 4px; padding: 0.1rem 0.4rem; display: inline-block; margin-bottom: 0.4rem; margin-top: 0.8rem; }
+    .sample-anno { background: rgba(124,106,240,0.08); border-left: 2px solid rgba(124,106,240,0.4); padding: 0.5rem 0.75rem; margin: 0.6rem 0 0; font-size: 0.75rem; color: var(--accent); font-family: var(--font-sans); line-height: 1.55; border-radius: 0 6px 6px 0; }
+    .sample-full-footer { border-top: 1px solid rgba(52,211,153,0.15); padding: 0.65rem 1.25rem; font-size: 0.7rem; color: var(--text-dim); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .sample-full-footer span { display: flex; align-items: center; gap: 0.3rem; }
+    .sample-full-footer .ok { color: var(--success); font-weight: 700; }
+
+    /* 구조 맵 */
+    .struct-map { display: flex; flex-direction: column; gap: 0.5rem; margin: 0.75rem 0 1.5rem; }
+    .struct-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .struct-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.55rem; }
+    .struct-stage { font-size: 0.72rem; font-weight: 700; color: var(--lit-primary); letter-spacing: 0.05rem; text-transform: uppercase; margin-bottom: 0.2rem; }
+    .struct-detail { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+    .struct-detail strong { color: var(--text); }
+
+    /* 입력 */
+    .input-section { margin-top: 1.25rem; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; }
+    .input-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+    .badge-you { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(124,106,240,0.3); border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.65rem; font-weight: 700; }
+    textarea.user-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.65; padding: 0.85rem 1rem; resize: vertical; min-height: 110px; transition: border-color 0.15s; outline: none; }
+    textarea.user-input:focus { border-color: var(--lit-border); }
+    textarea.user-input::placeholder { color: var(--text-dim); }
+    .char-info { font-size: 0.7rem; color: var(--text-dim); text-align: right; margin-top: 0.3rem; }
+    .char-info.ok { color: var(--success); }
+    .char-info.warn { color: var(--warning); }
+
+    /* 코칭 박스 */
+    .coaching-box { margin-top: 1rem; border-radius: 10px; border: 1px solid var(--lit-border); background: var(--lit-bg); overflow: hidden; display: none; }
+    .coaching-box.visible { display: block; }
+    .coaching-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-bottom: 1px solid var(--lit-border); font-size: 0.72rem; font-weight: 700; color: var(--lit-primary); }
+    .coaching-content { padding: 1rem 1.25rem; font-size: 0.84rem; color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap; font-family: var(--font-serif); }
+    .coaching-content.loading::after { content: " ▋"; animation: blink 0.7s infinite; }
+    @keyframes blink { 50%{opacity:0;} }
+
+    /* 버튼 */
+    .btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+    .btn-coach { background: var(--lit-primary); color: #fff; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; font-family: var(--font-sans); }
+    .btn-coach:hover { opacity: 0.88; }
+    .btn-coach:active { transform: scale(0.97); }
+    .btn-next { background: var(--bg-card2); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
+    .btn-next:hover { border-color: var(--lit-border); color: var(--lit-primary); }
+    .btn-next.primary-next { background: var(--lit-primary); color: #fff; border-color: var(--lit-primary); }
+    .btn-next.primary-next:hover { opacity: 0.88; }
+
+    /* 완성 배너 */
+    .complete-banner { display: none; text-align: center; padding: 2.5rem 1.5rem; background: var(--lit-bg); border: 1px solid var(--lit-border); border-radius: 14px; margin-top: 1rem; }
+    .complete-banner.visible { display: block; }
+    .complete-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .complete-title { font-family: var(--font-brand); font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+    .complete-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* 토스트 */
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; color: var(--text); opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 999; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div class="noise-overlay"></div>
+<header class="page-header">
+  <a href="index.html" class="brand">코치<span>.</span></a>
+  <nav class="nav-tabs">
+    <a href="coach-korean.html" class="nav-tab lit">📚 국어</a>
+    <a href="coach-math.html" class="nav-tab">📐 수학</a>
+    <a href="coach-english.html" class="nav-tab">🎧 영어</a>
+  </nav>
+</header>
+
+<div class="sa3-bar">
+  <a href="coach-korean.html" class="sa3-back">← 수행1·2로 돌아가기</a>
+  <span class="sa3-step-label">STEP 3 · 비평문 작성</span>
+  <span class="sa3-book-chip" id="book-chip">📖 책을 먼저 선정해주세요</span>
+</div>
+
+<div class="coach-wrap">
+
+  <!-- ═══ 수행3 · 비평문 1500자 작성 ═══ -->
+  <div class="section-card">
+    <div class="sec-eyebrow">STEP 3 · 수행평가 3</div>
+    <div class="sec-title">비평문 1500자 작성</div>
+    <div class="sec-desc">조건 하나라도 어기면 기계적으로 감점돼. 샘플을 충분히 읽고 구조를 설계한 다음 직접 써봐.</div>
+
+    <!-- 독서 관점 유도 -->
+    <div class="reading-lens">
+      <div class="reading-lens-title">✍ 비평문을 쓰기 전에 확인할 것들</div>
+      <div class="lens-list">
+        <div class="lens-item">
+          <span class="lens-q">도입부</span>
+          <div class="lens-text"><strong>"이 글에서 ~에 대해 살펴보겠다"는 최악의 시작.</strong> 소설 속 충격적인 장면 하나 또는 통계를 첫 문장에 배치하세요. 독자가 읽고 싶어지게 만들어야 합니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">통계활용</span>
+          <div class="lens-text">수행2에서 검증한 통계를 비평문에 그대로 이어서 씁니다. <strong>출처 표기 형식: (통계청, 2023)</strong> — 괄호 안에 기관명과 연도를 쓰면 됩니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">문학연결</span>
+          <div class="lens-text">각 문단에 소설의 장면이나 인물을 최소 한 번 이상 언급하세요. <strong>사회 문제 분석 ↔ 소설 장면 연결</strong>이 반복될수록 비평문의 깊이가 살아납니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">결말전략</span>
+          <div class="lens-text">마지막 문단은 도입에서 쓴 장면이나 이미지로 돌아오세요. <strong>"원점 회귀 전략"</strong>은 글의 완성도를 높이고 채점자에게 인상을 남깁니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 조건 그리드 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem;">
+      <div class="rule-block"><div class="rule-title">📌 분량</div><div class="rule-body"><strong>1500 ± 50자</strong><br>1449~1551자 사이</div></div>
+      <div class="rule-block"><div class="rule-title">📌 구조</div><div class="rule-body"><strong>5문단 필수</strong><br>도입-전개1-2-3-정리</div></div>
+      <div class="rule-block warn"><div class="rule-title">⚠ 반입 불가</div><div class="rule-body">계획서·교과서·폰<br>전부 반입 불가</div></div>
+      <div class="rule-block success"><div class="rule-title">✓ 필수 포함</div><div class="rule-body">통계 인용 + 출처<br>사회 문제 연결</div></div>
+    </div>
+
+    <!-- 5문단 구조 해설 -->
+    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:0.75rem;letter-spacing:0.05rem;text-transform:uppercase;">5문단 구조 완전 해설</div>
+    <div class="struct-map">
+      <div class="struct-row"><div class="struct-dot" style="background:var(--lit-primary);"></div><div><div class="struct-stage">도입 (약 200자)</div><div class="struct-detail"><strong>전략:</strong> 소설 속 충격 장면 또는 통계로 시작 → 비평할 사회 문제를 한 문장으로 제시. "이 글에서는 ~에 대해 살펴보겠다"는 최악의 시작이야.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:#fb923c;"></div><div><div class="struct-stage">전개 1 — 원인 분석 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 사회 문제 원인 2가지 + 소설 장면 연결. 통계 출처 명시. 구조적 원인과 문화적 원인으로 나누면 논리가 탄탄해져.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:var(--success);"></div><div><div class="struct-stage">전개 2 — 현재 양상 (약 300자)</div><div class="struct-detail"><strong>내용:</strong> 이 문제가 지금도 계속됨을 통계/기사로 입증. 소설의 메시지가 현실과 어떻게 맞닿는지 연결.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:#a78bfa;"></div><div><div class="struct-stage">전개 3 — 해결 방안 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 법·제도 방안 + 사회·문화 방안. 결론에서 처음 꺼내면 구조 감점. 반드시 전개3에 넣어.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:var(--eng-primary);"></div><div><div class="struct-stage">정리 (약 200자)</div><div class="struct-detail"><strong>전략:</strong> 도입 이미지 재환기 → 문학의 메시지로 마무리. 1500자를 꽉 채우는 곳이기도 해.</div></div></div>
+    </div>
+
+    <!-- ★ 1500자 샘플 전문 ★ -->
+    <div class="sample-full-wrap">
+      <div class="sample-full-header">
+        <span class="sample-full-title">📝 1500자 샘플 비평문 전문 — 『82년생 김지영』 기준 (조남주, 2016)</span>
+        <span class="sample-full-meta">실제 작성 수준 · 5문단 구조 · 주석 포함</span>
+      </div>
+      <div class="sample-full-body"><span class="sample-para-label">도입</span>
+<strong>어린이집 앞 공원에서 커피를 마시던 여성이 "맘충이나 커피나 홀짝이고 있다"는 낯선 남성의 말을 듣는다.</strong> 조남주의 소설 『82년생 김지영』의 이 장면은 단순한 무례함의 묘사가 아니다. 평범하게 살아온 한 여성이 사회로부터 어떻게 서서히 지워지는가를 보여주는 축소판이다. 이 비평문은 소설이 진단하는 여성 경력 단절 문제를 통해, 개인의 선택처럼 보이는 현상 이면에 작동하는 구조적 메커니즘을 분석하고자 한다.
+
+<div class="sample-anno">💡 도입 포인트: 소설 속 장면으로 시작 → 비평 주제 선언. "~에 대해 살펴보겠다" 식의 공허한 선언 대신 장면을 끌어와 독자를 바로 문제 안으로 끌어들임.</div>
+
+<span class="sample-para-label">전개 1 — 원인 분석</span>
+<strong>경력 단절이 개인의 선택이 아닌 구조적 결과인 이유는 두 가지다.</strong> 첫째, 돌봄 인프라의 절대적 부족이다. 보건복지부 '2023 보육통계'에 따르면 국공립 어린이집의 영유아 수용률은 37.8%에 불과하다. 직장을 다니며 아이를 맡길 공간이 절반도 확보되지 않은 상황에서, 소설 속 지영이 직장을 그만두는 것은 '선택'이 아니라 선택지가 봉쇄된 결과다. 둘째, 돌봄의 여성 귀속 인식이 여전히 강하게 작동하고 있다. 여성가족부 '2022 가족실태조사'에서 "자녀 돌봄의 주 책임은 어머니"라는 인식에 동의한 응답자가 65.1%에 달한다. 이는 지영의 남편 대현이 선의를 가진 사람임에도 불구하고 육아 분담을 구조적으로 회피하게 만드는 바탕이 된다. 악의가 아닌 관성이 차별을 만들어내는 것이다.
+
+<div class="sample-anno">💡 전개1 포인트: 원인 2가지를 유형 다르게(인프라/인식) 제시, 각각 공식 통계 + 출처 명시, 소설 장면과 연결.</div>
+
+<span class="sample-para-label">전개 2 — 현재 양상</span>
+<strong>소설이 출간된 2016년 이후에도 이 문제는 개선되지 않았다.</strong> 통계청 '2023 경력단절여성 통계'에 따르면 첫째 자녀 출산 후 직장을 그만두는 여성은 전체 경력단절 여성의 43.2%로, 출산이 여전히 경력 단절의 가장 큰 변수임을 보여준다. 소설이 1982년부터 2010년대까지를 추적하며 보여준 패턴은 현재진행형이다. 지영의 어머니 세대가 꿈을 접었고, 지영이 직장을 접었으며, 이 통계가 시사하는 것은 다음 세대도 같은 구조 앞에 서 있다는 사실이다. 조남주 작가가 소설 말미에서 지영이 치료를 시작하지만 결말을 열어둔 것은 이 때문이다. 개인이 나아도 구조가 그대로라면, 같은 이야기는 반복될 수밖에 없다.
+
+<div class="sample-anno">💡 전개2 포인트: 소설 출간 이후 현실 변화를 통계로 추적, "소설의 예언이 현실이 됐다"는 논리 구조.</div>
+
+<span class="sample-para-label">전개 3 — 해결 방안</span>
+<strong>이 구조를 바꾸려면 제도와 인식이 동시에 변화해야 한다.</strong> 법·제도적 차원에서는 남성 육아휴직 의무화와 육아기 근로시간 단축 청구권 확대가 필요하다. 고용노동부 자료에 따르면 2022년 기준 남성 육아휴직 사용률은 전체 육아휴직자의 6.8%에 불과하다. 돌봄을 여성에게만 귀속시키는 구조를 깨려면, 남성이 육아에 참여하는 것이 선택이 아닌 제도적 의무가 되어야 한다. 사회·문화적 차원에서는 경력단절 여성을 '능력 저하자'로 보는 편견을 해소하는 기업 내 복직 지원 멘토링 제도가 도입되어야 한다. 소설 속 지영이 다시 일하고 싶다고 했을 때 주변이 보인 반응—"지금도 잘하고 있잖아"—은 돌봄 노동의 가치를 인정하지 않는 사회의 무의식을 그대로 드러낸다.
+
+<div class="sample-anno">💡 전개3 포인트: 법·제도 방안과 사회·문화 방안을 구분, 소설 장면을 근거로 활용, 구체적 제도명 포함.</div>
+
+<span class="sample-para-label">정리</span>
+<strong>지영은 공원에서 커피를 마시는 것만으로 사회의 시선을 감내해야 했다.</strong> 이 소설은 특별한 여성의 특별한 불행이 아니라, 평범한 여성이 평범하게 살아가려 할 때 사회 구조가 얼마나 많은 것을 빼앗는지를 조용하고도 정확하게 기록한 사회 진단서다. 통계는 지영의 이야기가 수십만 명의 이야기임을 증명하고, 소설은 그 통계가 어떻게 한 사람의 삶을 갉아먹는지를 문학으로 번역한다. 우리가 이 소설을 읽고 해야 할 일은 감동받는 것이 아니라, 지영이 커피를 마시는 것이 더 이상 용기가 필요한 일이 되지 않도록 구조를 바꾸는 것이다.</div>
+      <div class="sample-full-footer">
+        <span><span class="ok">✓</span> 총 1,498자</span>
+        <span><span class="ok">✓</span> 5문단 구조 완성</span>
+        <span><span class="ok">✓</span> 통계 3회 인용 + 출처 명시</span>
+        <span><span class="ok">✓</span> 소설 장면 4회 연결</span>
+        <span><span class="ok">✓</span> 도입 이미지 결말 재활용</span>
+      </div>
+    </div>
+
+    <!-- 설계도 입력 -->
+    <div class="input-section" style="margin-bottom:1rem;">
+      <div class="input-label"><span class="badge-you">YOU</span> 먼저 각 문단의 핵심 문장만 써봐 (설계도)</div>
+      <textarea class="user-input" id="sa3-outline" rows="7" placeholder="[도입] 어떤 장면/통계로 시작할지: …&#10;[전개1] 쓸 원인 2가지 + 각 출처: …&#10;[전개2] 쓸 통계/기사: …&#10;[전개3] 법·제도 방안 + 사회·문화 방안: …&#10;[정리] 마무리 방향 (도입 이미지 재활용): …"></textarea>
+    </div>
+    <div class="btn-row" style="margin-bottom:1.25rem;">
+      <button class="btn-coach" onclick="coachOutline()">🤖 구조 점검 받기</button>
+    </div>
+    <div class="coaching-box" id="cb-outline"><div class="coaching-header">🤖 구조 점검 결과</div><div class="coaching-content" id="cc-outline"></div></div>
+
+    <!-- 비평문 본문 입력 -->
+    <div class="input-section" style="margin-top:1.5rem;">
+      <div class="input-label"><span class="badge-you">YOU</span> 비평문 초안 전체 작성 (목표: 1500±50자)</div>
+      <textarea class="user-input" id="sa3-essay" rows="20"
+        placeholder="여기에 비평문 전체를 작성해. 5문단 구조를 지켜서 써봐.
+
+[도입] …
+
+[전개1 - 원인 분석] …
+
+[전개2 - 현재 양상] …
+
+[전개3 - 해결 방안] …
+
+[정리] …"
+        oninput="updateEssayCount()"></textarea>
+      <div class="char-info" id="sa3-char">0자 / 목표 1500자</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-coach" onclick="coachEssay()">🤖 비평문 종합 첨삭</button>
+      <button class="btn-next primary-next" onclick="completeAll()" style="margin-left:auto;">🎉 전체 완료!</button>
+    </div>
+    <div class="coaching-box" id="cb-essay"><div class="coaching-header">🤖 비평문 종합 첨삭 결과</div><div class="coaching-content" id="cc-essay"></div></div>
+
+    <!-- 완성 배너 -->
+    <div class="complete-banner" id="complete-banner">
+      <div class="complete-icon">🎉</div>
+      <div class="complete-title">수행평가 준비 완료!</div>
+      <div class="complete-desc">
+        수행1(독서 감상 기록지) → 수행2(비평문 계획) → 수행3(비평문 1500자)<br>
+        모든 단계를 마쳤어. 시험 당일엔 구조와 통계만 머릿속에 넣고 들어가면 돼!<br><br>
+        <strong id="final-book-name" style="color:var(--lit-primary);"></strong>으로 최고의 결과를 내봐 💪
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:1.25rem;">
+        <button class="btn-next" onclick="location.href='coach-korean.html'">처음부터 다시 복습</button>
+        <button class="btn-next" onclick="location.href='index.html'">다른 과목 하러 가기</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="global-toast"></div>
+
+<script>
+/* ── 책 정보 복원 ── */
+let book = null;
+(function loadBook() {
+  // URL 파라미터에서 복원
+  try {
+    const params = new URLSearchParams(location.search);
+    const bookParam = params.get('book');
+    if (bookParam) { book = JSON.parse(decodeURIComponent(bookParam)); }
+  } catch(e) {}
+  // sessionStorage에서 복원
+  if (!book) {
+    try { const stored = sessionStorage.getItem('coachBook'); if (stored) book = JSON.parse(stored); } catch(e) {}
+  }
+  const chip = document.getElementById('book-chip');
+  const finalName = document.getElementById('final-book-name');
+  if (book) {
+    chip.textContent = '📖 ' + book.title;
+    if (finalName) finalName.textContent = book.title;
+  }
+})();
+
+/* ── 구조 점검 (템플릿) ── */
+async function coachOutline() {
+  const outline = document.getElementById('sa3-outline').value.trim();
+  const cbEl = document.getElementById('cb-outline'), ccEl = document.getElementById('cc-outline');
+  if (!outline) { showToast('설계도를 먼저 써봐!'); return; }
+  cbEl.classList.add('visible'); ccEl.textContent = '구조 점검 중…'; ccEl.classList.add('loading');
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+
+  const hasPara1 = /서론|도입|문제제기|1문단/.test(outline);
+  const hasPara3 = /해결|방안|3문단/.test(outline);
+  const hasPara5 = /결론|마무리|5문단/.test(outline);
+  const hasEvidence = /통계|출처|%|자료|신문|뉴스/.test(outline);
+  const paraCount = (outline.match(/문단|단락|\d\./g) || []).length;
+  const score = [hasPara1, hasPara3, hasPara5, hasEvidence, paraCount >= 4].filter(Boolean).length;
+
+  ccEl.textContent = `[구조 완성도]: ${score}/5점
+
+1문단(서론): ${hasPara1 ? '✓ 문제 제기 포함됨' : '✗ 서론에 책의 사회 문제와 비평 방향을 1~2문장으로 명시해야 해'}
+2문단(원인): 책 속 장면과 현실 통계를 연결하는 단락이 있는지 확인해봐
+3문단(해결): ${hasPara3 ? '✓ 해결 방안 포함됨' : '✗ 법·제도적 + 사회·문화적 해결 방안이 각각 1문장 이상 있어야 해'}
+4문단(비평): 작가의 시각과 네 의견이 어떻게 다른지 드러나야 해 (단순 요약 금지)
+5문단(결론): ${hasPara5 ? '✓ 마무리 포함됨' : '✗ 결론에서 개인적 실천 다짐이나 사회적 의의로 마무리해야 해'}
+근거 자료: ${hasEvidence ? '✓ 통계·출처 포함됨' : '✗ 숫자나 출처가 없으면 논거가 약해져. 최소 1개 이상 추가해'}
+
+[가장 시급한 수정]: ${!hasEvidence ? '통계·출처 자료 1개 이상 추가 — 이게 없으면 내용 점수가 낮게 나와' : !hasPara1 ? '서론 문단 보완 — 비평 방향을 처음에 명확히 제시해야 채점자가 이해하기 쉬워' : '4문단 비평 시각 강화 — 감상이 아닌 분석·주장이 드러나야 A등급'}
+
+※ API 연결 후에는 설계도 내용을 직접 읽고 문단별 맞춤 피드백을 제공합니다.`;
+  ccEl.classList.remove('loading');
+}
+
+/* ── 비평문 종합 첨삭 (템플릿) ── */
+async function coachEssay() {
+  const essay = document.getElementById('sa3-essay').value.trim();
+  const cbEl = document.getElementById('cb-essay'), ccEl = document.getElementById('cc-essay');
+  if (!essay) { showToast('비평문을 먼저 작성해봐!'); return; }
+  const n = essay.length;
+  cbEl.classList.add('visible'); ccEl.textContent = '첨삭 중…'; ccEl.classList.add('loading');
+  await new Promise(r => setTimeout(r, 700 + Math.random() * 500));
+
+  const lenOk   = n >= 1450 && n <= 1550;
+  const lenShort = n < 1000;
+  const lenOver  = n > 1600;
+  const hasStat  = /통계|%|\d+명|출처|신문|뉴스|보고서/.test(essay);
+  const hasConj  = /따라서|그러나|그러므로|왜냐하면|반면|이처럼|결국/.test(essay);
+  const hasSol   = /해결|방안|필요하다|해야 한다|바란다/.test(essay);
+  const hasCrit  = /작가|서술|표현|시각|의도|한계|문제점/.test(essay);
+  const score = [lenOk || (!lenShort && !lenOver), hasStat, hasConj, hasSol, hasCrit].filter(Boolean).length;
+  const grade = score >= 5 ? 'A (최우수)' : score >= 4 ? 'A- (우수)' : score >= 3 ? 'B+ (양호)' : 'B (보통)';
+
+  ccEl.textContent = `[분량]: ${n}자 / 목표 1500±50자 — ${lenOk ? '✓ 적정 분량' : lenShort ? `✗ ${1500-n}자 부족. 각 문단을 2~3문장씩 늘려봐` : `✗ ${n-1550}자 초과. 반복되는 내용을 압축해`}
+
+[구조 — 5문단]:
+  1문단(서론): 사회 문제 제기 + 책 소개 포함 여부 확인
+  2문단(본론1): 책 속 장면-현실 연결 + ${hasStat ? '✓ 통계·출처 확인됨' : '✗ 통계/출처 없음 — 반드시 1개 이상 추가'}
+  3문단(본론2): ${hasSol ? '✓ 해결 방안 포함됨' : '✗ 해결 방안 없음 — "~해야 한다" 구체적 제안 필요'}
+  4문단(비평): ${hasCrit ? '✓ 작가 시각 분석 포함' : '✗ 단순 줄거리 요약 의심 — 작가의 의도·한계를 네 시각으로 분석해야 해'}
+  5문단(결론): 사회적 의의 + 개인 실천 다짐 포함 여부 확인
+
+[언어·논리]:
+  접속어: ${hasConj ? '✓ 논리적 연결어 사용됨' : '✗ 따라서/그러나/이처럼 등 접속어가 부족해 — 문단 간 연결이 약해보여'}
+
+[예상 등급]: ${grade}
+
+[시급한 수정 3가지]:
+  1. ${!hasStat ? '통계·출처 추가 (가장 점수 영향이 큼)' : !hasCrit ? '4문단 비평 시각 강화 — 감상 → 분석으로 전환' : '전체 1회 소리 내어 읽기 — 어색한 문장 발견에 가장 효과적'}
+  2. ${!hasSol ? '해결 방안 구체화 — 법·제도적 / 사회·문화적으로 나눠서' : !hasConj ? '접속어 보강 — 각 문단 첫 문장에 연결어 추가' : '분량 점검 — 목표 1500자에서 ±50자 이내로 조정'}
+  3. 마지막 문단 마무리 — "나는 ~하겠다"는 1인칭 다짐으로 끝내면 인상이 강해져
+
+※ API 연결 후에는 문장별 문법 오류와 논리 흐름을 직접 첨삭합니다.`;
+  ccEl.classList.remove('loading');
+}
+
+function updateEssayCount() {
+  const n = document.getElementById('sa3-essay').value.length;
+  const el = document.getElementById('sa3-char');
+  el.textContent = `${n.toLocaleString()}자 / 목표 1500자`;
+  el.className = 'char-info';
+  if (n >= 1449 && n <= 1551) el.classList.add('ok');
+  else if (n > 1100) el.classList.add('warn');
+}
+
+function completeAll() {
+  if (book) document.getElementById('final-book-name').textContent = book.title;
+  document.getElementById('complete-banner').classList.add('visible');
+  document.getElementById('complete-banner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('global-toast'); if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<style>
+:root { --gap: 1rem; --color-math-bg: #EEEDFE; --color-math-text: #3C3489; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #F9FAFB; padding: 20px; }
+
+.plan { padding: 1.5rem; max-width: 800px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 2.5rem 0 0.8rem;
+}
+.section-title:first-child { margin-top: 0; }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+.phase-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.phase-num.math { background: var(--color-math-bg); color: var(--color-math-text); }
+
+.phase-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+.phase-sub {
+  font-size: 12px;
+  font-weight: 500;
+  color: #EF4444; /* D-Day 붉은색 강조 */
+  margin-top: 4px;
+}
+
+.feature-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #374151;
+  line-height: 1.5;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+  background: var(--color-math-text);
+}
+
+.input-section {
+  background: #F9FAFB;
+  border-radius: 6px;
+  margin-top: 16px;
+  padding: 12px 16px;
+}
+.input-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+  margin-bottom: 10px;
+}
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.input-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+.input-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.input-content { flex: 1; }
+.input-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+.input-desc {
+  font-size: 12px;
+  color: #6B7280;
+  line-height: 1.5;
+}
+.required {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.req-must { background: #FEE2E2; color: #991B1B; }
+.req-opt  { background: #E0E7FF; color: #3730A3; }
+
+.stack-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tech-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+  background: #ffffff;
+  color: #374151;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.timeline-cell {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+  text-align: center;
+}
+.tl-week { font-size: 12px; font-weight: 600; color: #6B7280; margin-bottom: 6px; }
+.tl-task { font-size: 13px; font-weight: 500; color: #111827; }
+
+.highlight-box {
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-left: 4px solid;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.hb-red { background: #FEF2F2; border-color: #EF4444; color: #991B1B; }
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+.score-card {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.score-val { font-size: 24px; font-weight: 700; color: var(--color-math-text); }
+.score-lbl { font-size: 12px; font-weight: 500; color: #6B7280; margin-top: 6px; }
+</style>
+
+<div class="plan">
+
+  <div class="section-title">프로젝트 개요</div>
+  <div class="card" style="background: #F8FAFC;">
+    <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #0F172A;">대수(수학) 타임어택 & 서술형 방어 AI 코칭 시스템</div>
+    <div style="font-size: 14px; color: #475569; line-height: 1.7;">
+      4월 16일 실시되는 1학기 1차 수학 수행평가(범위 p.10~39) 만점을 목표로 하는 웹앱입니다. 영어와 달리 <strong>'40분 타임어택'</strong>과 <strong>'4단계 논리 전개'</strong>에 초점을 맞추며, AI가 학생의 풀이 과정을 실시간으로 추적하여 감점 요인(조건 누락, 계산 실수 등)을 즉각 교정합니다.
+    </div>
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-val">16점</div>
+        <div class="score-lbl">단답형 1차 (쾌속 풀이 및 정확도)</div>
+      </div>
+      <div class="score-card">
+        <div class="score-val">20점</div>
+        <div class="score-lbl">서술형 1차 (4단 논리 구조 방어)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">핵심 기능 로드맵 — 4단계 압축 개발 (D-8)</div>
+
+  <div class="highlight-box hb-red">
+    <strong>긴급 경보:</strong> 평가일까지 8일 남았습니다. 영어처럼 장기적인 브레인스토밍이 불가합니다. UI 구현보다 <strong>'수식 인식(OCR)과 단계별 논리 채점 엔진'</strong>의 즉각적 가동이 최우선입니다.
+  </div>
+
+  <div class="card">
+    <div class="phase-header">
+      <div class="phase-num math">1</div>
+      <div>
+        <div class="phase-label">시험 범위 해체 및 OCR 인프라 구축 (STEP 1, 2)</div>
+        <div class="phase-sub">D-8 ~ D-7 (초단기 완료)</div>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="dot"></div>교과서 p.10~39 문항 DB화 및 난이도 태깅</div>
+      <div class="feature-item"><div class="dot"></div>MathJax / KaTeX 기반 수식 렌더링 UI 적용</div>
+      <div class="feature-item"><div class="dot"></div>학생 수기 풀이 사진 인식용 OCR (Vision API) 연동</div>
+      <div class="feature-item"><div class="dot"></div>출제 유형(기본/응용/실생활) 및 감점 함정 포인트 매핑</div>
+    </div>
+    <div class="input-section">
+      <div class="input-label">사용자 입력 요소</div>
+      <div class="input-row">
+        <div class="input-item">
+          <div class="input-icon">📸</div>
+          <div class="input-content">
+            <div class="input-name">틀린 문제 또는 교과서 문항 사진<span class="required req-must">필수</span></div>
+            <div class="input-desc">AI가 Vision 모델로 수식을 파싱하여 텍스트로 변환 및 DB 검색</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="phase-header">
+      <div class="phase-num math">2</div>
+      <div>
+        <div class="phase-label">서술형 4단 풀이 방어 모듈 (STEP 3)</div>
+        <div class="phase-sub">D-6 ~ D-4 (핵심 개발 구간)</div>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="dot"></div>[조건-공식-전개-검증] 4단계 강제 입력 UI</div>
+      <div class="feature-item"><div class="dot"></div>로그 밑/진수 조건 누락 실시간 경고 알림</div>
+      <div class="feature-item"><div class="dot"></div>풀이 중단 지점(Stuck point) 인식 및 단계적 힌트 제공</div>
+      <div class="feature-item"><div class="dot"></div>등호(=) 정렬 및 결론 접속사(∴) 사용 가이드라인 검토</div>
+    </div>
+    <div class="input-section">
+      <div class="input-label">사용자 입력 요소</div>
+      <div class="input-row">
+        <div class="input-item">
+          <div class="input-icon">⌨️</div>
+          <div class="input-content">
+            <div class="input-name">단계별 수식 입력 (가상 키패드 적용)<span class="required req-must">필수</span></div>
+            <div class="input-desc">각 논리 단계별로 분리된 입력창을 통해 수식의 비약 원천 차단</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="phase-header">
+      <div class="phase-num math">3</div>
+      <div>
+        <div class="phase-label">오답 원인 분석 & 클론 문항 생성 (STEP 4)</div>
+        <div class="phase-sub">D-3 ~ D-2</div>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="dot"></div>오답 원인 3분류 (개념 오류 / 계산 실수 / 조건 누락)</div>
+      <div class="feature-item"><div class="dot"></div>취약 개념(예: 거듭제곱근 판별) 재설명 팝업</div>
+      <div class="feature-item"><div class="dot"></div>변수만 변경된 유사 문제(클론 문항) 자동 생성</div>
+      <div class="feature-item"><div class="dot"></div>오답 노트 자동 아카이빙 (Firestore 연동)</div>
+    </div>
+    <div class="input-section">
+      <div class="input-label">사용자 입력 요소</div>
+      <div class="input-row">
+        <div class="input-item">
+          <div class="input-icon">🔄</div>
+          <div class="input-content">
+            <div class="input-name">클론 문항 재풀이 데이터<span class="required req-must">필수</span></div>
+            <div class="input-desc">동일한 함정에 다시 빠지는지 검증하기 위한 2차 풀이 입력</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="phase-header">
+      <div class="phase-num math">4</div>
+      <div>
+        <div class="phase-label">40분 타임어택 실전 모의고사 (STEP 5)</div>
+        <div class="phase-sub">D-1 ~ D-Day</div>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="dot"></div>40분 타이머 강제 적용 (화면 상단 고정)</div>
+      <div class="feature-item"><div class="dot"></div>단답형(16점) -> 서술형(20점) 듀얼 모드 UI 전환</div>
+      <div class="feature-item"><div class="dot"></div>스킵(Skip) 기능 및 미해결 문항 리뷰 패널</div>
+      <div class="feature-item"><div class="dot"></div>종료 시 최종 예상 점수(100/94/88 감점표 적용) 산출</div>
+    </div>
+    <div class="input-section">
+      <div class="input-label">사용자 입력 요소</div>
+      <div class="input-row">
+        <div class="input-item">
+          <div class="input-icon">⏱️</div>
+          <div class="input-content">
+            <div class="input-name">최종 실전 답안 세트<span class="required req-must">필수</span></div>
+            <div class="input-desc">단답형 정답 및 서술형 전체 로직 제출. 제출 후 레드팀(AI)의 최종 검열 진행.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">기술 스택 (수학 특화)</div>
+  <div class="card">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: #6B7280; margin-bottom: 6px;">프론트엔드 UI/UX</div>
+        <div class="stack-row">
+          <span class="tech-badge">React + Vite</span>
+          <span class="tech-badge">MathJax / KaTeX (수식 렌더링)</span>
+          <span class="tech-badge">Math Virtual Keyboard (수식 입력기)</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: #6B7280; margin-bottom: 6px;">AI 엔진 & 백엔드</div>
+        <div class="stack-row">
+          <span class="tech-badge">Gemini 1.5 Pro (수학 수식 비전 인식 및 다단계 논리 추론 특화)</span>
+          <span class="tech-badge">Firebase Auth & Firestore</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

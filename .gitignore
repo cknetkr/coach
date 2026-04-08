@@ -1,0 +1,8 @@
+legacy/
+docs/playbook.md
+docs/next_session_handoff.md
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini

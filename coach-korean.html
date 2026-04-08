@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>국어 수행평가 코치 | 책 선정 · 수행1 · 수행2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="coach-korean.css">
+</head>
+<body>
+<div class="noise-overlay"></div>
+<header class="page-header">
+  <a href="index.html" class="brand">코치<span>.</span></a>
+  <nav class="nav-tabs">
+    <a href="coach-korean.html" class="nav-tab lit">📚 국어</a>
+    <a href="coach-math.html" class="nav-tab">📐 수학</a>
+    <a href="coach-english.html" class="nav-tab">🎧 영어</a>
+    <button class="nav-tab report-btn" onclick="openReport()">📋 보고서</button>
+  </nav>
+</header>
+
+<div class="step-rail">
+  <div class="step-node active" id="sn-0" onclick="goStep(0)">
+    <div class="step-circle active" id="sc-0">📖</div>
+    <span class="step-label-text">책 선정</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-node" id="sn-1" onclick="goStep(1)">
+    <div class="step-circle" id="sc-1">1</div>
+    <span class="step-label-text">수행1</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-node" id="sn-2" onclick="goStep(2)">
+    <div class="step-circle" id="sc-2">2</div>
+    <span class="step-label-text">수행2</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-node" id="sn-3" onclick="goStep(3)">
+    <div class="step-circle" id="sc-3">✍</div>
+    <span class="step-label-text">수행3</span>
+  </div>
+</div>
+
+<div class="coach-wrap">
+
+  <!-- ═══════════════════════════════════════
+       STEP 0 · 책 선정
+  ═══════════════════════════════════════ -->
+  <div class="section-card visible active-section" id="step-0">
+    <div class="sec-eyebrow">STEP 0 · 책 선정</div>
+    <div class="sec-title">어떤 책을 읽었나요?</div>
+    <div class="sec-desc">수행평가에 쓸 책을 함께 정해요. 이미 읽은 책이 있어도 좋고, 아직 못 정했어도 괜찮아요.</div>
+
+    <!-- 독서 관점 유도 -->
+    <div class="reading-lens">
+      <div class="reading-lens-title">🔭 『오늘의 기분은 사과』 읽기 전략 — 이걸 메모하면 수행1~3이 완성된다</div>
+      <div class="lens-list">
+        <div class="lens-item">
+          <span class="lens-q">선정이유</span>
+          <div class="lens-text">이경이 <strong>"괜찮아"를 말하는 순간</strong>마다 표시해두세요. 그 장면이 내 경험과 어떻게 연결되는지 한 줄씩 메모하면 수행1 항목1이 자동으로 완성됩니다. 이때 "재미있어서"는 절대 금물 — 반드시 <strong>장면 → 내 경험 → 사회 문제</strong> 순서로 연결해야 합니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">사회연결</span>
+          <div class="lens-text">이경의 침묵이 <strong>"왜 혼자만의 문제가 아닌가?"</strong>를 읽으며 질문하세요. '청소년의 42.7%가 고민을 말하기 어렵다'는 통계와 연결되는 순간, 수행2·3의 핵심 논거가 완성됩니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">인물대비</span>
+          <div class="lens-text"><strong>이경(감정 검열) vs 전솔(당당함) vs 유림(기만적 공감)</strong> 세 인물의 차이를 메모하세요. 전솔이 "누가 너보고 싸우래?"라고 말할 때의 카타르시스 — 그 감각이 비평문 4문단(비평 시각)의 핵심 논거입니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">상징 장치</span>
+          <div class="lens-text"><strong>고모의 '기분 아이콘'</strong>(타인의 진심 헤아리기)과 <strong>할머니의 '매실 한 알'</strong>(지금 손에 있는 것에 집중) — 이 두 장면에서 멈추세요. 각 소재가 왜 주제를 상징하는지 쓰면 수행1 항목6 문학 기법 분석이 완성됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-area" id="chat-area">
+      <div class="bubble coach">
+        <div class="bubble-name">코치</div>
+        안녕! 국어 수행평가 같이 준비해보자 😊<br>
+        먼저 책을 정해야 해. 요즘 읽은 책이 있어? 아니면 관심 가는 주제나 장르가 있어?
+        <div class="quick-btns">
+          <span class="quick-btn" onclick="quickReply('오늘의 기분은 사과 이 책으로 할게요')">📖 오늘의 기분은 사과</span>
+          <span class="quick-btn" onclick="quickReply('아직 책을 못 정했어요')">아직 못 정했어요</span>
+          <span class="quick-btn" onclick="quickReply('이미 읽은 책이 있어요')">읽은 책이 있어요</span>
+          <span class="quick-btn" onclick="quickReply('소설 추천해줘')">소설 추천해줘</span>
+        </div>
+      </div>
+    </div>
+    <div class="book-confirm-card" id="book-confirm">
+      <div class="bcc-label">선정된 책</div>
+      <div class="bcc-title" id="bcc-title">—</div>
+      <div class="bcc-author" id="bcc-author"></div>
+      <div class="bcc-summary" id="bcc-summary"></div>
+    </div>
+    <div class="chat-input-row" id="chat-input-row">
+      <textarea class="chat-input" id="chat-input" rows="1" placeholder="여기에 입력하세요…" onkeydown="chatEnter(event)"></textarea>
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+    <div class="btn-row" id="book-confirm-btns" style="display:none; margin-top:1rem;">
+      <button class="btn-next primary-next" onclick="confirmBook()">이 책으로 시작하기 →</button>
+      <button class="btn-next" onclick="resetBook()">다시 선정하기</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       STEP 1 · 수행평가 1 — 독서 감상 기록지
+  ═══════════════════════════════════════ -->
+  <div class="section-card" id="step-1">
+    <div class="sec-eyebrow">STEP 1 · 수행평가 1</div>
+    <div class="sec-title">독서 감상 기록지</div>
+    <div class="sec-desc">6개 항목을 완성해야 해. 규칙 → 예시(샘플 + AI) → 내 답변 → AI 코칭 순서로 진행해봐.</div>
+
+    <!-- 독서 관점 유도 -->
+    <div class="reading-lens">
+      <div class="reading-lens-title">📌 수행1 — 『오늘의 기분은 사과』에서 찾아야 할 것들</div>
+      <div class="lens-list">
+        <div class="lens-item">
+          <span class="lens-q">항목 1</span>
+          <div class="lens-text">이경이 불편한 감정을 <strong>"괜찮아"로 덮는 장면</strong> 중 네 마음이 가장 흔들린 순간 하나를 고르세요. <strong>장면 → 내 경험 → 사회적 의미</strong> 3단계로 연결하면 항목1이 완성됩니다. "재미있어서" 선정한 것은 즉시 감점 — 반드시 사회 구조와 연결해야 합니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">항목 2·3</span>
+          <div class="lens-text"><strong>이경(감정 검열) · 유림(단짝→배신감) · 전솔(당당하고 무심함)</strong> 세 인물이 각자 그렇게 행동하는 <strong>사회적 이유</strong>를 찾으세요. 공간은 학교(무대) · 집 방(내면) · 할머니 집 마당(치유) 순으로 상징이 달라집니다 — 이게 항목2 [공간] 핵심입니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">항목 4·5</span>
+          <div class="lens-text">읽기 전 <strong>"청소년 소설이니 가벼운 우정 이야기겠지"</strong>라는 편견과 읽은 후 <strong>"진정한 화해는 자신의 감정과의 화해"</strong>라는 깨달음의 변화를 구체적으로 대비하세요. 항목5에는 청소년 정신건강 통계(42.7%)를 출처와 함께 반드시 넣어야 합니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">항목 6</span>
+          <div class="lens-text">두 장면에서 멈추세요. ① <strong>고모의 기분 아이콘 조언</strong> — 상상력으로 타인의 진심을 헤아리게 하는 상징. ② <strong>할머니의 매실 한 알</strong> — 과거·미래의 불안에서 벗어나 현재에 집중하게 하는 상징. 각 소재의 기법(상징·감각적 심상)과 주제 연결을 쓰면 항목6이 완성됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="part-accordion" id="sa1-accordion">
+
+      <!-- 항목 01 -->
+      <div class="part-item active" id="part-1">
+        <div class="part-header" onclick="togglePart('sa1',1,6)">
+          <div class="part-num">01</div><div class="part-name">작품 선정 이유</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">"재미있어서"는 <strong>즉시 감점</strong>이야. 반드시 <strong>장면 → 내 경험 → 사회적 의미</strong> 공식으로 써야 해. 작품의 주제와 내 경험을 직접 연결해야 A등급을 받아.</div>
+          </div>
+          <div class="rule-block warn">
+            <div class="rule-title">⚠ 이렇게 쓰면 감점</div>
+            <div class="rule-body">✗ "이 책이 재미있을 것 같아서 선정했다"<br>✗ "친구가 추천해줘서"<br>✗ "표지가 예뻐서"</div>
+          </div>
+
+          <!-- 정적 샘플 (『오늘의 기분은 사과』 기준) -->
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준 (실제 쓰는 방식)</div>
+            <div class="sample-body"><strong>[장면]</strong> 주인공이 친구에게 솔직한 감정을 말하려다 결국 "괜찮아"라는 말로 덮어버리는 장면이 가장 오래 남았다.
+<strong>[내 경험]</strong> 나도 화가 나거나 슬플 때 "뭐가 문제야?"라는 말을 들을까 봐 그냥 참았던 적이 많았다. 감정을 말하는 것 자체가 민폐처럼 느껴졌기 때문이다.
+<strong>[사회적 의미]</strong> 이 소설은 개인의 소심함이 아니라, 감정 표현을 '약함'으로 보는 사회적 분위기가 어떻게 청소년의 관계를 단절시키는지를 보여준다고 생각해 선정했다.</div>
+            <div class="sample-char">약 230자 | 공식 적용: 장면✓ 내 경험✓ 사회적 의미✓</div>
+          </div>
+
+          <div class="example-wrap">
+            <div class="example-header">✏ AI 코치 예시 답안 (선정된 책 기준 자동 생성)</div>
+            <div class="example-body" id="ex-1-text">📖 위에서 책을 선정하면 이 책에 맞는 예시가 나와요.</div>
+          </div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 공식: 장면 → 내 경험 → 사회적 의미</div>
+            <textarea class="user-input" id="ans-1" placeholder="[장면] 이 책의 어떤 장면이 나를 흔들었나?&#10;[내 경험] 그 장면이 내 어떤 경험과 연결됐나?&#10;[사회적 의미] 그 경험이 어떤 사회 문제와 이어지나?"></textarea>
+            <div class="char-info" id="ci-1">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(1)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa1',1,6)">✓ 완료 → 다음</button>
+          </div>
+          <div class="coaching-box" id="cb-1"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-1"></div></div>
+        </div>
+      </div>
+
+      <!-- 항목 02 -->
+      <div class="part-item" id="part-2">
+        <div class="part-header" onclick="togglePart('sa1',2,6)">
+          <div class="part-num">02</div><div class="part-name">인물 및 배경 분석</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">반드시 <strong>3가지 모두</strong> 포함:<br>① 주요 인물 성격과 특징<br>② 시대적 배경(어떤 사회 현상이 반영됐는지)<br>③ 공간의 상징적 의미</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[인물]</strong> 주인공 이경은 매일 자신의 기분을 과일에 비유해 일기에 기록하는 청소년으로, 미움받지 않기 위해 불편한 감정을 '괜찮아'로 덮는 '감정 검열'을 일상화한다. 단짝 유림은 이경에게 공감하는 듯 보이지만 실제로는 자기 이익에 따라 움직이는 기만적 공감의 소유자다. 전솔은 당당하고 무심해 보이는 인물로, "누가 너보고 싸우래? 그냥 알려주는 거야"라는 말로 이경에게 솔직한 감정 표현이 곧 갈등이 아님을 깨닫게 해주는 역할을 한다.
+<strong>[시대]</strong> 현재 한국의 청소년 세대를 배경으로 한다. SNS '좋아요'와 팔로워 수로 관계의 가치를 측정하는 디지털 환경 속에서, 오히려 진짜 감정을 나누기 더 어려워진 역설적인 소통 환경이 소설 전반에 반영되어 있다.
+<strong>[공간]</strong> 학교 교실은 '보여지는 나'를 연기해야 하는 무대이고, 집 방은 혼자 감정을 기록하며 자신을 마주하는 내면의 공간이다. 할머니 집 마당은 매실을 다듬으며 '지금 손에 있는 것'에 집중하게 되는 치유의 공간으로, 과거 상처와 미래 불안에서 해방되는 상징적 장소다.</div>
+            <div class="sample-char">약 380자 | 인물✓ 시대✓ 공간✓ — 이경·유림·전솔 각자의 역할 구분이 핵심</div>
+          </div>
+
+          <div class="example-wrap">
+            <div class="example-header">✏ AI 코치 예시 답안</div>
+            <div class="example-body" id="ex-2-text">📖 책 선정 후 예시가 생성돼요.</div>
+          </div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> [인물] [시대] [공간] 3가지 모두 써봐</div>
+            <textarea class="user-input" id="ans-2" placeholder="[인물] 주인공의 성격과 특징 — '착하다'보다 구체적으로&#10;[시대] 어떤 사회 현상이 이 소설에 담겼나?&#10;[공간] 주요 공간이 상징하는 것은?"></textarea>
+            <div class="char-info" id="ci-2">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(2)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa1',2,6)">✓ 완료 → 다음</button>
+          </div>
+          <div class="coaching-box" id="cb-2"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-2"></div></div>
+        </div>
+      </div>
+
+      <!-- 항목 03 -->
+      <div class="part-item" id="part-3">
+        <div class="part-header" onclick="togglePart('sa1',3,6)">
+          <div class="part-num">03</div><div class="part-name">간단한 줄거리</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body"><strong>"~했다, ~했다" 단순 나열은 감점.</strong><br>사건 간 인과관계가 드러나야 해. 접속어 활용: <em>그러나, 그 결과, 갈등이 심화된 시점은</em><br>구조: <strong>발단 → 전개 → 절정 → 결말</strong></div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[발단]</strong> 열일곱 살 이경은 매일 자신의 기분을 과일에 비유해 일기에 기록하며 살아간다. 학교에서는 잘 지내는 것처럼 보이지만, 단짝 유림의 기만적 공감에서 느끼는 배신감과 당당하고 무심해 보이는 전솔에 대한 당혹감이 조금씩 쌓이기 시작한다.
+<strong>[전개]</strong> 그러나 이경은 불편한 감정이 생길 때마다 '내가 예민한 것'이라며 스스로 검열한다. 그러던 중 고모에게 "친구 머리 위에 어떤 기분 아이콘이 떠 있을지 상상해봐"라는 조언을 듣고, 겉으로 드러나는 행동 뒤에 숨겨진 타인의 진심을 헤아리기 시작한다.
+<strong>[절정]</strong> 갈등이 심화된 시점은 유림과의 관계에서 느낀 배신감이 더 이상 외면할 수 없는 수준에 달하면서다. 이경은 할머니와 매실을 다듬으며 "지금 손에 있는 것에 집중하라"는 말을 통해 과거의 상처와 미래의 불안에서 벗어나 내면의 중심을 되찾는다.
+<strong>[결말]</strong> 진정한 화해란 유림과 사이가 좋아지는 것이 아니라, 자신의 솔직한 감정과 화해하고 주체적으로 살아가는 것임을 깨달으며 끝난다.</div>
+            <div class="sample-char">약 370자 | 인과 접속어✓ 발단→결말 구조✓ — 화해=자신의 감정과의 화해가 핵심</div>
+          </div>
+
+          <div class="example-wrap">
+            <div class="example-header">✏ AI 코치 예시 답안</div>
+            <div class="example-body" id="ex-3-text">📖 책 선정 후 예시가 생성돼요.</div>
+          </div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 발단→절정→결말, 인과관계가 드러나게</div>
+            <textarea class="user-input" id="ans-3" placeholder="[발단] …&#10;[전개] 그러나 …&#10;[절정] 갈등이 심화된 시점은 …&#10;[결말] 그 결과 …"></textarea>
+            <div class="char-info" id="ci-3">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(3)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa1',3,6)">✓ 완료 → 다음</button>
+          </div>
+          <div class="coaching-box" id="cb-3"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-3"></div></div>
+        </div>
+      </div>
+
+      <!-- 항목 04 -->
+      <div class="part-item" id="part-4">
+        <div class="part-header" onclick="togglePart('sa1',4,6)">
+          <div class="part-num">04</div><div class="part-name">책이 준 생각의 변화</div>
+          <span class="part-badge key">고득점 핵심</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body"><strong>읽기 전 vs 읽기 후</strong> 대비를 명확하게.<br>"새롭게 알게 됐다"는 너무 막연해. 어떤 생각이, 어떻게, 왜 바뀌었는지 3박자가 다 필요해.<br><strong>공식:</strong> 읽기 전(나는 ~라고 생각했다) → 읽기 후(~임을 깨달았다) → 앞으로(~하겠다)</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[읽기 전]</strong> 나는 친구 사이에서 갈등이 생기는 이유가 대부분 성격 차이나 상대방의 잘못 때문이라고 생각했다. 감정을 솔직하게 표현하는 것은 오히려 관계를 불편하게 만든다고 여겼다.
+<strong>[읽기 후]</strong> 그러나 이 소설을 통해 갈등의 상당 부분이 서로의 감정을 말하지 않아서 생기는 오해에서 비롯된다는 것을 깨달았다. 솔직함이 관계를 망치는 것이 아니라, 오히려 침묵이 관계를 서서히 무너뜨린다는 점이 인상 깊었다.
+<strong>[앞으로]</strong> 앞으로는 불편한 감정이 생겼을 때 "괜찮아"로 덮기보다, 조심스럽더라도 솔직하게 표현하는 연습을 해야겠다고 생각했다.</div>
+            <div class="sample-char">약 285자 | 읽기 전✓ 읽기 후✓ 앞으로✓ — 구체적 대비 명확</div>
+          </div>
+
+          <div class="example-wrap">
+            <div class="example-header">✏ AI 코치 예시 답안</div>
+            <div class="example-body" id="ex-4-text">📖 책 선정 후 예시가 생성돼요.</div>
+          </div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 읽기 전 생각 → 읽기 후 깨달음 → 앞으로의 태도</div>
+            <textarea class="user-input" id="ans-4" placeholder="[읽기 전] 나는 …라고 생각했다.&#10;[읽기 후] 이 작품을 통해 …임을 깨달았다.&#10;[앞으로] 나는 …하겠다."></textarea>
+            <div class="char-info" id="ci-4">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(4)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa1',4,6)">✓ 완료 → 다음</button>
+          </div>
+          <div class="coaching-box" id="cb-4"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-4"></div></div>
+        </div>
+      </div>
+
+      <!-- 항목 05 -->
+      <div class="part-item" id="part-5">
+        <div class="part-header" onclick="togglePart('sa1',5,6)">
+          <div class="part-num">05</div><div class="part-name">주제와 사회 현실 연결</div>
+          <span class="part-badge hard">★ 최고난도</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">이게 수행2의 씨앗이야. 가장 중요한 항목.<br>반드시 <strong>3단계</strong> 모두:<br>① 개인 경험 — 내가 실제로 겪은 구체적 경험<br>② 사회 연결 — 통계나 기사로 이게 나만의 문제가 아님을 증명<br>③ 의미 확장 — 이 문제의 본질을 한 문장으로</div>
+          </div>
+          <div class="rule-block warn">
+            <div class="rule-title">⚠ 통계 없으면 B등급</div>
+            <div class="rule-body">통계청, 여성가족부, 교육부 등 공신력 있는 출처 필수.<br>AI 통계를 그대로 쓰면 감점 — 공식 사이트에서 직접 확인해야 해.</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[개인 경험]</strong> 중학교 때 친한 친구와 작은 오해로 사이가 멀어진 적이 있다. 당시 나는 먼저 말을 꺼내지 못했고, 친구도 마찬가지였다. 결국 아무 말 없이 서로 멀어졌고, 나중에야 서로 오해하고 있었다는 걸 알게 됐다.
+<strong>[사회 연결]</strong> 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면, 청소년의 42.7%가 "고민이 있어도 주변에 말하기 어렵다"고 응답했다. 이는 감정 표현이 개인 역량의 문제가 아니라 소통을 허용하지 않는 환경의 문제임을 보여준다.
+<strong>[의미 확장]</strong> 이 소설은 청소년 개인의 소심함이 아니라, 감정을 드러내면 '예민하다'는 평가를 받는 문화적 분위기가 어떻게 관계 단절을 만들어내는지를 보여주는 사회적 진단서다.</div>
+            <div class="sample-char">약 305자 | 개인 경험✓ 통계+출처✓ 의미 확장✓ — A등급 패턴</div>
+          </div>
+
+          <div class="example-wrap"><div class="example-header">✏ AI 코치 예시 답안</div><div class="example-body" id="ex-5-text">📖 책 선정 후 예시가 생성돼요.</div></div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 내 경험 → 사회 통계/기사 → 이 문제의 본질</div>
+            <textarea class="user-input" id="ans-5" placeholder="[내 경험] 나는 언제 …을 경험했다.&#10;[사회 연결] …에 따르면 …%가 …한다. (출처: )&#10;[본질] 이것은 단순한 개인 문제가 아니라 …"></textarea>
+            <div class="char-info" id="ci-5">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(5)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa1',5,6)">✓ 완료 → 다음</button>
+          </div>
+          <div class="coaching-box" id="cb-5"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-5"></div></div>
+        </div>
+      </div>
+
+      <!-- 항목 06 -->
+      <div class="part-item" id="part-6">
+        <div class="part-header" onclick="togglePart('sa1',6,6)">
+          <div class="part-num">06</div><div class="part-name">인상적인 문구 2개 + 이유</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">문구 2개는 <strong>서로 다른 내용</strong>이어야 해.<br>"감동받았다"는 이유가 아니야. 반드시 <strong>문학적 기법 + 주제 연결</strong>로 써야 해.<br>예: 역설, 상징, 반복, 대비, 의인화 — 기법 이름 + 효과 설명</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[문구 1]</strong> "갈등의 씨앗이 보이면 벌벌 떨며 멀리 돌아가는."
+이유: 이 문장은 직유와 과장법을 결합해 이경의 '감정 검열' 심리를 압축한다. '씨앗'이라는 작은 단어와 '벌벌 떤다'는 과장된 신체 반응의 대비가 청소년이 느끼는 관계 불안의 강도를 실감나게 보여주며, 소설의 핵심 주제인 '소통 회피'를 가장 직접적으로 드러낸다.
+
+<strong>[문구 2]</strong> "누가 너보고 싸우래? 그냥 알려주는 거야."
+이유: 전솔의 이 대사는 반어법과 반전을 활용해 독자에게 강한 카타르시스를 준다. '싸움'과 '알려주는 것'을 분리함으로써, 솔직한 감정 표현이 곧 갈등이라는 이경의 잘못된 전제를 한 문장으로 무너뜨린다. 침묵을 강요당한 독자에게 '말해도 된다'는 허락처럼 기능하는 문장이다.</div>
+            <div class="sample-char">약 295자 | 기법 이름✓ 주제 연결✓ 2개 내용 다름✓</div>
+          </div>
+
+          <div class="example-wrap"><div class="example-header">✏ AI 코치 예시 답안</div><div class="example-body" id="ex-6-text">📖 책 선정 후 예시가 생성돼요.</div></div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 문구 2개 + 각각 문학 기법과 주제 연결 이유</div>
+            <textarea class="user-input" id="ans-6" placeholder='[문구 1] "…"&#10;이유: …기법. …주제와 연결돼서 …&#10;&#10;[문구 2] "…"&#10;이유: …기법. …주제와 연결돼서 …'></textarea>
+            <div class="char-info" id="ci-6">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachPart(6)">🤖 AI 코칭 받기</button>
+            <button class="btn-next primary-next" onclick="completeSA1()">✓ 수행1 완료 → 수행2로</button>
+          </div>
+          <div class="coaching-box" id="cb-6"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="cc-6"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /sa1-accordion -->
+    <div class="progress-bar-wrap">
+      <div class="progress-track"><div class="progress-fill" id="sa1-prog"></div></div>
+      <div class="progress-text" id="sa1-prog-text">0 / 6 완료</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       STEP 2 · 수행평가 2 — 비평문 계획서
+  ═══════════════════════════════════════ -->
+  <div class="section-card" id="step-2">
+    <div class="sec-eyebrow">STEP 2 · 수행평가 2</div>
+    <div class="sec-title">비평문 계획하기</div>
+    <div class="sec-desc">계획서는 수행3 비평문의 설계도야. 5개 항목을 채우면 비평문 구조가 자동으로 완성돼.</div>
+
+    <!-- 독서 관점 유도 -->
+    <div class="reading-lens">
+      <div class="reading-lens-title">🎯 비평문 계획을 쓰기 전에 책에서 확인할 것들</div>
+      <div class="lens-list">
+        <div class="lens-item">
+          <span class="lens-q">사회문제</span>
+          <div class="lens-text">책 속 갈등의 근본 원인을 하나의 사회 문제로 좁히세요. <strong>"이 소설이 없어도 이 문제는 존재하는가?"</strong>가 Yes면 좋은 주제입니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">통계검증</span>
+          <div class="lens-text">AI가 제시한 통계는 반드시 <strong>통계청(kosis.kr)</strong>에서 직접 확인하세요. 수치가 다르면 공식 수치를 씁니다. 이 과정 자체가 항목⑤의 내용이 됩니다.</div>
+        </div>
+        <div class="lens-item">
+          <span class="lens-q">AI질문법</span>
+          <div class="lens-text">AI에게 <strong>"이 소설의 A를 현실 B와 연결하면 어떤 논거가 가능한가?"</strong>처럼 분석형 질문을 던지세요. "줄거리 알려줘"는 0점입니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="part-accordion" id="sa2-accordion">
+
+      <div class="part-item active" id="sa2-part-1">
+        <div class="part-header" onclick="togglePart('sa2',1,5)">
+          <div class="part-num">①</div><div class="part-name">작품과 연결된 사회 문제 선정</div>
+          <span class="part-badge required">핵심</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body"><strong>딱 하나만</strong> 골라야 해. 여러 개 나열하면 논리가 흩어져.<br>너무 넓은 주제(예: "환경 문제")보다 <strong>구체적인 문제</strong>(예: "청소년 기후 불안")가 훨씬 좋아.<br>작품 속 장면이 이 문제와 어떻게 이어지는지 한 문장으로 연결해.</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>사회 문제:</strong> 청소년의 감정 표현 억압과 또래 관계 단절
+
+<strong>선택 이유:</strong> 소설 속 이경이 자신의 불편한 감정을 "괜찮아"로 반복해서 덮는 장면은 개인의 성격 문제가 아니라, 감정을 솔직하게 드러내면 '예민하다'거나 '분위기 망친다'는 평가를 받는 사회적 분위기에서 기인한다. 이 문제를 선택한 이유는 이경의 '감정 검열'이 현재 청소년 대다수가 경험하는 보편적 현실임을 통계가 뒷받침하기 때문이다.</div>
+            <div class="sample-char">약 210자 | 문제 하나✓ 책과 연결✓ 구체적 문제명✓</div>
+          </div>
+
+          <div class="example-wrap"><div class="example-header">✏ AI 코치 예시</div><div class="example-body" id="sa2-ex-1">📖 책 선정 후 예시가 생성돼요.</div></div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 내가 다룰 사회 문제 + 책과의 연결 이유</div>
+            <textarea class="user-input" id="sa2-ans-1" placeholder="사회 문제: …&#10;선택 이유: 소설 속 …장면이 이 문제의 …양상을 보여주기 때문"></textarea>
+            <div class="char-info" id="sa2-ci-1">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachSA2(1)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa2',1,5)">✓ 완료</button>
+          </div>
+          <div class="coaching-box" id="sa2-cb-1"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="sa2-cc-1"></div></div>
+        </div>
+      </div>
+
+      <div class="part-item" id="sa2-part-2">
+        <div class="part-header" onclick="togglePart('sa2',2,5)">
+          <div class="part-num">②</div><div class="part-name">사회 문제 원인 분석 (2가지 + 출처)</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">원인 <strong>2가지 이상</strong>, 각각 <strong>출처 필수</strong>.<br>원인 유형을 다르게: <em>경제적 원인 + 제도적 원인</em> 또는 <em>구조적 + 문화적</em><br>통계청(kosis.kr), 여성가족부, 교육부에서 직접 확인해서 넣어.</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[원인 1 — 문화적]</strong> '예민하다'는 낙인이 만드는 감정 표현 억압
+출처: 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면, 청소년의 42.7%가 "고민이 있어도 주변에 말하기 어렵다"고 응답했다. 이는 소설 속 이경처럼 감정을 솔직히 말했을 때 '유난스럽다'는 시선을 받을 것이라는 두려움이 또래 사이에 광범위하게 퍼져 있음을 보여준다.
+
+<strong>[원인 2 — 구조적]</strong> 학교의 정서 교육 부재 및 SNS 전시 문화
+출처: 여성가족부 '2022 청소년 매체이용 및 유해환경 실태조사'에 따르면 청소년의 하루 평균 SNS 이용 시간은 2.4시간으로, '좋아요'와 팔로워 수로 관계를 측정하는 문화 속에서 진짜 감정을 나누는 대화 시간은 오히려 줄어들고 있다.</div>
+            <div class="sample-char">약 330자 | 원인 유형 다름✓ 공식 출처✓ 통계 수치✓</div>
+          </div>
+
+          <div class="example-wrap"><div class="example-header">✏ AI 코치 예시</div><div class="example-body" id="sa2-ex-2">📖 책 선정 후 예시가 생성돼요.</div></div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 원인 2가지 + 각 출처</div>
+            <textarea class="user-input" id="sa2-ans-2" placeholder="[원인 1] …&#10;출처: …(기관, 연도)&#10;&#10;[원인 2] …&#10;출처: …(기관, 연도)"></textarea>
+            <div class="char-info" id="sa2-ci-2">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachSA2(2)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa2',2,5)">✓ 완료</button>
+          </div>
+          <div class="coaching-box" id="sa2-cb-2"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="sa2-cc-2"></div></div>
+        </div>
+      </div>
+
+      <div class="part-item" id="sa2-part-3">
+        <div class="part-header" onclick="togglePart('sa2',3,5)">
+          <div class="part-num">③</div><div class="part-name">해결 방안 (법·제도적 + 사회·문화적)</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body"><strong>"교육이 중요하다"는 해결 방안이 아니야.</strong><br>반드시 2종류로 나눠서 써:<br>• <strong>법·제도적</strong>: 특정 법률 개정, 예산 확충, 법정 기준 강화<br>• <strong>사회·문화적</strong>: 교육 커리큘럼, 캠페인, 민간 협력</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>[법·제도적 방안]</strong> 학교 교육과정 내 정서·감정 표현 교육 의무화: 현재 학교 생활지도 지침에는 갈등 중재 절차가 명시되어 있으나, 감정을 언어로 표현하는 방법을 체계적으로 가르치는 커리큘럼은 부재하다. 교육부 고시를 개정해 중·고교 과정에 '감정 언어화 교육'을 연간 최소 10시간 이상 편성하도록 법제화해야 한다.
+
+<strong>[사회·문화적 방안]</strong> '감정 표현은 예민함이 아니다' 인식 전환 캠페인 및 또래 상담 활성화: 소설 속 전솔처럼 상대의 감정을 있는 그대로 받아들이는 문화를 만들기 위해, 학교 단위의 또래 상담 프로그램을 확대하고 청소년 미디어에서 감정 표현을 긍정적으로 묘사하는 콘텐츠를 장려해야 한다.</div>
+            <div class="sample-char">약 315자 | 구체적 법률·제도✓ 구체적 사회·문화 방안✓</div>
+          </div>
+
+          <div class="example-wrap"><div class="example-header">✏ AI 코치 예시</div><div class="example-body" id="sa2-ex-3">📖 책 선정 후 예시가 생성돼요.</div></div>
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 법·제도적 + 사회·문화적 방안 각각</div>
+            <textarea class="user-input" id="sa2-ans-3" placeholder="[법·제도적] …&#10;&#10;[사회·문화적] …"></textarea>
+            <div class="char-info" id="sa2-ci-3">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachSA2(3)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa2',3,5)">✓ 완료</button>
+          </div>
+          <div class="coaching-box" id="sa2-cb-3"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="sa2-cc-3"></div></div>
+        </div>
+      </div>
+
+      <div class="part-item" id="sa2-part-4">
+        <div class="part-header" onclick="togglePart('sa2',4,5)">
+          <div class="part-num">④</div><div class="part-name">AI 활용 아이디어 (질문+아이디어 4세트)</div>
+          <span class="part-badge key">A등급 포인트</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body"><strong>"줄거리 알려줘" 같은 단순 질문은 0점.</strong><br>아이디어를 도출하거나 논거를 개발하는 질문이어야 해.<br>형식: Q(질문) → 아이디어(이 질문으로 얻을 것) 쌍을 4개.</div>
+          </div>
+          <div class="rule-block success">
+            <div class="rule-title">✓ 좋은 질문 예시</div>
+            <div class="rule-body">"이 소설의 상징을 현재 사회 문제와 연결하면 어떤 논거가 가능할까?"<br>"이 문제의 해외 성공 사례는 뭐가 있을까?"<br>"비평문 도입부에서 독자를 끌어당기는 전략은?"</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 기준</div>
+            <div class="sample-body"><strong>Q1:</strong> "소설 속 이경의 '감정 검열' 심리가 청소년 또래 관계 단절과 어떻게 연결되는지 심리학적 관점에서 분석해줘."
+아이디어: '사회적 죽음에 대한 공포'라는 심리학적 개념을 논거로 삼아 비평문의 핵심 주장을 뒷받침한다.
+
+<strong>Q2:</strong> "청소년 감정 교육을 학교 교과로 도입해 효과를 본 해외 사례를 3개 알려줘."
+아이디어: 핀란드·영국 등의 정서 교육 사례를 통해 해결 방안의 실현 가능성을 높인다.
+
+<strong>Q3:</strong> "소설의 '머리 위 기분 아이콘' 설정이 독자에게 주는 문학적 효과를 설명해줘."
+아이디어: 형식과 주제의 연결을 분석해 비평문 4문단(비평 시각)의 깊이를 더한다.
+
+<strong>Q4:</strong> "비평문 도입부에서 이경의 '괜찮아' 장면과 청소년 정신건강 통계를 함께 제시하는 효과적인 구성 방법을 제안해줘."
+아이디어: 독자를 처음부터 문제의식으로 끌어당기는 서론 전략을 얻는다.</div>
+            <div class="sample-char">약 340자 | 분석형 질문✓ 각 질문의 목적 명확✓ 4세트✓</div>
+          </div>
+
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> Q → 아이디어 4세트</div>
+            <textarea class="user-input" id="sa2-ans-4" placeholder="Q1: …&#10;아이디어: …&#10;&#10;Q2: …&#10;아이디어: …&#10;&#10;Q3: …&#10;아이디어: …&#10;&#10;Q4: …&#10;아이디어: …"></textarea>
+            <div class="char-info" id="sa2-ci-4">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachSA2(4)">🤖 AI 코칭 받기</button>
+            <button class="btn-next" onclick="markDone('sa2',4,5)">✓ 완료</button>
+          </div>
+          <div class="coaching-box" id="sa2-cb-4"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="sa2-cc-4"></div></div>
+        </div>
+      </div>
+
+      <div class="part-item" id="sa2-part-5">
+        <div class="part-header" onclick="togglePart('sa2',5,5)">
+          <div class="part-num">⑤</div><div class="part-name">정보 검증 과정 (3단계)</div>
+          <span class="part-badge required">필수</span><span class="part-chevron">▾</span>
+        </div>
+        <div class="part-body">
+          <div class="rule-block" style="margin-top:0.9rem;">
+            <div class="rule-title">📌 이 항목의 규칙</div>
+            <div class="rule-body">AI 통계를 그대로 쓰면 안 돼. 검증 <strong>3단계</strong>를 기술:<br>1단계: AI에게 질문 → 수치 획득<br>2단계: 공식 사이트에서 직접 확인<br>3단계: 일치 여부 확인 후 출처 기재</div>
+          </div>
+
+          <div class="sample-wrap">
+            <div class="sample-header">📝 샘플 답안 — 『오늘의 기분은 사과』 통계 검증 예시</div>
+            <div class="sample-body"><strong>1단계:</strong> AI(Claude)에게 "한국 청소년이 고민을 주변에 말하기 어렵다고 느끼는 비율 최신 통계를 알려줘"라고 질문함 → "약 40% 이상"이라는 수치와 출처로 한국청소년정책연구원을 제시받음.
+
+<strong>2단계:</strong> 교육부·한국청소년정책연구원 공식 홈페이지(nypi.re.kr) → 연구보고서 → '2023 청소년 정신건강 실태조사' 검색 → 원문 PDF에서 "고민이 있어도 주변에 말하기 어렵다" 항목의 실제 수치 42.7% 확인. AI 제시 수치(40% 이상)와 실제 수치(42.7%) 방향 일치, 정확한 수치는 공식 자료 기준으로 수정.
+
+<strong>3단계:</strong> 비평문에 "교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면 42.7%"로 출처 포함하여 기재. AI 수치보다 공식 수치가 우선임을 확인 후 적용.</div>
+            <div class="sample-char">약 300자 | 3단계 완결✓ 사이트 경로 구체적✓ 불일치 처리 방식 포함✓</div>
+          </div>
+
+          <div class="input-section">
+            <div class="input-label"><span class="badge-you">YOU</span> 검증한 통계 1개를 3단계로</div>
+            <textarea class="user-input" id="sa2-ans-5" placeholder="1단계: AI에게 '…'를 질문 → '…' 수치 획득&#10;2단계: …(공식 사이트)에서 직접 확인&#10;3단계: 일치/불일치 → 출처 처리 방식"></textarea>
+            <div class="char-info" id="sa2-ci-5">0자</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-coach" onclick="coachSA2(5)">🤖 AI 코칭 받기</button>
+            <button class="btn-next primary-next" onclick="completeSA2()">✓ 수행2 완료 → 수행3으로</button>
+          </div>
+          <div class="coaching-box" id="sa2-cb-5"><div class="coaching-header">🤖 코칭 결과</div><div class="coaching-content" id="sa2-cc-5"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /sa2-accordion -->
+    <div class="progress-bar-wrap">
+      <div class="progress-track"><div class="progress-fill" id="sa2-prog"></div></div>
+      <div class="progress-text" id="sa2-prog-text">0 / 5 완료</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       STEP 3 · 수행3으로 이동
+  ═══════════════════════════════════════ -->
+  <div class="section-card" id="step-3" style="text-align:center; padding: 2.5rem 1.5rem;">
+    <div class="sec-eyebrow">STEP 3 · 수행평가 3</div>
+    <div class="sec-title" style="margin-bottom:0.75rem;">비평문 1500자 작성</div>
+    <div class="sec-desc" style="margin-bottom:1.5rem;">수행1·2의 내용을 바탕으로 비평문을 작성할 차례야.<br>비평문 작성은 별도 페이지에서 진행해.</div>
+    <a href="coach-korean-essay.html" class="goto-sa3" id="goto-sa3-link">
+      <div class="goto-sa3-text">
+        <div class="goto-sa3-title">✍ 비평문 작성하러 가기</div>
+        <div class="goto-sa3-sub">5문단 구조 가이드 · 실시간 글자 수 · AI 첨삭</div>
+      </div>
+      <div class="goto-sa3-arrow">→</div>
+    </a>
+  </div>
+
+</div><!-- /coach-wrap -->
+<div class="toast" id="global-toast"></div>
+
+<!-- ── 보고서 모달 ── -->
+<div class="report-overlay" id="report-overlay">
+  <div class="report-modal">
+    <div class="report-modal-header">
+      <div class="report-modal-title">📋 완성 보고서</div>
+      <button class="report-close" onclick="closeReport()">✕ 닫기</button>
+    </div>
+    <div class="report-book" id="report-book">—</div>
+
+    <div class="report-section-title">수행1 · 독서 감상 기록지</div>
+    <div id="report-sa1"></div>
+
+    <div class="report-section-title">수행2 · 비평문 계획서</div>
+    <div id="report-sa2"></div>
+
+    <button class="report-print-btn" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+  </div>
+</div>
+
+<script>
+const state = {
+  currentStep: 0,
+  book: null,
+  chatHistory: [],
+  sa1Done: new Set(),
+  sa2Done: new Set()
+};
+
+/* ── 스텝 이동 ── */
+function goStep(n) {
+  state.currentStep = n;
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('visible', 'active-section'));
+  document.getElementById('step-' + n)?.classList.add('visible', 'active-section');
+  for (let i = 0; i <= 3; i++) {
+    const nd = document.getElementById('sn-' + i), sc = document.getElementById('sc-' + i);
+    if (!nd || !sc) continue;
+    nd.classList.remove('active', 'done'); sc.classList.remove('active', 'done');
+    if (i < n) { nd.classList.add('done'); sc.classList.add('done'); }
+    else if (i === n) { nd.classList.add('active'); sc.classList.add('active'); }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── 채팅 ── */
+function appendBubble(role, text, quickBtns = []) {
+  const area = document.getElementById('chat-area');
+  const b = document.createElement('div'); b.className = 'bubble ' + role;
+  if (role === 'coach') {
+    b.innerHTML = `<div class="bubble-name">코치</div>${text}`;
+    if (quickBtns.length) {
+      const row = document.createElement('div'); row.className = 'quick-btns';
+      quickBtns.forEach(q => {
+        const btn = document.createElement('span'); btn.className = 'quick-btn';
+        btn.textContent = q; btn.onclick = () => quickReply(q); row.appendChild(btn);
+      });
+      b.appendChild(row);
+    }
+  } else { b.textContent = text; }
+  area.appendChild(b); b.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+function showTyping() {
+  const area = document.getElementById('chat-area');
+  const t = document.createElement('div'); t.className = 'bubble coach bubble-typing'; t.id = 'typing-indicator';
+  t.innerHTML = '<div class="dot-pulse"></div><div class="dot-pulse"></div><div class="dot-pulse"></div>';
+  area.appendChild(t); t.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+function hideTyping() { document.getElementById('typing-indicator')?.remove(); }
+function quickReply(text) { document.getElementById('chat-input').value = text; sendChat(); }
+function chatEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }
+
+/* ── 책 데이터베이스 (템플릿용) ── */
+const _BOOK_DB = {
+  '오늘의 기분은 사과': { title:'오늘의 기분은 사과', author:'김지현', summary:'제20회 사계절문학상 수상작. 열일곱 소녀 이경은 미움받지 않기 위해 자신의 진짜 감정을 억누르는 "감정 검열"을 일상화한다. 단짝 유림과의 관계에서 배신감을 느끼고, 매사 당당한 전솔과의 만남에서 혼란을 겪는다. 고모의 "친구 머리 위 기분 아이콘을 상상해봐"라는 조언으로 타인의 진심을 헤아리게 되고, 할머니와 매실을 다듬으며 "지금 손에 있는 것에 집중하라"는 현재성의 지혜를 얻는다. 진정한 화해란 친구와 사이가 좋아지는 것이 아니라 자신의 솔직한 감정과 화해하고 주체적으로 살아가는 것임을 보여준다.', theme:'감정검열·주체적자아·청소년관계·현재성' },
+  '82년생 김지영': { title:'82년생 김지영', author:'조남주', summary:'평범한 여성 김지영이 살아오면서 겪은 성차별과 사회적 압력을 담담하게 서술한 소설이다. 개인의 이야기를 통해 한국 사회의 구조적 성불평등을 드러낸다. 독자들로 하여금 자신 주변의 일상적 차별을 돌아보게 만든다.', theme:'성차별·경력단절·젠더불평등' },
+  '채식주의자':   { title:'채식주의자', author:'한강', summary:'어느 날 고기를 먹지 않겠다는 결심을 한 여성을 중심으로, 그를 둘러싼 가족과 사회의 폭력적 시선을 세 편의 연작으로 그린다. 개인의 선택과 사회적 억압 사이의 긴장을 강렬하게 보여준다.', theme:'개인의 자유·폭력·몸의 주권' },
+  '아몬드':       { title:'아몬드', author:'손원평', summary:'감정을 느끼지 못하는 희귀 질환을 가진 소년 윤재가 폭력적인 소년 곤이와 교류하며 변해가는 이야기다. 공감 능력과 인간 관계의 본질, 사회적 소외를 탐색한다.', theme:'공감능력·청소년폭력·정체성' },
+  '소년이 온다':  { title:'소년이 온다', author:'한강', summary:'1980년 5·18 광주민주화운동을 배경으로, 살아남은 자와 죽은 자의 이야기를 여섯 개의 목소리로 풀어낸다. 역사적 비극 속 개인의 존엄과 기억의 의미를 묻는 작품이다.', theme:'역사·인간의 존엄·국가폭력' },
+  '불편한 편의점': { title:'불편한 편의점', author:'김호연', summary:'서울역 노숙인이 편의점 야간 직원이 되어 각기 다른 삶을 사는 손님들과 이어지는 따뜻한 이야기다. 계층과 세대를 가로지르는 연대와 치유를 그린다.', theme:'계층격차·연대·도시 소외' },
+  '완전한 행복':  { title:'완전한 행복', author:'정유정', summary:'완벽해 보이는 가족 안에 숨겨진 지배와 통제를 추적하는 심리 스릴러다. 가족이라는 이름 아래 이루어지는 폭력의 구조를 섬뜩하게 해부한다.', theme:'가족폭력·통제·정체성 말살' },
+  '피프티 피플':  { title:'피프티 피플', author:'정세랑', summary:'한 병원을 중심으로 살아가는 50명의 평범한 사람들의 이야기를 짧고 따뜻한 시선으로 엮는다. 각자의 일상이 서로 연결되어 있다는 것을 보여주는 연작 소설이다.', theme:'공동체·돌봄·일상의 연대' },
+  '당신이 옳다':  { title:'당신이 옳다', author:'정혜신', summary:'정신과 의사 저자가 공감이란 무엇인지, 어떻게 서로를 이해할 수 있는지를 실제 사례와 함께 풀어낸 에세이다. 경청과 공감의 힘이 인간을 어떻게 변화시키는지 보여준다.', theme:'공감·정신건강·인간관계' },
+};
+
+const _BOOK_RECS = {
+  '사회': ['82년생 김지영','불편한 편의점','소년이 온다'],
+  '청소년': ['오늘의 기분은 사과','아몬드','피프티 피플'],
+  '가족': ['완전한 행복','채식주의자','피프티 피플'],
+  '역사': ['소년이 온다','채식주의자'],
+  '심리': ['아몬드','완전한 행복','채식주의자'],
+  '공감': ['오늘의 기분은 사과','아몬드','당신이 옳다'],
+  '감정': ['오늘의 기분은 사과','아몬드','당신이 옳다'],
+  '소통': ['오늘의 기분은 사과','피프티 피플','당신이 옳다'],
+  '기본': ['오늘의 기분은 사과','아몬드','불편한 편의점'],
+};
+
+function _detectBook(text) {
+  for (const title of Object.keys(_BOOK_DB)) {
+    if (text.includes(title)) return _BOOK_DB[title];
+  }
+  return null;
+}
+
+function _bookChatTemplate(text, turnCount) {
+  // 1. 책 직접 언급 → 확정
+  const detected = _detectBook(text);
+  if (detected) {
+    return `오 "${detected.title}"! 좋은 선택이야. 이 책으로 수행평가 준비해보자!\nBOOK_CONFIRMED:${JSON.stringify(detected)}`;
+  }
+  // 2. 확정 의사 ("이 책으로", "그걸로" 등)
+  if (/이 책|그걸로|그 책|으로 할게|확정|결정/.test(text) && state.lastRecommended) {
+    const book = _BOOK_DB[state.lastRecommended];
+    if (book) return `좋아! "${book.title}"으로 확정하자!\nBOOK_CONFIRMED:${JSON.stringify(book)}`;
+  }
+  // 3. 이미 책 있다고 했는데 제목 안 말함
+  if (/읽은 책이 있|읽었/.test(text)) {
+    return '어떤 책이야? 제목을 알려줘! (예: 아몬드, 82년생 김지영 같은 것도 괜찮아)';
+  }
+  // 4. 추천 요청
+  if (/추천|모르겠|못 정|아무거나/.test(text)) {
+    return '어떤 분위기가 좋아? 사회 문제 / 심리·성장 / 역사 / 가족 중에 끌리는 게 있어?';
+  }
+  // 5. 관심사 키워드 → 추천
+  const keyMap = [
+    ['감정|기분|표현|소통|말하기|어색', '감정'],
+    ['사회|차별|불평등|젠더',           '사회'],
+    ['청소년|학교|또래|친구',           '청소년'],
+    ['가족|부모|집',                    '가족'],
+    ['역사|광주|민주화',                '역사'],
+    ['심리|스릴러|긴장',                '심리'],
+    ['공감|치유|감동|따뜻',             '공감'],
+  ];
+  for (const [pat, key] of keyMap) {
+    if (new RegExp(pat).test(text)) {
+      const recs = _BOOK_RECS[key] || _BOOK_RECS['기본'];
+      state.lastRecommended = recs[0];
+      return `그 방향이라면 "${recs[0]}"이 딱 맞아!\n수행평가 관점에서 쓸 내용이 많고, 사회 문제 연결도 쉬워. 이 책 어때? (아니면 "${recs[1]}"도 좋아)`;
+    }
+  }
+  // 6. 3턴 이상이면 기본 추천으로 마무리
+  if (turnCount >= 5) {
+    state.lastRecommended = '오늘의 기분은 사과';
+    return '고민이 많구나! 그러면 "오늘의 기분은 사과"(김지현)를 추천할게. 감정 표현과 소통이라는 주제로 청소년 일상과 사회 문제를 연결하기 쉽고, 수행평가 비평문 쓰기에 딱 맞아. 이걸로 할까?';
+  }
+  return '어떤 주제에 관심 있어? (감정·소통, 사회 문제, 가족, 역사 등) 알려주면 딱 맞는 책 추천해줄게!';
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim(); if (!text) return;
+  input.value = '';
+  appendBubble('user', text);
+  state.chatHistory.push({ role: 'user', content: text });
+  document.querySelectorAll('.quick-btns').forEach(r => r.remove());
+  showTyping();
+  await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
+  hideTyping();
+  const reply = _bookChatTemplate(text, state.chatHistory.length);
+  state.chatHistory.push({ role: 'assistant', content: reply });
+  if (reply.includes('BOOK_CONFIRMED:')) {
+    const m = reply.match(/BOOK_CONFIRMED:(\{[\s\S]*?\})/);
+    if (m) {
+      try {
+        state.book = JSON.parse(m[1]);
+        const clean = reply.replace(/BOOK_CONFIRMED:[\s\S]*$/, '').trim();
+        if (clean) appendBubble('coach', clean);
+        showBookConfirm(); return;
+      } catch (e) { }
+    }
+  }
+  appendBubble('coach', reply);
+}
+
+function showBookConfirm() {
+  document.getElementById('chat-input-row').style.display = 'none';
+  const card = document.getElementById('book-confirm');
+  document.getElementById('bcc-title').textContent = state.book.title;
+  document.getElementById('bcc-author').textContent = '저자: ' + state.book.author;
+  document.getElementById('bcc-summary').textContent = state.book.summary + '\n\n핵심 주제: ' + state.book.theme;
+  card.classList.add('visible');
+  document.getElementById('book-confirm-btns').style.display = 'flex';
+  appendBubble('coach', '📚 "' + state.book.title + '" — 이 책으로 확정할까?');
+  setTimeout(() => {
+    const top = card.getBoundingClientRect().top + window.scrollY - (57 + 47 + 12);
+    window.scrollTo({ top, behavior: 'smooth' });
+  }, 100);
+}
+function confirmBook() {
+  if (!state.book) return;
+  // 책 정보를 sessionStorage에 저장 (수행3 페이지에서 사용)
+  try { sessionStorage.setItem('coachBook', JSON.stringify(state.book)); } catch (e) { }
+  goStep(1);
+  generateAllExamples();
+}
+function resetBook() {
+  state.book = null; state.chatHistory = [];
+  document.getElementById('book-confirm').classList.remove('visible');
+  document.getElementById('book-confirm-btns').style.display = 'none';
+  document.getElementById('chat-input-row').style.display = 'flex';
+  document.getElementById('chat-area').innerHTML = '';
+  appendBubble('coach', '다시 골라보자! 어떤 책이 좋을 것 같아?');
+}
+
+/* ── 예시 일괄 생성 (템플릿) ── */
+function _koreanExamples(book) {
+  const t = book.title, a = book.author, th = book.theme;
+  // 『오늘의 기분은 사과』 전용 예시 (실제 인물·인용문 기반)
+  const isSagwa = t.includes('사과');
+  return {
+    'ex-1-text': isSagwa ?
+`[장면] 이경이 친구의 말에 상처받으면서도 "괜찮아"라고 웃어 넘기는 장면이 가장 오래 남았다. 그 미소가 진심이 아님을 독자는 알지만, 이경 자신조차 그 사실을 외면하는 순간이었다.
+[내 경험] 나도 친구가 내 의견을 무시했을 때 화가 났지만 "그럴 수도 있지"라고 넘긴 적이 있다. 나중에 그 감정이 쌓여 관계가 어색해졌을 때야 비로소 그때 말했어야 했다는 걸 깨달았다.
+[사회적 의미] 『${t}』은 한 소녀의 이야기를 통해, 감정을 솔직하게 드러내면 '예민하다'는 평가를 받는 사회 분위기가 어떻게 청소년의 관계를 조용히 무너뜨리는지를 보여준다.`
+:
+`[장면] 『${t}』에서 주인공이 자신의 감정을 억누르고 상대에게 맞춰주는 장면이 가장 강렬하게 남았다.
+[내 경험] 내 주변에서도 비슷한 상황이 반복되지만 아무도 먼저 말을 꺼내지 못한다는 것을 그때 처음 깨달았다.
+[사회적 의미] ${t}은 개인의 이야기를 통해 '${th}'이라는 사회 구조적 문제를 드러낸다는 점에서 비평문의 논거로 적합하다.`,
+
+    'ex-2-text': isSagwa ?
+`[인물] 주인공 이경은 미움받지 않기 위해 자신의 진짜 감정을 억누르는 '감정 검열'을 일상화한 열일곱 살이다. 단짝 유림은 겉으로는 세심해 보이지만 이경을 자신의 방식대로 통제하려 해 배신감의 원천이 되는 인물이다. 전솔은 매사 당당하고 무심해 보여 이경에게 처음엔 당혹감을 주지만, "누가 너보고 싸우래? 그냥 알려주는 거야"처럼 솔직함이 관계를 망치지 않는다는 것을 몸으로 보여준다.
+[시대] 현재 한국의 10대 청소년 세대를 배경으로 한다. SNS '좋아요'와 팔로워 수로 관계의 가치를 측정하는 디지털 환경 속에서, 오히려 진짜 감정을 나누기 더 어려워진 역설적 시대다.
+[공간] 학교 교실은 '보여지는 나'를 연기해야 하는 무대이고, 집 방은 혼자 감정을 기록하며 자신을 마주하는 공간이다. 할머니 집 마당은 매실을 다듬으며 '지금 손에 있는 것'에 집중하게 되는, 과거와 미래의 불안에서 해방되는 치유 공간이다.`
+:
+`[인물] 주인공은 평범한 일상 속에서 사회 구조의 억압을 경험하는 인물로, 독자가 자신의 이야기로 느낄 만큼 보편적으로 그려진다.
+[시대] 현대 한국 사회를 배경으로 하며 독자가 지금 이 시대의 이야기로 직접 공감할 수 있다.
+[공간] 일상적 공간들이 배경이 되어 특별하지 않은 장소에서 발생하는 문제의 일상성을 강조한다.`,
+
+    'ex-3-text': isSagwa ?
+`[발단] 열일곱 살 이경은 매일 자신의 기분을 과일에 비유해 일기에 기록하며 살아간다. 학교에서는 잘 지내는 것처럼 보이지만, 단짝 유림의 행동에서 느끼는 배신감과 매사 당당한 전솔에 대한 당혹감이 쌓이기 시작한다.
+[전개] 그러나 이경은 불편한 감정이 생길 때마다 '내가 예민한 것'이라며 스스로 검열한다. 그러던 중 고모에게 "친구 머리 위에 어떤 기분 아이콘이 떠 있을지 상상해봐"라는 조언을 듣고, 겉으로 드러나는 행동 뒤에 숨겨진 타인의 진심을 헤아리기 시작한다.
+[절정] 갈등이 심화된 시점은 유림과의 관계에서 느낀 배신감이 더 이상 외면할 수 없는 수준에 달하면서다. 이경은 할머니와 매실을 다듬으며 "지금 손에 있는 것에 집중하라"는 말을 통해 과거의 상처와 미래의 불안에서 벗어나 내면의 중심을 되찾는다.
+[결말] 완전한 화해나 관계의 회복보다는, 상처를 준 존재와 '부대끼며 살아가는 것' 자체가 화해라는 열린 결말로 끝난다. 제목의 '사과'가 과일(apple)과 화해(apology)의 이중 의미를 품으며, 진정한 화해란 타인이 아닌 자신의 솔직한 감정과의 화해임을 암시한다.`
+:
+`[발단] 주인공은 평범한 일상 속에서 자신이 놓인 상황에 서서히 의문을 품기 시작한다.
+[전개] 그러나 주변 인물과의 관계에서 갈등이 생기며 구조적 문제가 수면 위로 드러난다.
+[절정] 결정적 사건을 통해 주인공과 독자 모두 문제의 본질을 직시하게 된다.
+[결말] 뚜렷한 해결보다 문제를 직시한 채 끝나며 독자에게 '그 다음'을 생각하게 하는 열린 결말이다.`,
+
+    'ex-4-text': isSagwa ?
+`[읽기 전] 제목만 보고 가볍고 감성적인 성장 소설일 것이라 생각했다. 사과라는 단어에서 달콤한 화해 이야기를 떠올렸고, 청소년 소설이니 단순한 우정 회복 이야기겠거니 하며 큰 기대 없이 펼쳤다.
+[읽기 후] 그러나 이경이 상처받으면서도 "괜찮아"를 반복하는 장면에서 나 자신을 발견했다. 특히 고모의 '기분 아이콘' 조언과 할머니의 '매실 한 알'이라는 두 장면이 인상 깊었다. 감정을 억누르는 것이 개인의 소심함이 아니라, 솔직한 표현을 '예민함'으로 낙인찍는 사회 분위기에서 학습된 결과라는 점이 가장 충격적이었다. 또한 진정한 화해가 친구와 잘 지내는 것이 아니라 자신의 감정과 화해하는 것이라는 결론이 오래 남았다.
+[앞으로] 앞으로 불편한 감정이 생겼을 때 "괜찮아"로 덮기 전에, 그 감정에 이름을 붙여보는 습관을 만들겠다. 이경의 기분 일기처럼, 오늘 내 기분이 어떤 과일인지 스스로에게 묻는 것부터 시작하려 한다.`
+:
+`[읽기 전] 제목을 봤을 때 단순한 감성 소설일 것이라 생각했다.
+[읽기 후] 읽고 나서 이 책이 '${th}'이라는 사회적 문제를 담고 있다는 것을 알게 되었다. 무의식적으로 당연하게 받아들였던 나의 편견을 직접 마주했다.
+[앞으로] 앞으로 비슷한 상황에서 침묵하지 않고 문제를 제기하는 사람이 되어야겠다.`,
+
+    'ex-5-text': isSagwa ?
+`[개인 경험] 2학년 때 팀 과제 중 한 친구의 태도가 계속 불편했지만 분위기를 망칠까봐 끝까지 아무 말도 하지 못했다. 과제가 끝난 뒤 그 친구와 어색해졌고, 나는 그게 내가 너무 예민해서라고 생각했다.
+[사회 연결] 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면, 청소년의 42.7%가 "고민이 있어도 주변에 말하기 어렵다"고 응답했다. 이는 이경의 침묵이 개인의 소심함이 아니라 또래 관계 전반에 퍼진 구조적 현상임을 보여준다.
+[본질] 이 문제의 본질은 개인의 용기 부족이 아니라, 감정 표현을 '약함'으로 보는 사회적 인식과 학교 내 정서 교육의 부재에 있다.`
+:
+`[개인 경험] 책을 읽으며 내 주변의 유사한 상황들이 떠올랐다. 당시에는 당연하게 넘겼지만 이 책을 통해 그것이 구조적 문제였음을 깨달았다.
+[사회 연결] 관련 통계에 따르면 문제는 매년 심화되고 있으며 제도적 보완이 부족하다. 이는 ${a}이 제시하는 문제의식과 맞닿아 있다.
+[본질] 이 문제의 본질은 개인이 아니라 사회 구조가 특정 집단을 불리한 위치에 놓는다는 점에 있다.`,
+
+    'ex-6-text': isSagwa ?
+`[문구1] "갈등의 씨앗이 보이면 벌벌 떨며 멀리 돌아가는."
+이유: 직유와 과장법이 결합된 이 문장은 이경의 감정 검열 심리를 한 줄로 압축한다. '씨앗'이라는 작은 단어와 '벌벌 떤다'는 과장된 반응의 대비가 청소년이 관계 불안을 얼마나 크게 느끼는지를 실감나게 보여준다. 소설의 핵심 주제인 '소통 회피'를 가장 직접적으로 드러내는 문장이다.
+[문구2] "누가 너보고 싸우래? 그냥 알려주는 거야."
+이유: 전솔의 이 대사는 반어법과 전제 전복을 통해 강한 카타르시스를 준다. '싸움'과 '알려주는 것'을 분리함으로써, 솔직한 표현이 곧 갈등이라는 이경(과 독자)의 잘못된 전제를 한 문장으로 무너뜨린다.`
+:
+`[문구1] 주인공의 감정을 직접적으로 드러내는 핵심 문장을 인용하세요.
+이유: 해당 문장이 사용한 문학적 기법(역설·대비·상징 등)과 그 효과, 소설 주제와의 연결을 서술하세요.
+[문구2] 앞과 다른 내용·장면에서 인상적인 문장을 고르세요.
+이유: 기법 이름을 반드시 포함하고 왜 이 표현이 주제를 강화하는지 분석하세요.`,
+
+    'sa2-ex-1': isSagwa ?
+`사회문제: 청소년의 감정 표현 억압과 또래 관계 단절
+선택이유: 소설 속 이경이 불편한 감정을 "괜찮아"로 반복해서 덮는 장면은 개인의 소심함이 아니라 감정을 드러내면 '예민하다'는 낙인이 찍히는 사회 분위기에서 기인한다. 이 문제를 선택한 이유는 이경의 '감정 검열'이 현재 청소년 42.7%가 경험하는 보편적 현실임을 통계가 뒷받침하기 때문이다.`
+:
+`사회문제: 『${t}』이 제기하는 핵심 사회 문제는 '${th}'이다.
+선택이유: 이 문제는 현재 한국 사회에서 다수의 사람들이 경험하고 있음에도 구조적으로 방치되어 있으며, 문학적 비평을 통해 논의할 가치가 높기 때문에 선정했다.`,
+
+    'sa2-ex-2': isSagwa ?
+`[원인1 — 문화적] '예민하다'는 낙인이 만드는 감정 표현 억압
+출처: 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면, 청소년의 42.7%가 "고민이 있어도 주변에 말하기 어렵다"고 응답했다. 감정을 말했을 때 '유난스럽다'는 시선을 받을 것이라는 두려움이 구조적으로 형성되어 있다.
+[원인2 — 구조적] 학교 교육과정 내 정서 교육 부재 및 SNS 전시 문화
+출처: 여성가족부 '2022 청소년 매체이용 실태조사'에 따르면 청소년 하루 평균 SNS 이용 시간은 2.4시간으로, '좋아요' 수로 관계를 측정하는 문화 속에서 진짜 감정을 나누는 대화 시간은 오히려 줄어들고 있다.`
+:
+`[원인1] 관련 통계(출처: 국가통계포털)에 따르면 해당 문제는 구조적 불평등과 직결된다.
+[원인2] 현행 제도가 피해 당사자를 실질적으로 보호하기에 미흡하며, 사회 인식 변화보다 제도 개선이 뒤처져 있다.`,
+
+    'sa2-ex-3': isSagwa ?
+`[법·제도적 방안] 학교 교육과정 내 감정 언어화 교육 의무화: 현재 학교 생활지도 지침에는 갈등 중재 절차만 있을 뿐, 감정을 언어로 표현하는 방법을 체계적으로 가르치는 커리큘럼은 없다. 교육부 고시를 개정해 중·고교 과정에 '감정 표현 교육'을 연간 최소 10시간 편성하도록 법제화해야 한다.
+[사회·문화적 방안] 또래 상담 프로그램 확대 및 미디어 내 감정 표현 긍정 묘사 장려: 소설 속 전솔처럼 상대의 감정을 있는 그대로 받아들이는 문화를 만들기 위해, 학교 단위 또래 상담을 확대하고 청소년 콘텐츠에서 감정 표현을 '강함'으로 묘사하는 방향으로 미디어 가이드라인을 개선해야 한다.`
+:
+`[법·제도적 방안] 관련 법률을 개정하고 실효성 있는 처벌 규정과 지원 체계를 마련해야 한다.
+[사회·문화적 방안] 학교와 사회에서 인식 교육을 의무화하고 미디어의 재생산 방지 가이드라인을 강화해야 한다.`,
+  };
+}
+
+async function generateAllExamples() {
+  if (!state.book) return;
+  const examples = _koreanExamples(state.book);
+  for (const [id, text] of Object.entries(examples)) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.textContent = '생성 중…';
+    await new Promise(r => setTimeout(r, 120 + Math.random() * 80));
+    el.textContent = text;
+  }
+}
+
+/* ── 아코디언 ── */
+function togglePart(prefix, n, total) {
+  const isSA1 = (prefix === 'sa1');
+  const itemId = isSA1 ? `part-${n}` : `sa2-part-${n}`;
+  const accId = isSA1 ? 'sa1-accordion' : 'sa2-accordion';
+  const item = document.getElementById(itemId);
+  const wasActive = item.classList.contains('active');
+  document.querySelectorAll(`#${accId} .part-item`).forEach(i => i.classList.remove('active'));
+  if (!wasActive) {
+    item.classList.add('active');
+    setTimeout(() => {
+      const stickyOffset = 57 + 47 + 12; // page-header + step-rail + margin
+      const top = item.getBoundingClientRect().top + window.scrollY - stickyOffset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }, 50);
+  }
+}
+
+/* ── 수행1 코칭 (템플릿) ── */
+function _coachKorean1(n, answer) {
+  const len = answer.length;
+  const short = len < 80;
+  const checks = [
+    null,
+    // 1: 작품 선정 이유
+    { needs: ['장면','경험','사회'], labels: ['[장면]','[내 경험]','[사회적 의미]'],
+      tip: '공식 3단계([장면]→[내 경험]→[사회적 의미])가 모두 들어가야 A등급이야. "재미있어서"나 "추천받아서"는 즉시 감점이야.' },
+    // 2: 인물 및 배경 분석
+    { needs: ['인물','시대','공간'], labels: ['[인물]','[시대]','[공간]'],
+      tip: '[인물] [시대] [공간] 세 레이블을 각각 쓰고 그 아래에 설명을 붙이는 형식이 채점하기 좋아.' },
+    // 3: 줄거리
+    { needs: ['발단','전개','절정','결말'], labels: ['[발단]','[전개]','[절정]','[결말]'],
+      tip: '네 단계 레이블을 쓰고, 각 단계 사이에 "그러나", "결국", "이로 인해" 같은 인과 접속어를 넣으면 논리적으로 보여.' },
+    // 4: 읽기 전후 생각 변화
+    { needs: ['전','후','앞으로'], labels: ['[읽기 전]','[읽기 후]','[앞으로]'],
+      tip: '변화의 폭이 클수록 점수가 높아. "원래는 ~라고 생각했는데, 읽고 나서 ~로 바뀌었다"는 구조를 명확하게 써.' },
+    // 5: 주제와 사회 현실 연결
+    { needs: ['통계','%','사회'], labels: ['[개인 경험]','[사회 연결]','[본질]'],
+      tip: '통계나 뉴스 자료(출처 포함)를 최소 1개 이상 넣어야 해. 숫자가 들어가면 채점자 눈에 확 들어와.' },
+    // 6: 인상적인 문구
+    { needs: ['문구','기법','역설','대비','상징','반복'], labels: ['[문구1]','이유:','[문구2]'],
+      tip: '문학 기법 이름(역설, 대비, 상징, 반복 등)을 반드시 써야 해. "인상적이었다"만 쓰면 감점이야.' },
+  ];
+  const rule = checks[n];
+  if (!rule) return '(코칭 데이터 없음)';
+  const missing = rule.needs.filter(k => !answer.includes(k));
+  const hasAll = missing.length === 0;
+
+  let result = '';
+  result += `1. 잘 된 점\n`;
+  result += hasAll
+    ? `필수 요소(${rule.labels.join(', ')})가 모두 포함되어 있어. 분량도 ${short ? '조금 짧지만' : '적절해'}.\n`
+    : `일부 내용이 이미 담겨 있어. 방향은 맞아${short ? ', 다만 좀 더 길게 써봐' : ''}.\n`;
+
+  result += `\n2. 보완할 점\n`;
+  if (missing.length > 0) {
+    result += `아직 ${missing.map(k => `'${k}'`).join(', ')} 관련 내용이 없어. `;
+  }
+  if (short) {
+    result += `현재 ${len}자인데, 최소 100~150자는 써야 채점자가 내용을 평가할 수 있어. `;
+  }
+  result += rule.tip + '\n';
+
+  result += `\n3. 수정 방향\n`;
+  result += `지금 쓴 내용을 유지하면서 ${rule.labels[0]} 형식 레이블을 앞에 붙이고, `;
+  result += missing.length > 0 ? `빠진 ${rule.labels.slice(1).join(', ')} 부분을 한두 문장씩 추가해봐.` : `전체 흐름을 한 번 더 읽어보면 완성도가 올라가.`;
+  result += `\n\n※ API 연결 후에는 작성 내용을 직접 분석해 맞춤 피드백을 제공합니다.`;
+  return result;
+}
+
+async function coachPart(n) {
+  const answer = document.getElementById(`ans-${n}`)?.value.trim();
+  const cbEl = document.getElementById(`cb-${n}`), ccEl = document.getElementById(`cc-${n}`);
+  if (!answer) { showToast('먼저 내 답변을 써봐!'); return; }
+  cbEl.classList.add('visible'); ccEl.textContent = '분석 중…'; ccEl.classList.add('loading');
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+  ccEl.textContent = _coachKorean1(n, answer);
+  ccEl.classList.remove('loading');
+}
+
+/* ── 수행1 완료 ── */
+function markDone(prefix, n, total) {
+  if (prefix === 'sa1') {
+    state.sa1Done.add(n);
+    const item = document.getElementById(`part-${n}`);
+    item.classList.remove('active'); item.classList.add('done');
+    updateProgress('sa1', state.sa1Done.size, 6, 'sa1-prog', 'sa1-prog-text');
+    if (n < 6) { const next = document.getElementById(`part-${n + 1}`); if (next) { next.classList.add('active'); setTimeout(() => { const top = next.getBoundingClientRect().top + window.scrollY - (57 + 47 + 12); window.scrollTo({ top, behavior: 'smooth' }); }, 50); } }
+  } else {
+    state.sa2Done.add(n);
+    const item = document.getElementById(`sa2-part-${n}`);
+    item.classList.remove('active'); item.classList.add('done');
+    updateProgress('sa2', state.sa2Done.size, 5, 'sa2-prog', 'sa2-prog-text');
+    if (n < 5) { const next = document.getElementById(`sa2-part-${n + 1}`); if (next) { next.classList.add('active'); setTimeout(() => { const top = next.getBoundingClientRect().top + window.scrollY - (57 + 47 + 12); window.scrollTo({ top, behavior: 'smooth' }); }, 50); } }
+  }
+}
+function updateProgress(prefix, done, total, fillId, textId) {
+  document.getElementById(fillId).style.width = (done / total * 100) + '%';
+  document.getElementById(textId).textContent = `${done} / ${total} 완료`;
+}
+function completeSA1() { state.sa1Done.add(6); markDone('sa1', 6, 6); setTimeout(() => goStep(2), 400); }
+function completeSA2() {
+  markDone('sa2', 5, 5);
+  setTimeout(() => {
+    goStep(3);
+    // 수행3 링크에 book 파라미터 전달
+    try {
+      const link = document.getElementById('goto-sa3-link');
+      if (link && state.book) {
+        const enc = encodeURIComponent(JSON.stringify(state.book));
+        link.href = `coach-korean-essay.html?book=${enc}`;
+      }
+    } catch (e) { }
+  }, 400);
+}
+
+/* ── 수행2 코칭 (템플릿) ── */
+function _coachKorean2(n, answer) {
+  const len = answer.length;
+  const short = len < 60;
+  const rules = [
+    null,
+    // 1: 사회 문제 선정
+    { check: ['사회문제','선택이유','왜'], tip: '"사회문제:" 와 "선택이유:" 레이블을 명확히 나눠서 써야 해. 책의 주제와 사회 문제가 어떻게 연결되는지 한 문장으로 설명하면 완성돼.' },
+    // 2: 원인 분석
+    { check: ['원인','출처','통계','%'], tip: '원인은 경제적 원인과 제도적 원인으로 나누고, 각각 출처(통계청, 뉴스 등)를 표기해야 해. 숫자가 있으면 훨씬 설득력이 생겨.' },
+    // 3: 해결 방안
+    { check: ['법','제도','문화','교육'], tip: '[법·제도적]과 [사회·문화적] 두 층위로 나눠서 쓰면 구조가 명확해져. 하나만 쓰면 편향된 시각처럼 보일 수 있어.' },
+    // 4: AI 활용 아이디어
+    { check: ['AI','자료','검색','활용'], tip: 'AI를 어떤 목적으로, 어떤 방식으로 활용했는지 구체적으로 써야 해. "AI를 사용했다"만 쓰면 점수가 안 나와.' },
+    // 5: 정보 검증 과정
+    { check: ['검증','출처','확인','신뢰'], tip: '어떤 자료를 어떻게 교차 검증했는지 단계를 써야 해. "인터넷 검색"만 쓰면 감점이야. 공신력 있는 출처(국가기관, 학술지 등)를 명시해.' },
+  ];
+  const rule = rules[n];
+  if (!rule) return '(코칭 데이터 없음)';
+  const missing = rule.check.filter(k => !answer.includes(k));
+
+  let result = '';
+  result += `1. 잘 된 점\n`;
+  result += missing.length === 0
+    ? `필요한 핵심 요소가 모두 포함되어 있어. ${short ? '분량을 조금 더 늘려봐.' : '방향은 좋아.'}\n`
+    : `내용의 방향은 맞아. 조금만 보완하면 완성도가 올라가.\n`;
+
+  result += `\n2. 보완할 점\n`;
+  if (missing.length > 0) {
+    result += `'${missing.join(', ')}' 관련 내용을 추가해야 해. `;
+  }
+  if (short) result += `현재 ${len}자로 너무 짧아. 최소 80자 이상 써야 해. `;
+  result += rule.tip + '\n';
+
+  result += `\n3. 수정 방향\n`;
+  result += missing.length > 0
+    ? `지금 쓴 내용을 뼈대로, 빠진 요소(${missing.slice(0,2).join(', ')})를 한 문장씩 추가해봐.`
+    : `전체 흐름을 다시 읽고, 논리적 연결이 자연스러운지 확인해봐.`;
+  result += `\n\n※ API 연결 후에는 작성 내용을 직접 분석해 맞춤 피드백을 제공합니다.`;
+  return result;
+}
+
+async function coachSA2(n) {
+  const answer = document.getElementById(`sa2-ans-${n}`)?.value.trim();
+  const cbEl = document.getElementById(`sa2-cb-${n}`), ccEl = document.getElementById(`sa2-cc-${n}`);
+  if (!answer) { showToast('먼저 내 답변을 써봐!'); return; }
+  cbEl.classList.add('visible'); ccEl.textContent = '분석 중…'; ccEl.classList.add('loading');
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+  ccEl.textContent = _coachKorean2(n, answer);
+  ccEl.classList.remove('loading');
+}
+
+/* ── 글자 수 실시간 ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const pairs = [
+    ['ans-1','ci-1'],['ans-2','ci-2'],['ans-3','ci-3'],
+    ['ans-4','ci-4'],['ans-5','ci-5'],['ans-6','ci-6'],
+    ['sa2-ans-1','sa2-ci-1'],['sa2-ans-2','sa2-ci-2'],
+    ['sa2-ans-3','sa2-ci-3'],['sa2-ans-4','sa2-ci-4'],['sa2-ans-5','sa2-ci-5']
+  ];
+  pairs.forEach(([aid, cid]) => {
+    const ta = document.getElementById(aid), ci = document.getElementById(cid);
+    if (!ta || !ci) return;
+    ta.addEventListener('input', () => { ci.textContent = ta.value.length + '자'; });
+  });
+
+  /* ── 샘플 답안 → 텍스트박스 자동 입력 ── */
+  document.querySelectorAll('.part-item').forEach(item => {
+    const sampleBody = item.querySelector('.sample-body');
+    const textarea = item.querySelector('textarea.user-input');
+    const charInfo = item.querySelector('.char-info');
+    if (!sampleBody || !textarea) return;
+    const text = sampleBody.innerText.trim();
+    textarea.value = text;
+    if (charInfo) charInfo.textContent = text.length + '자';
+  });
+});
+
+/* ── 보고서 ── */
+const SA1_LABELS = ['작품 선정 이유','인물 및 배경 분석','간단한 줄거리','책이 준 생각의 변화','주제와 사회 현실 연결','인상적인 문구 2개'];
+const SA2_LABELS = ['사회 문제 선정','원인 분석','해결 방안','AI 활용 아이디어','정보 검증 과정'];
+
+function openReport() {
+  const bookEl = document.getElementById('report-book');
+  bookEl.innerHTML = state.book
+    ? `<strong>『${state.book.title}』</strong> · ${state.book.author}<br><span style="font-size:0.78rem">${state.book.theme}</span>`
+    : '<span style="color:var(--text-dim)">책 미선정</span>';
+
+  const sa1 = document.getElementById('report-sa1');
+  sa1.innerHTML = SA1_LABELS.map((label, i) => {
+    const val = document.getElementById(`ans-${i+1}`)?.value.trim() || '';
+    return `<div class="report-item">
+      <div class="report-item-label">항목 ${String(i+1).padStart(2,'0')} · ${label}</div>
+      <div class="report-item-body">${val || '(미작성)'}</div>
+    </div>`;
+  }).join('');
+
+  const sa2 = document.getElementById('report-sa2');
+  sa2.innerHTML = SA2_LABELS.map((label, i) => {
+    const val = document.getElementById(`sa2-ans-${i+1}`)?.value.trim() || '';
+    return `<div class="report-item">
+      <div class="report-item-label">항목 ⑤${i+1}에 해당 · ${label}</div>
+      <div class="report-item-body">${val || '(미작성)'}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('report-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReport() {
+  document.getElementById('report-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── 토스트 ── */
+function showToast(msg) {
+  const t = document.getElementById('global-toast'); if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
+
