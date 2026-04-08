@@ -1,32 +1,37 @@
     /* ── 공통 토큰 ── */
     :root {
       --page-max: 1200px;
-      --bg: #0e0f14; --bg-card: #13141b; --bg-card2: #1a1b24; --bg-input: #111218;
-      --border: #2a2b38; --text: #e8e9f0; --text-secondary: #9a9bac; --text-dim: #5a5b6a;
-      --lit-primary: #f472b6; --lit-bg: rgba(244,114,182,0.07); --lit-border: rgba(244,114,182,0.22);
-      --accent: #7c6af0; --accent-light: rgba(124,106,240,0.12);
-      --warning: #f59e0b; --success: #34d399;
-      --eng-primary: #38bdf8;
+      --bg: #0e0f14; --bg-card: #161820; --bg-card2: #1c1e26; --bg-input: #11121a;
+      --border: rgba(255,255,255,0.07); --text: #e8e9f0; --text-secondary: #8a8fa8; --text-dim: #555870;
+      --lit-primary: #f472b6; --lit-bg: rgba(244,114,182,0.10); --lit-border: rgba(244,114,182,0.25);
+      --accent: #7c6af0; --accent-light: rgba(124,106,240,0.15);
+      --warning: #f59e0b; --warning-light: rgba(245,158,11,0.12); --success: #34d399;
+      --math-primary: #34d399; --math-bg: rgba(52,211,153,0.10); --math-border: rgba(52,211,153,0.25);
+      --eng-primary: #38bdf8; --eng-bg: rgba(56,189,248,0.10); --eng-border: rgba(56,189,248,0.25);
       --font-sans: 'Noto Sans KR', sans-serif;
       --font-serif: 'Noto Serif KR', serif;
       --font-brand: 'Syne', sans-serif;
+      --radius: 10px;
+      --radius-sm: 6px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.65; min-height: 100dvh; }
     .noise-overlay { position: fixed; inset: 0; pointer-events: none; opacity: 0.025; z-index: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px; }
-    .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); gap: 1.5rem; }
+    .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); gap: 1.5rem; }
     .brand { font-family: var(--font-brand); font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
-    .brand span { color: var(--lit-primary); }
+    .brand span { color: var(--accent); }
     .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; }
-    .nav-tab { padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: all 0.15s; }
+    .nav-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.15s; }
     .nav-tab:hover { background: var(--bg-card2); color: var(--text); }
     .nav-tab.lit { background: var(--lit-bg); color: var(--lit-primary); border: 1px solid var(--lit-border); }
+    .nav-tab.math { background: var(--math-bg); color: var(--math-primary); border: 1px solid var(--math-border); }
+    .nav-tab.eng { background: var(--eng-bg); color: var(--eng-primary); border: 1px solid var(--eng-border); }
 
     /* ── 스텝 레일 ── */
-    .step-rail { position: sticky; top: 57px; z-index: 200; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0.75rem max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); display: flex; align-items: center; gap: 0; }
+    .step-rail { position: sticky; top: 57px; z-index: 200; background: rgba(14,15,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0.75rem max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); display: flex; align-items: center; gap: 0; }
     .step-node { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.3rem 0.6rem; border-radius: 6px; transition: background 0.15s; }
     .step-node:hover { background: var(--bg-card2); }
     .step-circle { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; border: 1.5px solid var(--border); color: var(--text-dim); background: var(--bg-card2); transition: all 0.25s; flex-shrink: 0; }
