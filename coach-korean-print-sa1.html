@@ -58,10 +58,13 @@
       ['인상적인 문구, 이유\n(2부분)', '서로 다른 문구 2개와 구체적인 인상 깊은 이유']
     ];
     let payload = null;
+    let fallbackBook = null;
     try { payload = JSON.parse(sessionStorage.getItem('coachPrint:sa1') || localStorage.getItem('coachPrint:sa1') || 'null'); } catch (e) {}
+    try { fallbackBook = JSON.parse(sessionStorage.getItem('coachBook') || localStorage.getItem('coachBook') || 'null'); } catch (e) {}
+    const book = payload?.book?.title ? payload.book : (fallbackBook?.title ? fallbackBook : null);
     const form = document.getElementById('form');
-    document.getElementById('book-title').textContent = payload?.book?.title || '';
-    document.getElementById('book-author').textContent = payload?.book?.author || '';
+    document.getElementById('book-title').textContent = book?.title || '';
+    document.getElementById('book-author').textContent = book?.author || '';
     form.innerHTML = guides.map((item, index) => {
       const text = payload?.answers?.[index] || '';
       return `

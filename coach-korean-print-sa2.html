@@ -248,7 +248,10 @@
 
   <script>
     let payload = null;
+    let fallbackBook = null;
     try { payload = JSON.parse(sessionStorage.getItem('coachPrint:sa2') || localStorage.getItem('coachPrint:sa2') || 'null'); } catch (e) {}
+    try { fallbackBook = JSON.parse(sessionStorage.getItem('coachBook') || localStorage.getItem('coachBook') || 'null'); } catch (e) {}
+    const book = payload?.book?.title ? payload.book : (fallbackBook?.title ? fallbackBook : null);
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -288,10 +291,10 @@
     const splitVerify = (text) => String(text || '').split('\n').map((line) => line.trim()).filter(Boolean).slice(0, 3);
     const ai = parseAiPairs(payload?.ai || '');
     const verify = splitVerify(payload?.verify || '');
-    setText('book-title-1', payload?.book?.title || '');
-    setText('book-author-1', payload?.book?.author || '');
-    setText('book-title-2', payload?.book?.title || '');
-    setText('book-author-2', payload?.book?.author || '');
+    setText('book-title-1', book?.title || '');
+    setText('book-author-1', book?.author || '');
+    setText('book-title-2', book?.title || '');
+    setText('book-author-2', book?.author || '');
     setText('problem', payload?.problem || '');
     setText('cause', payload?.cause || '');
     setText('solution', payload?.solution || '');

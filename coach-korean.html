@@ -1296,6 +1296,36 @@ const state = {
   reportMode: 'sa1'
 };
 
+function restoreStoredBook() {
+  let restoredBook = null;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const bookParam = params.get('book');
+    if (bookParam) restoredBook = JSON.parse(decodeURIComponent(bookParam));
+  } catch (e) { }
+  if (!restoredBook) {
+    try {
+      const stored = sessionStorage.getItem('coachBook');
+      if (stored) restoredBook = JSON.parse(stored);
+    } catch (e) { }
+  }
+  if (!restoredBook) {
+    try {
+      const stored = localStorage.getItem('coachBook');
+      if (stored) restoredBook = JSON.parse(stored);
+    } catch (e) { }
+  }
+  return restoredBook && restoredBook.title ? restoredBook : null;
+}
+
+function persistBook(book) {
+  if (!book?.title) return;
+  try { sessionStorage.setItem('coachBook', JSON.stringify(book)); } catch (e) { }
+  try { localStorage.setItem('coachBook', JSON.stringify(book)); } catch (e) { }
+}
+
+state.book = restoreStoredBook();
+
 /* ── 스텝 이동 ── */
 function goStep(n) {
   if (n === 3) {
@@ -1474,13 +1504,14 @@ function showBookConfirm() {
 }
 function confirmBook() {
   if (!state.book) return;
-  // 책 정보를 sessionStorage에 저장 (수행3 페이지에서 사용)
-  try { sessionStorage.setItem('coachBook', JSON.stringify(state.book)); } catch (e) { }
+  persistBook(state.book);
   goStep(1);
   generateAllExamples();
 }
 function resetBook() {
   state.book = null; state.chatHistory = [];
+  try { sessionStorage.removeItem('coachBook'); } catch (e) { }
+  try { localStorage.removeItem('coachBook'); } catch (e) { }
   document.getElementById('book-confirm').classList.remove('visible');
   document.getElementById('book-confirm-btns').style.display = 'none';
   document.getElementById('chat-input-row').style.display = 'flex';
@@ -1665,18 +1696,16 @@ function getCurrentSA1Step() {
 }
 
 function resolveReportBook() {
-  let reportBook = state.book;
-  if (!reportBook) {
-    try {
-      const stored = sessionStorage.getItem('coachBook');
-      if (stored) reportBook = JSON.parse(stored);
-    } catch (e) { }
-  }
+  let reportBook = state.book || restoreStoredBook();
   if (!reportBook) {
     const title = document.getElementById('bcc-title')?.textContent?.trim();
     const authorText = document.getElementById('bcc-author')?.textContent?.trim() || '';
     const author = authorText.replace(/^저자:\s*/, '');
     if (title && title !== '—') reportBook = { title, author };
+  }
+  if (reportBook?.title) {
+    state.book = reportBook;
+    persistBook(reportBook);
   }
   return reportBook || { title: '', author: '' };
 }
@@ -2085,7 +2114,7 @@ function goSA3Page() {
       }
     };
     sessionStorage.setItem('coachSA3Context', JSON.stringify(payload));
-    sessionStorage.setItem('coachBook', JSON.stringify(state.book));
+    persistBook(state.book);
   } catch (e) { }
 
   const url = new URL('coach-korean-essay.html', window.location.href);
@@ -2255,6 +2284,7 @@ async function coachSA2(n) {
 
   scheduleAutoGrowRefresh(document);
   window.addEventListener('resize', () => scheduleAutoGrowRefresh(document));
+  if (state.book?.title) persistBook(state.book);
 
   updateSA1StageProgress(0);
   syncSA1Stepper(0);
@@ -2267,19 +2297,7 @@ async function coachSA2(n) {
 
 /* ── 보고서 ── */
 function openReport(mode = 'auto') {
-  let reportBook = state.book;
-  if (!reportBook) {
-    try {
-      const stored = sessionStorage.getItem('coachBook');
-      if (stored) reportBook = JSON.parse(stored);
-    } catch (e) { }
-  }
-  if (!reportBook) {
-    const title = document.getElementById('bcc-title')?.textContent?.trim();
-    const authorText = document.getElementById('bcc-author')?.textContent?.trim() || '';
-    const author = authorText.replace(/^저자:\s*/, '');
-    if (title && title !== '—') reportBook = { title, author };
-  }
+  const reportBook = resolveReportBook();
 
   const resolvedMode = mode === 'auto'
     ? (state.currentStep === 2 ? 'sa2' : 'sa1')
