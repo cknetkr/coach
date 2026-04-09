@@ -10,7 +10,7 @@ Keep the current static prototype runnable in `test/`, while preparing a folder 
 - `test/coach-korean.html`
 - `test/coach-math.html`
 - `test/coach-english.html`
-- `test/coach-korean-essay.html`
+- `test/coach-korean-s3.html`
 - `test/coach-shared.css`
 - `test/coach-korean.css`
 - `test/coach-math.css`

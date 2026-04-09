@@ -1,3 +1,306 @@
+/* ── 수학 전용 ── */
+.step4-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+.step-block { background: var(--bg-card2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.step-block-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+.step-num-badge { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+.step-num-badge.s1 { background: rgba(56,189,248,0.2); color: #38bdf8; }
+.step-num-badge.s2 { background: var(--math-bg); color: var(--math-primary); }
+.step-num-badge.s3 { background: rgba(167,139,250,0.2); color: #a78bfa; }
+.step-num-badge.s4 { background: var(--warning-light); color: var(--warning); }
+.step-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.step-hint { font-size: 0.76rem; color: var(--text-secondary); margin-left: auto; }
+.step-block-body { padding: 0.75rem 1rem; }
+.step-warn { font-size: 0.75rem; padding: 0.4rem 0.7rem; border-radius: var(--radius-sm); margin-top: 0.4rem; display: none; }
+.step-warn.visible { display: block; }
+.step-warn.warn-red { background: rgba(239,68,68,0.10); color: #fca5a5; }
+.step-warn.warn-blue { background: rgba(56,189,248,0.10); color: #7dd3fc; }
+
+/* ── 엔진 설명 공통 ── */
+.engine-hero {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.35rem;
+  margin-bottom: 1rem;
+}
+.engine-kicker {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.engine-hero.math .engine-kicker { color: var(--math-primary); }
+.engine-hero.eng .engine-kicker { color: var(--eng-primary); }
+.engine-hero .engine-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.45rem;
+}
+.engine-hero .engine-desc {
+  font-size: 0.83rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.mini-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+.mini-chip {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+  color: var(--text-secondary);
+}
+.mini-chip.math {
+  border-color: var(--math-border);
+  background: var(--math-bg);
+  color: var(--math-primary);
+}
+.mini-chip.eng {
+  border-color: var(--eng-border);
+  background: var(--eng-bg);
+  color: var(--eng-primary);
+}
+.engine-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.engine-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1rem 0.95rem;
+}
+.engine-card.math {
+  border-color: var(--math-border);
+  background: linear-gradient(180deg, rgba(52,211,153,0.08), rgba(52,211,153,0.03));
+}
+.engine-card.eng {
+  border-color: var(--eng-border);
+  background: linear-gradient(180deg, rgba(56,189,248,0.08), rgba(56,189,248,0.03));
+}
+.engine-card .ec-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07rem;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.engine-card.math .ec-label { color: var(--math-primary); }
+.engine-card.eng .ec-label { color: var(--eng-primary); }
+.engine-card .ec-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+.engine-card .ec-body {
+  font-size: 0.79rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.flow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+}
+.flow-item.math {
+  border-color: rgba(52,211,153,0.18);
+}
+.flow-item.eng {
+  border-color: rgba(56,189,248,0.18);
+}
+.flow-num {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+.flow-item.math .flow-num { background: var(--math-primary); }
+.flow-item.eng .flow-num { background: var(--eng-primary); }
+.flow-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.12rem;
+}
+.flow-desc {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ── 학습 가이드 블록 ── */
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.guide-panel {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.guide-panel.math {
+  border-color: var(--math-border);
+  background: linear-gradient(180deg, rgba(52,211,153,0.08), rgba(52,211,153,0.02));
+}
+.guide-panel.eng {
+  border-color: var(--eng-border);
+  background: linear-gradient(180deg, rgba(56,189,248,0.08), rgba(56,189,248,0.02));
+}
+.guide-kicker {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.guide-panel.math .guide-kicker { color: var(--math-primary); }
+.guide-panel.eng .guide-kicker { color: var(--eng-primary); }
+.guide-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.55rem;
+}
+.guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.guide-item {
+  font-size: 0.79rem;
+  color: var(--text-secondary);
+  line-height: 1.68;
+  padding-left: 0.95rem;
+  position: relative;
+}
+.guide-item::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  position: absolute;
+  left: 0;
+  top: 0.58rem;
+  opacity: 0.8;
+}
+.guide-ask {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem;
+  font-size: 0.79rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+.guide-ask strong {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.guide-example {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.05rem;
+}
+.guide-example.math { border-color: var(--math-border); }
+.guide-example.eng { border-color: var(--eng-border); }
+.guide-example-head {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  margin-bottom: 0.55rem;
+}
+.guide-example.math .guide-example-head { color: var(--math-primary); }
+.guide-example.eng .guide-example-head { color: var(--eng-primary); }
+.guide-example-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.72;
+}
+.guide-example-body strong { color: var(--text); }
+
+/* ── 토스트 ── */
+.toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--bg-card2); border: 1px solid var(--border); color: var(--text); font-size: 0.82rem; padding: 0.65rem 1.25rem; border-radius: 999px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── 범위 칩 ── */
+.range-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+.range-chip { font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.65rem; border-radius: 999px; background: var(--bg-card2); color: var(--text-secondary); border: 1px solid var(--border); }
+.range-chip.highlight { background: var(--math-bg); color: var(--math-primary); border-color: var(--math-border); }
+.range-chip.lit { background: var(--lit-bg); color: var(--lit-primary); border-color: var(--lit-border); }
+.range-chip.eng { background: var(--eng-bg); color: var(--eng-primary); border-color: var(--eng-border); }
+
+/* ── 진행 바 (국어 수행 진행도) ── */
+.progress-bar-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.progress-bar-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.8rem; }
+.progress-bar-track { height: 8px; background: var(--bg-input); border-radius: 999px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 999px; background: var(--lit-primary); transition: width 0.4s var(--cubic); }
+
+/* ── 반응형 ── */
+@media(min-width:1024px) {
+  .inner-panel { padding: 2rem 2.6rem 2.6rem; }
+  .panel-title, .sec-title { font-size: 1.5rem; }
+}
+
+@media(max-width:768px) {
+  body { font-size: 14px; }
+  .page-header { height: 52px; padding: 0 0.9rem; gap: 0.5rem; }
+  .page-header .brand { font-size: 1.1rem; }
+  .nav-tab { padding: 0.22rem 0.5rem; font-size: 0.72rem; }
+  .sub-tabbar { top: 52px; padding: 0.55rem 0.9rem; }
+  .inner-panel {
+    margin: 0.85rem 0.75rem 0;
+    padding: 1.15rem 1rem 1.35rem;
+    border-radius: 14px;
+  }
+}
+
+@media(max-width:600px) {
+  .score-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media(max-width:390px) {
+  .page-header { height: 48px; }
+  .sub-tabbar { top: 48px; }
+  .page-header .brand { font-size: 1rem; }
+  .nav-tab { padding: 0.2rem 0.4rem; font-size: 0.68rem; }
+}
+
 /* 수학 전용 스타일 */
 .formula-box {
   background: rgba(52,211,153,0.06);
@@ -42,7 +345,7 @@
   border-radius: var(--radius-sm);
   padding: 1.25rem;
   min-height: 120px;
-  font-family: 'Noto Serif KR', serif;
+  font-family: var(--font-serif);
   font-size: 0.9rem;
   line-height: 2;
   border: 2px solid var(--math-border);
@@ -73,3 +376,131 @@
 .error-ref { font-size: 0.72rem; color: var(--math-primary); font-weight: 700; }
 .error-del { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.75rem; padding: 0.15rem 0.4rem; }
 .error-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+
+
+/* ══ STEP 4 타임어택 시험지 스타일 ══ */
+.ta-problem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.ta-problem.revealed { border-color: var(--math-border); }
+.ta-problem.ta-essay { border-color: rgba(245,158,11,0.2); }
+.ta-problem.ta-essay.revealed { border-color: var(--warning); }
+.ta-q-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  background: var(--bg-card2);
+}
+.ta-num {
+  min-width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--math-bg);
+  border: 1px solid var(--math-border);
+  color: var(--math-primary);
+  font-size: 0.78rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.ta-q-body { flex: 1; }
+.ta-q-text {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.75;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-serif);
+}
+.ta-meta { display: flex; align-items: center; gap: 0.4rem; }
+.ta-tag {
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--math-bg);
+  color: var(--math-primary);
+  border: 1px solid var(--math-border);
+}
+.ta-pts {
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--math-primary);
+}
+.ta-reveal-btn {
+  flex-shrink: 0;
+  background: var(--math-bg);
+  border: 1px solid var(--math-border);
+  color: var(--math-primary);
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  align-self: center;
+}
+.ta-reveal-btn:hover { filter: brightness(1.2); }
+.ta-reveal-btn.open {
+  background: var(--bg-card2);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+.ta-answer {
+  display: none;
+  padding: 1rem 1.1rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--math-border);
+}
+.ta-problem.ta-essay .ta-answer {
+  border-top-color: rgba(245,158,11,0.3);
+}
+.ta-answer.visible { display: block; }
+.ta-ans-label {
+  font-size: 0.65rem; font-weight: 800;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--math-primary);
+  margin-bottom: 0.35rem;
+}
+.ta-ans-val {
+  font-size: 1.15rem; font-weight: 800;
+  color: var(--math-primary);
+  margin-bottom: 0.5rem;
+}
+.ta-ans-reason {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 0.5rem;
+}
+.ta-trap {
+  font-size: 0.76rem;
+  background: rgba(239,68,68,0.08);
+  border-left: 2px solid var(--danger);
+  color: #fca5a5;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.ta-score-guide {
+  margin-top: 0.75rem;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.ta-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.ta-score-row:last-child { border-bottom: none; }
+.ta-score-row span:last-child {
+  font-weight: 700;
+  color: var(--warning);
+  flex-shrink: 0;
+}
+</style>

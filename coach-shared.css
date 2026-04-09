@@ -33,9 +33,9 @@
   --eng-border: rgba(56,189,248,0.25);
   --radius: 10px;
   --radius-sm: 6px;
-  --font-serif: 'Noto Serif KR', serif;
   --font-sans: 'Noto Sans KR', sans-serif;
-  --font-brand: 'Syne', sans-serif;
+  --font-serif: 'Noto Sans KR', sans-serif;
+  --font-brand: 'Noto Sans KR', sans-serif;
   --cubic: cubic-bezier(0.22,1,0.36,1);
 }
 
@@ -112,8 +112,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   border-radius: 18px;
   box-shadow: 0 18px 50px rgba(0,0,0,0.18);
 }
-.panel-title { font-family: var(--font-brand); font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem; }
-.panel-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.75rem; font-family: var(--font-serif); }
+.panel-kicker,
+.sec-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.panel-title,
+.sec-title {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+.panel-desc,
+.sec-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+  font-family: var(--font-serif);
+}
 
 /* ── 카드 ── */
 .mc { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
@@ -504,7 +526,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 /* ── 반응형 ── */
 @media(min-width:1024px) {
   .inner-panel { padding: 2rem 2.6rem 2.6rem; }
-  .panel-title { font-size: 1.5rem; }
+  .panel-title, .sec-title { font-size: 1.5rem; }
 }
 
 @media(max-width:768px) {

@@ -8,41 +8,62 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0e0f14; --bg-card: #13141b; --bg-card2: #1a1b24; --bg-input: #111218;
-      --border: #2a2b38; --text: #e8e9f0; --text-secondary: #9a9bac; --text-dim: #5a5b6a;
-      --lit-primary: #f472b6; --lit-bg: rgba(244,114,182,0.07); --lit-border: rgba(244,114,182,0.22);
-      --accent: #7c6af0; --accent-light: rgba(124,106,240,0.12);
+      --page-max: 1200px;
+      --bg: #0e0f14; --bg-card: #161820; --bg-card2: #1c1e26; --bg-input: #11121a;
+      --border: rgba(255,255,255,0.07); --text: #e8e9f0; --text-secondary: #8a8fa8; --text-dim: #555870;
+      --lit-primary: #f472b6; --lit-bg: rgba(244,114,182,0.10); --lit-border: rgba(244,114,182,0.25);
+      --accent: #7c6af0; --accent-light: rgba(124,106,240,0.15);
       --warning: #f59e0b; --success: #34d399; --eng-primary: #38bdf8;
       --font-sans: 'Noto Sans KR', sans-serif;
       --font-serif: 'Noto Serif KR', serif;
       --font-brand: 'Syne', sans-serif;
+      --radius-sm: 6px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+    body *, body *::before, body *::after { font-family: inherit; }
     .noise-overlay { position: fixed; inset: 0; pointer-events: none; opacity: 0.025; z-index: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px; }
-    .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.5rem; gap: 1.5rem; }
-    .brand { font-family: var(--font-brand); font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
+    .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); gap: 1.5rem; }
+    .brand { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
     .brand span { color: var(--lit-primary); }
     .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; }
-    .nav-tab { padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: all 0.15s; }
+    .nav-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.15s; }
     .nav-tab:hover { background: var(--bg-card2); color: var(--text); }
     .nav-tab.lit { background: var(--lit-bg); color: var(--lit-primary); border: 1px solid var(--lit-border); }
 
-    /* 수행3 전용 상단 바 */
-    .sa3-bar { position: sticky; top: 57px; z-index: 200; background: rgba(14,15,20,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0.65rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-    .sa3-back { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
-    .sa3-back:hover { color: var(--lit-primary); }
-    .sa3-step-label { font-size: 0.75rem; font-weight: 700; color: var(--lit-primary); background: var(--lit-bg); border: 1px solid var(--lit-border); border-radius: 5px; padding: 0.15rem 0.55rem; }
-    .sa3-book-chip { margin-left: auto; font-size: 0.75rem; color: var(--text-secondary); background: var(--bg-card2); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* 수행3 스텝퍼 전용 */
+    .sa3-stepper { display: flex; gap: 0.35rem; margin: -0.1rem 0 1rem; background: transparent; border: none; padding: 0; overflow-x: auto; max-width: 100%; }
+    .sa3-step-chip { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); padding: 0.42rem 0.68rem; display: flex; flex-direction: column; align-items: center; gap: 0.16rem; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); white-space: nowrap; flex: 0 0 auto; min-width: 75px; }
+    .sa3-step-chip:hover { border-color: var(--lit-border); color: var(--text); }
+    .sa3-step-chip.active { background: var(--lit-bg); border-color: var(--lit-border); color: var(--lit-primary); }
+    .sa3-step-no { font-size: 0.92rem; font-weight: 800; line-height: 1; }
+    .sa3-step-text { font-size: 0.72rem; font-weight: 700; line-height: 1.15; text-align: center; }
+    
+    .sa3-part-view { display: none; }
+    .sa3-part-view.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    .coach-wrap { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; }
-    .section-card { background: var(--bg-card); border: 1px solid var(--lit-border); border-radius: 14px; padding: 1.75rem 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 0 0 1px rgba(244,114,182,0.08); }
+    /* 공통 네비게이션 서브탭바 */
+    .sub-tabbar { display: flex; align-items: center; gap: 0.25rem; padding: 0.75rem max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto; position: sticky; top: 57px; z-index: 200; }
+    .sub-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.82rem; font-family: var(--font-sans); padding: 0.4rem 0.9rem; cursor: pointer; white-space: nowrap; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+    .sub-tab .step-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05rem; color: var(--text-dim); }
+    .sub-tab:hover { color: var(--text); background: var(--bg-card2); }
+    .sub-tab.lit.active { border-color: var(--lit-border); background: var(--lit-bg); color: var(--lit-primary); }
+    .sub-tab.lit.done { color: #f9a8d4; border-color: rgba(244,114,182,0.14); background: rgba(244,114,182,0.04); }
+    .sub-tab.lit.active .step-label { color: var(--lit-primary); }
+    .sub-tab.lit.done .step-label { color: #f9a8d4; }
+    .tab-arrow { color: var(--text-dim); font-size: 0.8rem; padding: 0 0.1rem; }
+    
+    .sa3-book-chip { margin-left: auto; font-size: 0.78rem; color: var(--text-secondary); background: var(--bg-card2); border: 1px solid var(--border); border-radius: 20px; padding: 0.35rem 0.8rem; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .coach-wrap { max-width: none; margin: 0; padding: 0 0 5rem; }
+    .section-card { max-width: var(--page-max); margin: 1.5rem auto 0; padding: 1.8rem 2rem 2.2rem; background: linear-gradient(180deg, rgba(22,24,32,0.92), rgba(18,20,28,0.95)); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 18px 50px rgba(0,0,0,0.18); }
     .sec-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08rem; text-transform: uppercase; color: var(--lit-primary); margin-bottom: 0.4rem; }
-    .sec-title { font-family: var(--font-brand); font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
-    .sec-desc { font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-serif); line-height: 1.7; margin-bottom: 1.25rem; }
+    .sec-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
+    .sec-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.25rem; }
 
     /* 독서 관점 유도 */
     .reading-lens { background: rgba(124,106,240,0.06); border: 1px solid rgba(124,106,240,0.2); border-radius: 12px; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; }
@@ -56,7 +77,7 @@
     /* 규칙 */
     .rule-block { background: var(--bg-card2); border-left: 3px solid var(--lit-primary); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
     .rule-block .rule-title { font-size: 0.78rem; font-weight: 700; color: var(--lit-primary); margin-bottom: 0.4rem; }
-    .rule-block .rule-body { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; }
+    .rule-block .rule-body { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; font-family: var(--font-serif); }
     .rule-block .rule-body strong { color: var(--text); }
     .rule-block.warn { border-left-color: var(--warning); }
     .rule-block.warn .rule-title { color: var(--warning); }
@@ -81,19 +102,112 @@
     .struct-row { display: flex; gap: 0.75rem; align-items: flex-start; }
     .struct-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.55rem; }
     .struct-stage { font-size: 0.72rem; font-weight: 700; color: var(--lit-primary); letter-spacing: 0.05rem; text-transform: uppercase; margin-bottom: 0.2rem; }
-    .struct-detail { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+    .struct-detail { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; font-family: var(--font-serif); }
     .struct-detail strong { color: var(--text); }
 
     /* 입력 */
     .input-section { margin-top: 1.25rem; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; }
     .input-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
     .badge-you { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(124,106,240,0.3); border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.65rem; font-weight: 700; }
-    textarea.user-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.65; padding: 0.85rem 1rem; resize: vertical; min-height: 110px; transition: border-color 0.15s; outline: none; }
+    textarea.user-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: #ffffff; font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.65; padding: 0.85rem 1rem; resize: none; overflow: hidden; min-height: 110px; transition: border-color 0.15s; outline: none; }
     textarea.user-input:focus { border-color: var(--lit-border); }
-    textarea.user-input::placeholder { color: var(--text-dim); }
+    textarea.user-input::placeholder { color: #94a3b8; }
     .char-info { font-size: 0.7rem; color: var(--text-dim); text-align: right; margin-top: 0.3rem; }
     .char-info.ok { color: var(--success); }
     .char-info.warn { color: var(--warning); }
+
+    .sa3-workspace { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: 1rem; align-items: start; margin-top: 1.5rem; }
+    .sa3-panel { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+    .sa3-panel-title { font-size: 0.78rem; font-weight: 700; color: var(--lit-primary); letter-spacing: 0.05rem; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .sa3-part-list { display: grid; gap: 0.8rem; }
+    .sa3-part-block { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem; }
+    .sa3-part-name { font-size: 0.74rem; font-weight: 700; color: #ffffff; margin-bottom: 0.45rem; }
+    .sa3-part-guide { font-size: 0.72rem; color: #cbd5e1; line-height: 1.55; margin-bottom: 0.45rem; }
+    .sa3-part-input { min-height: 120px; }
+    .sa3-hidden-essay { display: none; }
+    .sa3-rubric-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; margin-bottom: 0.7rem; }
+    .sa3-rubric-item { display: grid; gap: 0.14rem; min-height: 52px; border: 1px solid var(--border); border-radius: 9px; padding: 0.46rem 0.58rem; background: rgba(255,255,255,0.02); }
+    .sa3-rubric-label { font-size: 0.69rem; color: var(--text-secondary); line-height: 1.15; }
+    .sa3-rubric-state { font-size: 0.76rem; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+    .sa3-rubric-state.ok { color: var(--success); }
+    .sa3-rubric-state.warn { color: var(--warning); }
+    .sa3-rubric-state.bad { color: #f87171; }
+    .manuscript-wrap { margin-top: 0.9rem; }
+    .manuscript-note { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.65rem; line-height: 1.5; }
+    .manuscript-pages { display: grid; gap: 1rem; max-height: 1120px; overflow: auto; padding-right: 0.2rem; cursor: zoom-in; }
+    .manuscript-pages:hover { filter: brightness(1.03); }
+    .print-manuscript-pages { display: none; }
+    .sa3-print-root { display: none; }
+    .manuscript-spread { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(320px, 0.96fr); gap: 0; border-radius: 18px; overflow: hidden; border: 1px solid rgba(15, 23, 42, 0.5); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28); }
+    .manuscript-sheet { position: relative; background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.72), rgba(250,248,240,0.96) 28%, rgba(240,236,225,0.98) 100%);
+      color: #0f172a; padding: 1rem 1rem 0.85rem; min-height: 100%; }
+    .manuscript-sheet::before { content: ""; position: absolute; inset: 0; background:
+        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0)),
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,0.42), transparent 32%);
+      pointer-events: none; opacity: 0.9; }
+    .manuscript-sheet.left { border-right: 2px solid rgba(15, 23, 42, 0.16); }
+    .manuscript-sheet.right { padding-top: 1.5rem; }
+    .manuscript-page-title { position: relative; z-index: 1; font-size: 0.7rem; font-weight: 800; color: #475569; margin-bottom: 0.7rem; letter-spacing: 0.04em; }
+    .manuscript-headline { position: relative; z-index: 1; border: 1px solid rgba(15, 23, 42, 0.42); padding: 0.35rem 0.55rem; font-size: 0.88rem; font-weight: 800; background: rgba(255,255,255,0.35); margin-bottom: 0.35rem; }
+    .manuscript-info-table { position: relative; z-index: 1; width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0.7rem; }
+    .manuscript-info-table th, .manuscript-info-table td { border: 1px solid rgba(15, 23, 42, 0.35); padding: 0.24rem 0.32rem; font-size: 0.7rem; text-align: center; }
+    .manuscript-info-table th { background: rgba(148, 163, 184, 0.14); font-weight: 700; }
+    .manuscript-info-table td.book-cell { text-align: left; padding-left: 0.6rem; font-weight: 700; }
+    .manuscript-guideline { position: relative; z-index: 1; border: 1px solid rgba(15, 23, 42, 0.32); background: rgba(255,255,255,0.28); padding: 0.7rem 0.8rem; margin-bottom: 0.7rem; }
+    .manuscript-guideline-title { font-size: 0.72rem; font-weight: 800; text-align: center; margin-bottom: 0.35rem; letter-spacing: 0.16em; }
+    .manuscript-guideline-lead { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .manuscript-guideline ol { padding-left: 1rem; display: grid; gap: 0.12rem; }
+    .manuscript-guideline li { font-size: 0.63rem; line-height: 1.42; }
+    .manuscript-subject { position: relative; z-index: 1; display: flex; gap: 0.45rem; align-items: center; font-size: 0.82rem; font-weight: 800; margin-bottom: 0.65rem; }
+    .manuscript-subject-line { min-height: 1.05rem; flex: 1; border-bottom: 1px solid rgba(15, 23, 42, 0.48); font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; color: #334155; }
+    .manuscript-grid-area { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) 30px; align-items: stretch; gap: 0.35rem; }
+    .manuscript-grid { display: grid; grid-template-columns: repeat(25, minmax(0, 1fr)); grid-auto-rows: 1fr; border-top: 1px solid rgba(15, 23, 42, 0.42); border-left: 1px solid rgba(15, 23, 42, 0.42); background: rgba(255,255,255,0.25); }
+    .manuscript-grid.grid-24 { aspect-ratio: 25 / 24; }
+    .manuscript-grid.grid-48 { aspect-ratio: 25 / 48; }
+    .manuscript-cell { border-right: 1px solid rgba(15, 23, 42, 0.32); border-bottom: 1px solid rgba(15, 23, 42, 0.32); display: flex; align-items: center; justify-content: center; font-size: clamp(0.42rem, 0.65vw, 0.74rem); color: #111827; font-family: var(--font-serif); line-height: 1; }
+    .manuscript-cell.empty { color: transparent; }
+    .manuscript-row-numbers { display: grid; align-content: stretch; color: #475569; font-size: 0.54rem; font-weight: 700; line-height: 1; }
+    .manuscript-row-number { display: flex; align-items: center; justify-content: flex-start; }
+    .manuscript-meta { position: relative; z-index: 1; margin-top: 0.55rem; display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.62rem; color: #64748b; }
+    .manuscript-overflow { margin-top: 0.55rem; font-size: 0.72rem; color: #f87171; }
+    .sa3-actions { margin-top: 1rem; }
+    .manuscript-preview-cta { font-size: 0.7rem; color: var(--lit-primary); margin-top: 0.45rem; text-align: right; }
+
+    .preview-modal { position: fixed; inset: 0; z-index: 1200; display: none; align-items: center; justify-content: center; padding: 1.25rem; background: rgba(6, 8, 14, 0.82); backdrop-filter: blur(10px); }
+    .preview-modal.open { display: flex; }
+    .preview-modal-dialog { width: min(1200px, 100%); max-height: calc(100vh - 2.5rem); background: #11141c; border: 1px solid rgba(244,114,182,0.22); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.38); overflow: hidden; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+    .preview-modal-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.95rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.08); background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); }
+    .preview-modal-actions { display: flex; align-items: center; gap: 0.55rem; }
+    .preview-modal-title { font-size: 0.86rem; font-weight: 800; color: #fff; }
+    .preview-modal-subtitle { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.14rem; }
+    .preview-modal-print { appearance: none; border: 1px solid var(--lit-primary); background: var(--lit-primary); color: #fff; border-radius: 999px; padding: 0.55rem 0.95rem; font-size: 0.76rem; font-weight: 800; cursor: pointer; }
+    .preview-modal-edit { appearance: none; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; border-radius: 999px; padding: 0.55rem 0.95rem; font-size: 0.76rem; font-weight: 800; cursor: pointer; }
+    .preview-modal-close { appearance: none; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #fff; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+    .preview-modal-body { overflow: auto; padding: 1.15rem; background: radial-gradient(circle at top, rgba(244,114,182,0.08), transparent 32%), #0e1118; }
+    .preview-modal-pages { display: grid; gap: 1rem; }
+    .preview-modal-pages .print-manuscript-page { margin: 0; }
+    .preview-modal-pages .manuscript-sheet { max-width: 980px; margin: 0 auto; padding: 1rem 1rem 0.85rem; box-shadow: 0 18px 40px rgba(0,0,0,0.24); border-radius: 14px; }
+    .preview-modal-pages .manuscript-page-title { font-size: 0.82rem; margin-bottom: 0.55rem; }
+    .preview-modal-pages .manuscript-grid.grid-24 { aspect-ratio: 25 / 24; width: 100%; height: auto; }
+    .preview-modal-pages .manuscript-grid-area { grid-template-columns: minmax(0, 1fr) 32px; gap: 0.35rem; }
+    .preview-modal-pages .manuscript-cell { font-size: clamp(0.72rem, 1.05vw, 1rem); }
+    .preview-modal-pages .manuscript-row-number { font-size: 0.72rem; }
+
+    /* 모의고사 시험지 형태 헤더 */
+    .exam-paper-header { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .exam-title { text-align: center; font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+    .exam-info-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; table-layout: fixed; }
+    .exam-info-table th, .exam-info-table td { border: 1px solid var(--border); padding: 0.4rem 0.5rem; font-size: 0.8rem; text-align: center; }
+    .exam-info-table th { background: rgba(255,255,255,0.06); color: var(--text-secondary); font-weight: 600; width: 15%; }
+    .exam-info-table td { color: var(--text); width: 18%; }
+    .exam-direction { font-size: 0.85rem; font-weight: 600; color: #fff; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.3rem; }
+    .exam-conditions { background: rgba(0,0,0,0.25); border: 1px dashed var(--text-dim); padding: 1rem 1.25rem; border-radius: 6px; margin-bottom: 1.25rem; }
+    .ec-title { text-align: center; font-size: 0.78rem; font-weight: 700; color: var(--lit-primary); margin-bottom: 0.75rem; letter-spacing: 0.2rem; }
+    .exam-conditions ol { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .exam-conditions li { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }
+    .exam-subject-input { font-size: 0.9rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+    .subject-line { flex: 1; border-bottom: 1px solid var(--text-dim); height: 1.2rem; display: inline-block; }
 
     /* 코칭 박스 */
     .coaching-box { margin-top: 1rem; border-radius: 10px; border: 1px solid var(--lit-border); background: var(--lit-bg); overflow: hidden; display: none; }
@@ -105,24 +219,216 @@
 
     /* 버튼 */
     .btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
-    .btn-coach { background: var(--lit-primary); color: #fff; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s; font-family: var(--font-sans); }
-    .btn-coach:hover { opacity: 0.88; }
+    .btn-coach { background: var(--lit-primary); color: #fff; border: 1px solid var(--lit-primary); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s, filter 0.15s; font-family: var(--font-sans); }
+    .btn-coach:hover { opacity: 1; filter: brightness(1.06); }
     .btn-coach:active { transform: scale(0.97); }
-    .btn-next { background: var(--bg-card2); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
-    .btn-next:hover { border-color: var(--lit-border); color: var(--lit-primary); }
+    .btn-next { background: var(--lit-primary); color: #fff; border: 1px solid var(--lit-primary); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
+    .btn-next:hover { color: #fff; filter: brightness(1.06); }
     .btn-next.primary-next { background: var(--lit-primary); color: #fff; border-color: var(--lit-primary); }
-    .btn-next.primary-next:hover { opacity: 0.88; }
+    .btn-next.primary-next:hover { opacity: 1; filter: brightness(1.06); }
+    .btn-mini-preview { background: rgba(255,255,255,0.05); color: var(--lit-primary); border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.62rem; font-size: 0.68rem; font-weight: 700; cursor: pointer; font-family: var(--font-sans); }
+    .btn-mini-preview:hover { color: #f9a8d4; border-color: var(--lit-border); }
+    .sa3-count-wrap { display:flex; align-items:center; gap:0.45rem; font-size:0.82rem; color:var(--text-dim); font-family:var(--font-mono); }
+    .sa3-count-wrap .count-value { font-size:0.9rem; font-weight:700; color:var(--text-secondary); }
+    .sa3-count-wrap .count-target { color:var(--text-secondary); }
+    .sa3-part-toggle { display:flex; align-items:center; gap:0.4rem; cursor:pointer; user-select:none; width:100%; min-height:1.5rem; }
+    .sa3-part-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
+    .sa3-part-fields.collapsed { display:none; }
+    .sa3-part-toggle.collapsed .sa3-part-arrow { transform: rotate(-90deg); }
+    .sa3-intro-toggle { display:flex; align-items:center; gap:0.4rem; cursor:pointer; user-select:none; width:100%; min-height:1.5rem; }
+    .sa3-intro-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
+    .sa3-intro-fields.collapsed { display:none; }
+    .sa3-intro-toggle.collapsed .sa3-intro-arrow { transform: rotate(-90deg); }
+    .sa3-structure-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; margin-top: 0.55rem; }
+    .sa3-template-row { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem; }
+    .sa3-template-chip { background: rgba(255,255,255,0.04); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 0.34rem 0.72rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: var(--font-sans); }
+    .sa3-template-chip.active { color: var(--lit-primary); border-color: var(--lit-border); background: rgba(244,114,182,0.08); }
+    .sa3-template-help { margin-top:0.45rem; font-size:0.72rem; color: var(--text-secondary); line-height:1.55; }
+    .sa3-structure-editor { padding: 0; background: transparent; border: none; }
+    .sa3-structure-label { display:block; font-size: 0.72rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem; }
+    .sa3-structure-editor textarea { min-height: 92px; font-size: 0.76rem; }
+    .sa3-structure-preview { margin-top: 0.7rem; font-size: 0.9rem; color: #ffffff; line-height: 1.7; }
 
     /* 완성 배너 */
-    .complete-banner { display: none; text-align: center; padding: 2.5rem 1.5rem; background: var(--lit-bg); border: 1px solid var(--lit-border); border-radius: 14px; margin-top: 1rem; }
+    .complete-banner { display: none; text-align: center; padding: 2.5rem 1.5rem; background: linear-gradient(180deg, rgba(244,114,182,0.10), rgba(124,106,240,0.08)); border: 1px solid var(--lit-border); border-radius: 14px; margin-top: 1rem; }
     .complete-banner.visible { display: block; }
     .complete-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-    .complete-title { font-family: var(--font-brand); font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+    .complete-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
     .complete-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+
+    body .page-header *,
+    body .sub-tabbar *,
+    body .coach-wrap * {
+      font-family: var(--font-sans) !important;
+    }
 
     /* 토스트 */
     .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; color: var(--text); opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 999; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 980px) {
+      .sa3-workspace { grid-template-columns: 1fr; }
+      .manuscript-spread { grid-template-columns: 1fr; }
+      .manuscript-sheet.left { border-right: none; border-bottom: 2px solid rgba(15, 23, 42, 0.16); }
+      .manuscript-pages { max-height: none; }
+      .preview-modal { padding: 0.75rem; }
+      .preview-modal-dialog { max-height: calc(100vh - 1.5rem); }
+      .preview-modal-body { padding: 0.8rem; }
+      .preview-modal-pages .manuscript-sheet { padding: 0.8rem; }
+      .preview-modal-actions { gap: 0.4rem; }
+      .preview-modal-print, .preview-modal-edit { padding: 0.48rem 0.78rem; font-size: 0.72rem; }
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 3mm;
+    }
+
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      body > * {
+        display: none !important;
+      }
+      #sa3-print-root {
+        display: block !important;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
+      .exam-paper-header {
+        background: #ffffff !important;
+        border: 1px solid #666 !important;
+        color: #000 !important;
+        break-inside: avoid;
+      }
+      .exam-title,
+      .exam-direction,
+      .exam-subject-input {
+        color: #000 !important;
+      }
+      .exam-info-table th,
+      .exam-info-table td,
+      .exam-conditions,
+      .exam-conditions li {
+        color: #000 !important;
+        border-color: #666 !important;
+      }
+      .manuscript-wrap {
+        margin-top: 0 !important;
+      }
+      .manuscript-pages { display: none !important; }
+      .print-manuscript-pages {
+        display: block !important;
+        margin-top: 0 !important;
+      }
+      .print-manuscript-page {
+        display: block;
+        page-break-after: always;
+        break-after: page;
+        margin: 0;
+      }
+      .print-manuscript-page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .print-manuscript-page .manuscript-sheet {
+        padding: 0 !important;
+        margin: 0 !important;
+        break-inside: avoid;
+      }
+      .print-manuscript-page .manuscript-grid-area {
+        grid-template-columns: 206mm 8mm !important;
+        gap: 1mm !important;
+        justify-content: flex-start !important;
+      }
+      .print-manuscript-page .manuscript-grid.grid-24 {
+        aspect-ratio: auto !important;
+        grid-template-rows: repeat(24, 1fr);
+        width: 206mm !important;
+        height: 197mm !important;
+      }
+      .print-manuscript-page .manuscript-cell {
+        font-size: 12pt !important;
+        font-weight: 600;
+      }
+      .print-manuscript-page .manuscript-page-title {
+        display: none !important;
+      }
+      .print-manuscript-page .manuscript-headline {
+        font-size: 13pt !important;
+      }
+      .print-manuscript-page .manuscript-info-table th,
+      .print-manuscript-page .manuscript-info-table td {
+        font-size: 9pt !important;
+      }
+      .print-manuscript-page .manuscript-guideline-title,
+      .print-manuscript-page .manuscript-guideline-lead,
+      .print-manuscript-page .manuscript-guideline li,
+      .print-manuscript-page .manuscript-subject,
+      .print-manuscript-page .manuscript-row-number {
+        font-size: 9pt !important;
+      }
+      .print-manuscript-page .manuscript-meta {
+        display: none !important;
+      }
+      .print-manuscript-page .manuscript-row-numbers {
+        width: 8mm !important;
+      }
+      .print-manuscript-page .manuscript-row-number {
+        justify-content: flex-start !important;
+      }
+      .manuscript-spread {
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+        break-inside: avoid;
+        margin-bottom: 6mm;
+      }
+      .manuscript-sheet {
+        background: #fff !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-bottom: 6mm;
+        break-inside: avoid;
+      }
+      .manuscript-sheet::before {
+        display: none !important;
+      }
+      .manuscript-sheet.left {
+        border-right: none !important;
+        border-bottom: none !important;
+      }
+      .manuscript-page-title,
+      .manuscript-headline,
+      .manuscript-guideline-title,
+      .manuscript-guideline-lead,
+      .manuscript-subject,
+      .manuscript-meta,
+      .manuscript-row-numbers,
+      .manuscript-cell {
+        color: #000 !important;
+      }
+      .manuscript-info-table th,
+      .manuscript-info-table td,
+      .manuscript-guideline,
+      .manuscript-grid,
+      .manuscript-cell {
+        border-color: #777 !important;
+        background: #fff !important;
+      }
+      .manuscript-overflow {
+        color: #000 !important;
+        margin-top: 3mm !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -130,137 +436,473 @@
 <header class="page-header">
   <a href="index.html" class="brand">코치<span>.</span></a>
   <nav class="nav-tabs">
-    <a href="coach-korean.html" class="nav-tab lit">📚 국어</a>
-    <a href="coach-math.html" class="nav-tab">📐 수학</a>
-    <a href="coach-english.html" class="nav-tab">🎧 영어</a>
+    <button class="nav-tab report-btn" onclick="const p = window.opener || window.parent; if(p && p.openReport) { p.openReport(); } else { window.location.href='coach-korean.html?step=3'; } " style="background:rgba(244,114,182,0.12); border:1px solid var(--lit-border); color:var(--lit-primary); font-weight:700; cursor:pointer; padding:0.4rem 0.9rem; border-radius:var(--radius-sm);">📋 보고서</button>
+    <a href="coach-korean-s0.html" class="nav-tab lit">📚 국어</a>
+    <a href="coach-math.html" class="nav-tab" style="background:#0f172a; color:#38bdf8; border:1px solid rgba(56,189,248,0.2);">📐 수학</a>
+    <a href="coach-english.html" class="nav-tab" style="background:#1e1b4b; color:#818cf8; border:1px solid rgba(129,140,248,0.2);">🎧 영어</a>
   </nav>
 </header>
 
-<div class="sa3-bar">
-  <a href="coach-korean.html" class="sa3-back">← 수행1·2로 돌아가기</a>
-  <span class="sa3-step-label">STEP 3 · 비평문 작성</span>
+<nav class="sub-tabbar">
+  <button class="sub-tab lit done" id="sn-0" onclick="window.location.href='coach-korean.html?step=0'">
+    <span class="step-label">STEP 0</span><span id="sc-0">책 선정</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit done" id="sn-1" onclick="window.location.href='coach-korean.html?step=1'">
+    <span class="step-label">STEP 1</span><span id="sc-1">수행1</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit done" id="sn-2" onclick="window.location.href='coach-korean.html?step=2'">
+    <span class="step-label">STEP 2</span><span id="sc-2">수행2</span>
+  </button>
+  <span class="tab-arrow">›</span>
+  <button class="sub-tab lit active" id="sn-3">
+    <span class="step-label">STEP 3</span><span id="sc-3">수행3</span>
+  </button>
   <span class="sa3-book-chip" id="book-chip">📖 책을 먼저 선정해주세요</span>
-</div>
+</nav>
 
 <div class="coach-wrap">
 
   <!-- ═══ 수행3 · 비평문 1500자 작성 ═══ -->
-  <div class="section-card">
-    <div class="sec-eyebrow">STEP 3 · 수행평가 3</div>
-    <div class="sec-title">비평문 1500자 작성</div>
-    <div class="sec-desc">조건 하나라도 어기면 기계적으로 감점돼. 샘플을 충분히 읽고 구조를 설계한 다음 직접 써봐.</div>
+  <div class="section-card" id="step-3" style="padding-top:1.25rem;">
+    <!-- 스테퍼 -->
+    <div class="sa3-stepper">
+      <button class="sa3-step-chip active" id="sa3-chip-0" onclick="focusSA3Part(0)">
+        <span class="sa3-step-no">0</span><span class="sa3-step-text">비평 가이드</span>
+      </button>
+      <button class="sa3-step-chip" id="sa3-chip-1" onclick="focusSA3Part(1)">
+        <span class="sa3-step-no">1</span><span class="sa3-step-text">도입/전개</span>
+      </button>
+      <button class="sa3-step-chip" id="sa3-chip-2" onclick="focusSA3Part(2)">
+        <span class="sa3-step-no">2</span><span class="sa3-step-text">본문 편집</span>
+      </button>
+      <button class="sa3-step-chip" id="sa3-chip-3" onclick="focusSA3Part(3)">
+        <span class="sa3-step-no">3</span><span class="sa3-step-text">최종 검수</span>
+      </button>
+    </div>
 
-    <!-- 독서 관점 유도 -->
-    <div class="reading-lens">
-      <div class="reading-lens-title">✍ 비평문을 쓰기 전에 확인할 것들</div>
-      <div class="lens-list">
-        <div class="lens-item">
-          <span class="lens-q">도입부</span>
-          <div class="lens-text"><strong>"이 글에서 ~에 대해 살펴보겠다"는 최악의 시작.</strong> 소설 속 충격적인 장면 하나 또는 통계를 첫 문장에 배치하세요. 독자가 읽고 싶어지게 만들어야 합니다.</div>
-        </div>
-        <div class="lens-item">
-          <span class="lens-q">통계활용</span>
-          <div class="lens-text">수행2에서 검증한 통계를 비평문에 그대로 이어서 씁니다. <strong>출처 표기 형식: (통계청, 2023)</strong> — 괄호 안에 기관명과 연도를 쓰면 됩니다.</div>
-        </div>
-        <div class="lens-item">
-          <span class="lens-q">문학연결</span>
-          <div class="lens-text">각 문단에 소설의 장면이나 인물을 최소 한 번 이상 언급하세요. <strong>사회 문제 분석 ↔ 소설 장면 연결</strong>이 반복될수록 비평문의 깊이가 살아납니다.</div>
-        </div>
-        <div class="lens-item">
-          <span class="lens-q">결말전략</span>
-          <div class="lens-text">마지막 문단은 도입에서 쓴 장면이나 이미지로 돌아오세요. <strong>"원점 회귀 전략"</strong>은 글의 완성도를 높이고 채점자에게 인상을 남깁니다.</div>
-        </div>
+    <!-- 0. 가이드 탭 -->
+    <div class="sa3-part-view active" id="sa3-view-0">
+      <div class="sec-eyebrow">STEP 3 · 비평문 작성</div>
+      <div class="sec-title">비평문 1500자 작성 가이드</div>
+      <div class="sec-desc">수행2에서 정리한 사회 문제, 원인, 해결 방안을 바탕으로 5문단 비평문을 완성하는 단계야. 필요한 기준만 빠르게 보고 바로 쓰기로 넘어갈 수 있게 정리해둘게.</div>
+
+    <div class="rule-block" style="margin-bottom:1.25rem;">
+      <div class="rule-title">📚 먼저 기억할 핵심</div>
+      <div class="rule-body">
+        비평문은 <strong>감상문처럼 줄거리만 요약하는 글이 아니라, 작품을 통해 사회 문제를 해석하고 판단하는 글</strong>입니다.<br>
+        그래서 각 문단마다 <strong>소설 장면</strong>, <strong>현실 자료</strong>, <strong>자신의 해석</strong>이 함께 들어가야 글이 단단해집니다.<br>
+        특히 이번 글은 <strong>청소년의 감정 표현 억압</strong>이라는 문제를 중심에 두고, 원인과 현재 양상, 해결 방향까지 이어지도록 쓰면 좋습니다.
       </div>
     </div>
 
     <!-- 조건 그리드 -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem;">
       <div class="rule-block"><div class="rule-title">📌 분량</div><div class="rule-body"><strong>1500 ± 50자</strong><br>1449~1551자 사이</div></div>
-      <div class="rule-block"><div class="rule-title">📌 구조</div><div class="rule-body"><strong>5문단 필수</strong><br>도입-전개1-2-3-정리</div></div>
+      <div class="rule-block"><div class="rule-title">📌 구조</div><div class="rule-body"><strong>5문단 필수</strong><br>도입-원인-현재 양상-해결-정리</div></div>
       <div class="rule-block warn"><div class="rule-title">⚠ 반입 불가</div><div class="rule-body">계획서·교과서·폰<br>전부 반입 불가</div></div>
-      <div class="rule-block success"><div class="rule-title">✓ 필수 포함</div><div class="rule-body">통계 인용 + 출처<br>사회 문제 연결</div></div>
+      <div class="rule-block success"><div class="rule-title">✓ 필수 포함</div><div class="rule-body">청소년 통계 + 출처<br>감정 억압 문제 연결</div></div>
+    </div>
+
+    <div class="rule-block" style="margin-bottom:1.25rem;">
+      <div class="rule-title">🧭 쓰면서 계속 확인할 것</div>
+      <div class="rule-body">
+        <strong>통계 활용</strong>: 수행2에서 정리한 자료를 그대로 쓰고, <strong>(교육부·한국청소년정책연구원, 2023)</strong>처럼 기관명과 연도를 함께 적습니다.<br>
+        <strong>문학 연결</strong>: 이경, 유림, 전솔 같은 인물이나 장면을 각 문단에서 한 번 이상 연결하면 비평문다운 힘이 살아납니다.<br>
+        <strong>마무리 전략</strong>: 결말에서는 다시 "괜찮아" 같은 핵심 이미지로 돌아오면 처음과 끝이 자연스럽게 이어집니다.
+      </div>
     </div>
 
     <!-- 5문단 구조 해설 -->
-    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:0.75rem;letter-spacing:0.05rem;text-transform:uppercase;">5문단 구조 완전 해설</div>
+    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:0.75rem;letter-spacing:0.05rem;text-transform:uppercase;">5문단 구조 요약</div>
     <div class="struct-map">
-      <div class="struct-row"><div class="struct-dot" style="background:var(--lit-primary);"></div><div><div class="struct-stage">도입 (약 200자)</div><div class="struct-detail"><strong>전략:</strong> 소설 속 충격 장면 또는 통계로 시작 → 비평할 사회 문제를 한 문장으로 제시. "이 글에서는 ~에 대해 살펴보겠다"는 최악의 시작이야.</div></div></div>
-      <div class="struct-row"><div class="struct-dot" style="background:#fb923c;"></div><div><div class="struct-stage">전개 1 — 원인 분석 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 사회 문제 원인 2가지 + 소설 장면 연결. 통계 출처 명시. 구조적 원인과 문화적 원인으로 나누면 논리가 탄탄해져.</div></div></div>
-      <div class="struct-row"><div class="struct-dot" style="background:var(--success);"></div><div><div class="struct-stage">전개 2 — 현재 양상 (약 300자)</div><div class="struct-detail"><strong>내용:</strong> 이 문제가 지금도 계속됨을 통계/기사로 입증. 소설의 메시지가 현실과 어떻게 맞닿는지 연결.</div></div></div>
-      <div class="struct-row"><div class="struct-dot" style="background:#a78bfa;"></div><div><div class="struct-stage">전개 3 — 해결 방안 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 법·제도 방안 + 사회·문화 방안. 결론에서 처음 꺼내면 구조 감점. 반드시 전개3에 넣어.</div></div></div>
-      <div class="struct-row"><div class="struct-dot" style="background:var(--eng-primary);"></div><div><div class="struct-stage">정리 (약 200자)</div><div class="struct-detail"><strong>전략:</strong> 도입 이미지 재환기 → 문학의 메시지로 마무리. 1500자를 꽉 채우는 곳이기도 해.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:var(--lit-primary);"></div><div><div class="struct-stage">도입 (약 250자)</div><div class="struct-detail"><strong>전략:</strong> 이경이 감정을 "괜찮아"로 덮는 장면이나 청소년 통계로 시작 → 감정 표현 억압 문제를 한 문장으로 제시.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:#fb923c;"></div><div><div class="struct-stage">전개 1 — 원인 분석 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 감정 표현 억압이 생기는 문화적 원인 + 구조적 원인을 나눠 쓰고, 이경의 행동과 연결. 공식 통계 출처를 함께 적어야 해.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:var(--success);"></div><div><div class="struct-stage">전개 2 — 현재 양상 (약 300자)</div><div class="struct-detail"><strong>내용:</strong> 지금도 청소년이 고민을 말하기 어려운 현실이 계속된다는 점을 통계와 기사로 입증. 소설의 메시지가 현실과 맞닿는 지점을 보여줘.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:#a78bfa;"></div><div><div class="struct-stage">전개 3 — 해결 방안 (약 350자)</div><div class="struct-detail"><strong>내용:</strong> 법·제도 방안 + 사회·문화 방안을 구분. 감정 언어화 교육, 또래 상담, 인식 전환 캠페인 같은 구체안을 넣어.</div></div></div>
+      <div class="struct-row"><div class="struct-dot" style="background:var(--eng-primary);"></div><div><div class="struct-stage">정리 (약 250자)</div><div class="struct-detail"><strong>전략:</strong> 다시 "괜찮아" 장면이나 기분 아이콘 이미지로 돌아와, 문학이 감정 억압 구조를 드러내는 힘을 강조하며 마무리.</div></div></div>
     </div>
-
-    <!-- ★ 1500자 샘플 전문 ★ -->
-    <div class="sample-full-wrap">
-      <div class="sample-full-header">
-        <span class="sample-full-title">📝 1500자 샘플 비평문 전문 — 『82년생 김지영』 기준 (조남주, 2016)</span>
-        <span class="sample-full-meta">실제 작성 수준 · 5문단 구조 · 주석 포함</span>
+      
+      <div class="btn-row" style="margin-top:1.5rem;">
+        <button class="btn-next primary-next" onclick="focusSA3Part(1)" style="margin-left:auto;">1단계: 도입/전개 보기 ›</button>
       </div>
-      <div class="sample-full-body"><span class="sample-para-label">도입</span>
-<strong>어린이집 앞 공원에서 커피를 마시던 여성이 "맘충이나 커피나 홀짝이고 있다"는 낯선 남성의 말을 듣는다.</strong> 조남주의 소설 『82년생 김지영』의 이 장면은 단순한 무례함의 묘사가 아니다. 평범하게 살아온 한 여성이 사회로부터 어떻게 서서히 지워지는가를 보여주는 축소판이다. 이 비평문은 소설이 진단하는 여성 경력 단절 문제를 통해, 개인의 선택처럼 보이는 현상 이면에 작동하는 구조적 메커니즘을 분석하고자 한다.
+    </div> <!-- /sa3-view-0 -->
 
-<div class="sample-anno">💡 도입 포인트: 소설 속 장면으로 시작 → 비평 주제 선언. "~에 대해 살펴보겠다" 식의 공허한 선언 대신 장면을 끌어와 독자를 바로 문제 안으로 끌어들임.</div>
+    <!-- 1. 도입/전개 탭 -->
+    <div class="sa3-part-view" id="sa3-view-1">
+      <div class="sec-eyebrow">STEP 3 · 1단계</div>
+      <div class="sec-title">도입/전개 가이드</div>
+      <div class="sec-desc">도입은 글의 첫인상을 만드는 부분이야. 같은 주제를 써도 무엇으로 시작하느냐에 따라 글의 분위기와 설득 방식이 달라져.</div>
 
-<span class="sample-para-label">전개 1 — 원인 분석</span>
-<strong>경력 단절이 개인의 선택이 아닌 구조적 결과인 이유는 두 가지다.</strong> 첫째, 돌봄 인프라의 절대적 부족이다. 보건복지부 '2023 보육통계'에 따르면 국공립 어린이집의 영유아 수용률은 37.8%에 불과하다. 직장을 다니며 아이를 맡길 공간이 절반도 확보되지 않은 상황에서, 소설 속 지영이 직장을 그만두는 것은 '선택'이 아니라 선택지가 봉쇄된 결과다. 둘째, 돌봄의 여성 귀속 인식이 여전히 강하게 작동하고 있다. 여성가족부 '2022 가족실태조사'에서 "자녀 돌봄의 주 책임은 어머니"라는 인식에 동의한 응답자가 65.1%에 달한다. 이는 지영의 남편 대현이 선의를 가진 사람임에도 불구하고 육아 분담을 구조적으로 회피하게 만드는 바탕이 된다. 악의가 아닌 관성이 차별을 만들어내는 것이다.
-
-<div class="sample-anno">💡 전개1 포인트: 원인 2가지를 유형 다르게(인프라/인식) 제시, 각각 공식 통계 + 출처 명시, 소설 장면과 연결.</div>
-
-<span class="sample-para-label">전개 2 — 현재 양상</span>
-<strong>소설이 출간된 2016년 이후에도 이 문제는 개선되지 않았다.</strong> 통계청 '2023 경력단절여성 통계'에 따르면 첫째 자녀 출산 후 직장을 그만두는 여성은 전체 경력단절 여성의 43.2%로, 출산이 여전히 경력 단절의 가장 큰 변수임을 보여준다. 소설이 1982년부터 2010년대까지를 추적하며 보여준 패턴은 현재진행형이다. 지영의 어머니 세대가 꿈을 접었고, 지영이 직장을 접었으며, 이 통계가 시사하는 것은 다음 세대도 같은 구조 앞에 서 있다는 사실이다. 조남주 작가가 소설 말미에서 지영이 치료를 시작하지만 결말을 열어둔 것은 이 때문이다. 개인이 나아도 구조가 그대로라면, 같은 이야기는 반복될 수밖에 없다.
-
-<div class="sample-anno">💡 전개2 포인트: 소설 출간 이후 현실 변화를 통계로 추적, "소설의 예언이 현실이 됐다"는 논리 구조.</div>
-
-<span class="sample-para-label">전개 3 — 해결 방안</span>
-<strong>이 구조를 바꾸려면 제도와 인식이 동시에 변화해야 한다.</strong> 법·제도적 차원에서는 남성 육아휴직 의무화와 육아기 근로시간 단축 청구권 확대가 필요하다. 고용노동부 자료에 따르면 2022년 기준 남성 육아휴직 사용률은 전체 육아휴직자의 6.8%에 불과하다. 돌봄을 여성에게만 귀속시키는 구조를 깨려면, 남성이 육아에 참여하는 것이 선택이 아닌 제도적 의무가 되어야 한다. 사회·문화적 차원에서는 경력단절 여성을 '능력 저하자'로 보는 편견을 해소하는 기업 내 복직 지원 멘토링 제도가 도입되어야 한다. 소설 속 지영이 다시 일하고 싶다고 했을 때 주변이 보인 반응—"지금도 잘하고 있잖아"—은 돌봄 노동의 가치를 인정하지 않는 사회의 무의식을 그대로 드러낸다.
-
-<div class="sample-anno">💡 전개3 포인트: 법·제도 방안과 사회·문화 방안을 구분, 소설 장면을 근거로 활용, 구체적 제도명 포함.</div>
-
-<span class="sample-para-label">정리</span>
-<strong>지영은 공원에서 커피를 마시는 것만으로 사회의 시선을 감내해야 했다.</strong> 이 소설은 특별한 여성의 특별한 불행이 아니라, 평범한 여성이 평범하게 살아가려 할 때 사회 구조가 얼마나 많은 것을 빼앗는지를 조용하고도 정확하게 기록한 사회 진단서다. 통계는 지영의 이야기가 수십만 명의 이야기임을 증명하고, 소설은 그 통계가 어떻게 한 사람의 삶을 갉아먹는지를 문학으로 번역한다. 우리가 이 소설을 읽고 해야 할 일은 감동받는 것이 아니라, 지영이 커피를 마시는 것이 더 이상 용기가 필요한 일이 되지 않도록 구조를 바꾸는 것이다.</div>
-      <div class="sample-full-footer">
-        <span><span class="ok">✓</span> 총 1,498자</span>
-        <span><span class="ok">✓</span> 5문단 구조 완성</span>
-        <span><span class="ok">✓</span> 통계 3회 인용 + 출처 명시</span>
-        <span><span class="ok">✓</span> 소설 장면 4회 연결</span>
-        <span><span class="ok">✓</span> 도입 이미지 결말 재활용</span>
+      <div class="rule-block" style="margin-bottom:1.25rem;">
+        <div class="rule-title">📚 도입을 여는 4가지 기본 패턴</div>
+        <div class="rule-body">
+          1. <strong>기본형</strong>: 장면 → 내 감정 → 문제 제기. 가장 안정적이고 수행평가용으로 쓰기 쉽다.<br>
+          2. <strong>통계형</strong>: 현실 자료 → 작품 연결. 사회 문제가 처음부터 분명하게 드러난다.<br>
+          3. <strong>질문형</strong>: "왜 청소년은 속마음을 숨길까?"처럼 질문으로 시작해 독자를 끌어들인다.<br>
+          4. <strong>주장형</strong>: "감정 표현을 약함으로 보는 문화는 바뀌어야 한다."처럼 입장을 먼저 내세운다.<br>
+          <strong>도입은 꼭 한 가지 방식만 정답이 아니며, 시작 방식에 따라 글의 분위기와 도입의 흐름이 달라집니다.</strong><br>
+          다만 <strong>도입-전개1-전개2-전개3-정리</strong>라는 5문단 큰 구조는 그대로 유지되고, 달라지는 것은 <strong>도입 첫 문장을 어떻게 여는지</strong>입니다.
+        </div>
       </div>
-    </div>
 
-    <!-- 설계도 입력 -->
-    <div class="input-section" style="margin-bottom:1rem;">
-      <div class="input-label"><span class="badge-you">YOU</span> 먼저 각 문단의 핵심 문장만 써봐 (설계도)</div>
-      <textarea class="user-input" id="sa3-outline" rows="7" placeholder="[도입] 어떤 장면/통계로 시작할지: …&#10;[전개1] 쓸 원인 2가지 + 각 출처: …&#10;[전개2] 쓸 통계/기사: …&#10;[전개3] 법·제도 방안 + 사회·문화 방안: …&#10;[정리] 마무리 방향 (도입 이미지 재활용): …"></textarea>
-    </div>
-    <div class="btn-row" style="margin-bottom:1.25rem;">
-      <button class="btn-coach" onclick="coachOutline()">🤖 구조 점검 받기</button>
-    </div>
-    <div class="coaching-box" id="cb-outline"><div class="coaching-header">🤖 구조 점검 결과</div><div class="coaching-content" id="cc-outline"></div></div>
+      <div class="rule-block" style="margin-bottom:1.25rem;">
+        <div class="rule-title">📝 도입 예시 비교</div>
+        <div class="rule-body" style="margin-bottom:0.9rem;">
+          아래 네 문장은 모두 <strong>"오늘의 기분은 사과"</strong>와 청소년의 감정 억압 문제를 다루지만, <strong>도입 방식이 달라지면 글의 인상도 달라집니다.</strong>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">기본형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 나는 이 장면이 답답하면서도 이해됐다. 이 작품은 청소년이 왜 자기 감정을 숨기게 되는지를 보여준다.
+            </div>
+          </div>
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">통계형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 답했다. 이런 현실은 "오늘의 기분은 사과" 속 이경의 모습과 겹친다. 이 작품은 감정을 숨기는 청소년의 현실을 비판적으로 드러낸다.
+            </div>
+          </div>
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">질문형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              왜 청소년은 힘들어도 괜찮은 척해야 할까? "오늘의 기분은 사과" 속 이경의 모습은 이 질문을 떠올리게 한다. 나는 이 작품이 감정 표현을 막는 관계의 분위기를 보여준다고 생각한다.
+            </div>
+          </div>
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">주장형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              감정 표현을 약함으로 보는 문화는 바뀌어야 한다. "오늘의 기분은 사과"는 이런 현실 속에서 청소년이 얼마나 쉽게 자기 마음을 숨기게 되는지를 보여준다. 특히 이경의 "괜찮아"라는 말은 그 억압을 잘 드러낸다.
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- 비평문 본문 입력 -->
-    <div class="input-section" style="margin-top:1.5rem;">
-      <div class="input-label"><span class="badge-you">YOU</span> 비평문 초안 전체 작성 (목표: 1500±50자)</div>
-      <textarea class="user-input" id="sa3-essay" rows="20"
-        placeholder="여기에 비평문 전체를 작성해. 5문단 구조를 지켜서 써봐.
+      <div class="rule-block" style="margin-bottom:1.25rem;">
+        <div class="rule-title">🧭 전개 방식은 어떻게 봐야 할까?</div>
+        <div class="rule-body">
+          <strong>이번 수행평가에서는 도입만 선택형으로 바꾸고, 전개1·2·3과 정리는 정해진 역할대로 쓰는 것이 가장 안전합니다.</strong><br>
+          즉 보통은 <strong>전개1 = 원인 분석, 전개2 = 현재 양상, 전개3 = 해결 방안, 정리 = 작품 판단과 마무리</strong>로 가면 됩니다.<br>
+          다만 글쓰기 이론으로 보면 전개 순서나 강조점은 바뀔 수 있습니다. 장면을 먼저 두고 분석할 수도 있고, 현실 사례를 먼저 제시한 뒤 원인을 풀 수도 있습니다.<br>
+          중요한 것은 순서를 바꾸더라도 <strong>문단 역할이 살아 있고, 근거와 해석의 연결이 분명해야 한다</strong>는 점입니다.
+        </div>
+      </div>
 
-[도입] …
+      <div class="rule-block" style="margin-bottom:1.25rem;">
+        <div class="rule-title">📖 전개 변형 예시</div>
+        <div class="rule-body" style="margin-bottom:0.9rem;">
+          아래는 <strong>이론적으로 전개를 변형하는 방식</strong>입니다. 수행평가에서는 기본형이 가장 안전하지만, 글쓰기 흐름을 이해하는 공부용으로 함께 알아두면 좋아요.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;">
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">전개1 변형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              <strong>통계 먼저</strong>: 통계 제시 → 의미 해석 → 작품 연결<br>
+              <strong>장면 먼저</strong>: 작품 장면 → 원인 분석 → 통계 보강<br>
+              <strong>비판 먼저</strong>: 문제 비판 → 원인 설명 → 근거 제시
+            </div>
+          </div>
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">전개2 변형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              <strong>현실 사례형</strong>: 기사·현실 사례 → 작품 연결<br>
+              <strong>관계 분석형</strong>: 작품 속 관계 분석 → 지금 현실과 연결<br>
+              <strong>혼란 강조형</strong>: 청소년의 모순된 감정 상태 → 사회 문제 확장
+            </div>
+          </div>
+          <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
+            <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">전개3 변형</div>
+            <div class="rule-body" style="font-size:0.8rem;">
+              <strong>학교 중심형</strong><br>
+              <strong>사회·문화 중심형</strong><br>
+              <strong>개인 + 제도 결합형</strong>
+            </div>
+          </div>
+        </div>
+      </div>
 
-[전개1 - 원인 분석] …
+      <div class="btn-row sa3-actions" style="margin-top:1.5rem;">
+        <button class="btn-next" onclick="focusSA3Part(0)">← 비평 가이드로</button>
+        <button class="btn-next primary-next" onclick="focusSA3Part(2)" style="margin-left:auto;">2단계: 본문 편집하기 ›</button>
+      </div>
+    </div> <!-- /sa3-view-1 -->
 
-[전개2 - 현재 양상] …
+    <!-- 2. 본문 편집 탭 -->
+    <div class="sa3-part-view" id="sa3-view-2">
+      <div class="sec-eyebrow">STEP 3 · 2단계</div>
+      <div class="sec-title">5문단 본문 편집기</div>
+      <div class="sec-desc">가이드와 설계도를 참고해 5문단 본문을 각각 작성하고 종합 첨삭을 받아보자.</div>
+      
+      <div style="margin-top:1rem; background:linear-gradient(to right, rgba(244,114,182,0.08), rgba(244,114,182,0.02)); border:1px solid rgba(244,114,182,0.2); border-left:3px solid var(--lit-primary); border-radius:8px; padding:0.8rem 1rem; display:flex; gap:0.6rem; align-items:flex-start;">
+        <span style="font-size:1.1rem; line-height:1.2;">✏️</span>
+        <div style="font-size:0.78rem; line-height:1.5; color:var(--text-secondary);">
+          <strong style="color:var(--text); display:block; margin-bottom:0.15rem;">미리 입력된 본문 샘플은 마음대로 지우거나 이어서 쓸 수 있습니다!</strong>
+          편집기란을 누르고 안내 문구를 참고하여 자신만의 1500자 비평문을 완성해 보세요.
+        </div>
+      </div>
 
-[전개3 - 해결 방안] …
+      <!-- 비평문 본문 입력 -->
+      <div style="margin-top:1.25rem;">
+        <div class="sa3-panel" style="padding:1.25rem 1.75rem;">
+          <div class="sa3-part-list">
+          <div class="sa3-part-block">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+              <div style="flex:1; min-width:0;">
+                <div class="sa3-part-name sa3-intro-toggle" id="sa3-intro-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="toggleIntroFields()">
+                  <span class="sa3-intro-arrow">▾</span>
+                  <span>[도입] <span id="sa3-intro-pattern-label" style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">장면 + 내 감정 + 문제 제기</span></span>
+                </div>
+              </div>
+              <div class="sa3-count-wrap">
+                <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
+                <div><span class="count-value" id="cnt-intro">0</span> <span class="count-target">/ 250자</span></div>
+              </div>
+            </div>
+            <div class="sa3-intro-fields" id="sa3-intro-fields">
+              <div style="margin-bottom:0.9rem; padding:0.95rem 1rem; border:1px solid rgba(244,114,182,0.18); border-radius:12px; background:rgba(15,23,42,0.32);">
+                <div style="font-size:0.84rem; font-weight:800; color:var(--lit-primary); margin-bottom:0.45rem;">도입 가이드</div>
+                <div style="font-size:0.79rem; line-height:1.65; color:#e5e7eb; margin-bottom:0.55rem;">
+                  가장 기본형은 <strong>장면 → 내 감정 → 문제 제기</strong> 순서예요. 다만 도입은 꼭 한 방식만 정답이 아니고, 시작을 어떻게 여느냐에 따라 글 분위기가 달라집니다.
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.5rem;">
+                  <button type="button" onclick="applyIntroTemplate('basic')" id="sa3-intro-card-basic" style="padding:0.6rem 0.7rem; border-radius:10px; background:rgba(244,114,182,0.1); border:1px solid rgba(244,114,182,0.34); text-align:left; cursor:pointer;">
+                    <div style="font-size:0.76rem; font-weight:800; color:#ffffff; margin-bottom:0.2rem;">기본형</div>
+                    <div style="font-size:0.72rem; color:#cbd5e1;">장면 → 감정 → 문제 제기</div>
+                  </button>
+                  <button type="button" onclick="applyIntroTemplate('stat')" id="sa3-intro-card-stat" style="padding:0.6rem 0.7rem; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); text-align:left; cursor:pointer;">
+                    <div style="font-size:0.76rem; font-weight:800; color:#ffffff; margin-bottom:0.2rem;">통계형</div>
+                    <div style="font-size:0.72rem; color:#cbd5e1;">현실 자료 → 작품 연결</div>
+                  </button>
+                  <button type="button" onclick="applyIntroTemplate('question')" id="sa3-intro-card-question" style="padding:0.6rem 0.7rem; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); text-align:left; cursor:pointer;">
+                    <div style="font-size:0.76rem; font-weight:800; color:#ffffff; margin-bottom:0.2rem;">질문형</div>
+                    <div style="font-size:0.72rem; color:#cbd5e1;">질문 → 장면 → 해석</div>
+                  </button>
+                  <button type="button" onclick="applyIntroTemplate('claim')" id="sa3-intro-card-claim" style="padding:0.6rem 0.7rem; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); text-align:left; cursor:pointer;">
+                    <div style="font-size:0.76rem; font-weight:800; color:#ffffff; margin-bottom:0.2rem;">주장형</div>
+                    <div style="font-size:0.72rem; color:#cbd5e1;">입장 → 작품 근거</div>
+                  </button>
+                </div>
+              </div>
+              <div class="sa3-structure-grid">
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label" id="sa3-intro-label-1">장면</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-intro-scene" oninput="syncIntroFromFields()">이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label" id="sa3-intro-label-2">내 감정</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-intro-feeling" oninput="syncIntroFromFields()">나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label" id="sa3-intro-label-3">문제 제기</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-intro-issue" oninput="syncIntroFromFields()">"오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않는다. 제목처럼 감정이란 때로 말로 설명되지 않고 그저 어떤 이미지로만 남는다. 나는 이 소설이 감정 표현을 억압하는 관계 속에서 자기 마음을 잃어가는 청소년의 현실을 비판하고 있다고 생각한다.</textarea>
+                </div>
+              </div>
+              <div class="sa3-structure-preview" id="sa3-intro-preview"></div>
+            </div>
+            <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-intro" oninput="updateEssayCount()">이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다. "오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않는다. 제목처럼 감정이란 때로 말로 설명되지 않고 그저 어떤 이미지로만 남는다. 나는 이 소설이 감정 표현을 억압하는 관계 속에서 자기 마음을 잃어가는 청소년의 현실을 비판하고 있다고 생각한다.</textarea>
+          </div>
+          <div class="sa3-part-block">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+              <div style="flex:1; min-width:0;">
+                <div class="sa3-part-name sa3-part-toggle" id="sa3-body1-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body1-fields','sa3-body1-toggle')">
+                  <span class="sa3-part-arrow">▾</span>
+                  <span>[전개1 - 원인 분석] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">통계 + 원인 분석 + 비판적 시선</span></span>
+                </div>
+              </div>
+              <div class="sa3-count-wrap">
+                <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
+                <div><span class="count-value" id="cnt-body1">0</span> <span class="count-target">/ 350자</span></div>
+              </div>
+            </div>
+            <div class="sa3-part-fields" id="sa3-body1-fields">
+              <div class="sa3-structure-grid">
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">통계</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-stat" oninput="syncSectionFromFields('body1')">교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">원인 분석</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-cause" oninput="syncSectionFromFields('body1')">청소년이 감정을 솔직하게 드러내지 못하는 가장 큰 이유는 또래 관계 안에서 생기는 낙인이다. 이 수치는 많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다는 뜻이다. 또 학교는 갈등을 줄이라고 하지만 감정을 설명하고 받아들이는 법은 충분히 가르치지 않는다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">비판적 시선</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-critique" oninput="syncSectionFromFields('body1')">소설 속 이경도 상처받았지만 유림에게 말하지 못한다. 나는 여기서 개인의 성격보다 분위기의 힘이 더 무섭다고 느꼈다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서는 솔직함이 용기보다 실수로 취급되기 쉽다. 감정을 말했다가 관계가 어색해지는 경험을 반복하면, 학생들은 점점 침묵을 더 안전한 방식으로 내면화하게 된다.</textarea>
+                </div>
+              </div>
+              <div class="sa3-structure-preview" id="sa3-body1-preview"></div>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body1" oninput="updateEssayCount()">청소년이 감정을 솔직하게 드러내지 못하는 가장 큰 이유는 또래 관계 안에서 생기는 낙인이다. 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다. 이 수치는 많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다는 뜻이다. 소설 속 이경도 상처받았지만 유림에게 말하지 못한다. 나는 여기서 개인의 성격보다 분위기의 힘이 더 무섭다고 느꼈다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서는 솔직함이 용기보다 실수로 취급되기 쉽다. 또 학교는 갈등을 줄이라고 하지만 감정을 설명하고 받아들이는 법은 충분히 가르치지 않는다. 감정을 말했다가 관계가 어색해지는 경험을 반복하면, 학생들은 점점 침묵을 더 안전한 방식으로 내면화하게 된다.</textarea>
+            </div>
+          </div>
+          <div class="sa3-part-block">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+              <div style="flex:1; min-width:0;">
+                <div class="sa3-part-name sa3-part-toggle" id="sa3-body2-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body2-fields','sa3-body2-toggle')">
+                  <span class="sa3-part-arrow">▾</span>
+                  <span>[전개2 - 현재 양상] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">현실 자료 + 혼란스러운 현재성 + 작품 연결</span></span>
+                </div>
+              </div>
+              <div class="sa3-count-wrap">
+                <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
+                <div><span class="count-value" id="cnt-body2">0</span> <span class="count-target">/ 300자</span></div>
+              </div>
+            </div>
+            <div class="sa3-part-fields" id="sa3-body2-fields">
+              <div class="sa3-structure-grid">
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">현실 자료</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-data" oninput="syncSectionFromFields('body2')">교육부·질병관리청 '2024 청소년 건강행태 조사'에 따르면 중·고등학생의 스트레스 인지율은 42.3%로, 전년 대비 5%p 올라 조사 이래 최대 상승폭을 기록했다. 같은 조사에서 최근 1년 내 우울감을 경험한 비율도 27.7%로, 10명 중 3명꼴이었다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">혼란스러운 현재성</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-present" oninput="syncSectionFromFields('body2')">이 문제는 소설 속 이야기에서 끝나지 않는다. 이렇게 많은 학생이 스트레스와 우울을 경험하면서도, 정작 그 감정을 말로 꺼내는 사람은 드물다. 힘들다고 말하면 예민하게 보일까 봐, 분위기를 망칠까 봐 조용히 삼키는 쪽을 택한다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">작품 연결</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-link" oninput="syncSectionFromFields('body2')">소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓인다. 모두가 힘들어하면서도 아무도 먼저 이상하다고 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
+                </div>
+              </div>
+              <div class="sa3-structure-preview" id="sa3-body2-preview"></div>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body2" oninput="updateEssayCount()">이 문제는 소설 속 이야기에서 끝나지 않는다. 교육부·질병관리청 '2024 청소년 건강행태 조사'에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 조사 이래 최대 상승폭을 기록했고, 최근 1년 내 우울감을 경험한 비율도 27.7%에 달했다. 이렇게 많은 학생이 스트레스와 우울을 경험하면서도, 정작 그 감정을 말로 꺼내는 사람은 드물다. 힘들다고 말하면 예민하게 보일까 봐, 분위기를 망칠까 봐 조용히 삼키는 쪽을 택한다. 소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓인다. 모두가 힘들어하면서도 아무도 먼저 이상하다고 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
+            </div>
+          </div>
+          <div class="sa3-part-block">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+              <div style="flex:1; min-width:0;">
+                <div class="sa3-part-name sa3-part-toggle" id="sa3-body3-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body3-fields','sa3-body3-toggle')">
+                  <span class="sa3-part-arrow">▾</span>
+                  <span>[전개3 - 해결 방안] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">학교 차원 + 문화 차원 + 희망 근거</span></span>
+                </div>
+              </div>
+              <div class="sa3-count-wrap">
+                <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
+                <div><span class="count-value" id="cnt-body3">0</span> <span class="count-target">/ 350자</span></div>
+              </div>
+            </div>
+            <div class="sa3-part-fields" id="sa3-body3-fields">
+              <div class="sa3-structure-grid">
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">학교 차원</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-school" oninput="syncSectionFromFields('body3')">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 먼저 학교 안에서 감정 언어화 교육과 대화 훈련을 운영할 필요가 있다. 자신의 감정을 정확히 말하는 연습과 상대의 감정을 함부로 판단하지 않는 연습이 함께 이루어져야 한다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">문화 차원</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-culture" oninput="syncSectionFromFields('body3')">사회적으로도 감정 표현을 유난함이나 약함으로 보는 시선을 바꿔야 한다. 힘들다고 말하는 것이 짐이 아니라 신뢰의 표현임을 알 수 있도록, 또래 상담이나 감정 언어화 캠페인 같은 문화적 접근이 함께 이루어져야 한다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">희망 근거</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-hope" oninput="syncSectionFromFields('body3')">나는 소설 속 전솔의 존재가 중요하다고 느꼈다. 전솔은 이경에게 솔직하게 말을 건네고, 그 말이 싸움이 아닌 연결이 될 수 있다는 가능성을 보여준다. 이것은 개인의 용기만이 아니라, 그 솔직함을 받아줄 수 있는 관계와 환경이 먼저 만들어져야 한다는 것을 뜻한다.</textarea>
+                </div>
+              </div>
+              <div class="sa3-structure-preview" id="sa3-body3-preview"></div>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body3" oninput="updateEssayCount()">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 먼저 학교 안에서 감정 언어화 교육과 대화 훈련을 운영할 필요가 있다. 자신의 감정을 정확히 말하는 연습과 상대의 감정을 함부로 판단하지 않는 연습이 함께 이루어져야 한다. 사회적으로도 감정 표현을 유난함이나 약함으로 보는 시선을 바꿔야 한다. 힘들다고 말하는 것이 짐이 아니라 신뢰의 표현임을 알 수 있도록, 또래 상담이나 감정 언어화 캠페인 같은 문화적 접근이 함께 이루어져야 한다. 나는 소설 속 전솔의 존재가 중요하다고 느꼈다. 전솔은 이경에게 솔직하게 말을 건네고, 그 말이 싸움이 아닌 연결이 될 수 있다는 가능성을 보여준다. 이것은 개인의 용기만이 아니라, 그 솔직함을 받아줄 수 있는 관계와 환경이 먼저 만들어져야 한다는 것을 뜻한다.</textarea>
+            </div>
+          </div>
+          <div class="sa3-part-block">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+              <div style="flex:1; min-width:0;">
+                <div class="sa3-part-name sa3-part-toggle" id="sa3-end-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-end-fields','sa3-end-toggle')">
+                  <span class="sa3-part-arrow">▾</span>
+                  <span>[정리] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">따뜻하지만 아픈 작품이라는 판단 + 사회 비판</span></span>
+                </div>
+              </div>
+              <div class="sa3-count-wrap">
+                <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
+                <div><span class="count-value" id="cnt-end">0</span> <span class="count-target">/ 250자</span></div>
+              </div>
+            </div>
+            <div class="sa3-part-fields" id="sa3-end-fields">
+              <div class="sa3-structure-grid">
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">작품 판단</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-end-judgment" oninput="syncSectionFromFields('end')">이경이 반복해서 내뱉는 "괜찮아"는 사실 괜찮지 않다는 신호다. "오늘의 기분은 사과"는 청소년의 마음을 예쁘게만 포장하지 않는다. 오히려 착한 척, 괜찮은 척, 무난한 척을 강요하는 관계의 분위기가 얼마나 잔인할 수 있는지를 조용하게 드러낸다. 그래서 나는 이 소설이 따뜻하면서도 아픈 작품이라고 느꼈다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">사회 비판</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-end-critique" oninput="syncSectionFromFields('end')">누군가를 쉽게 비난하지는 않지만, 그렇다고 지금의 관계 문화를 그냥 넘어가지도 않기 때문이다. 결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다.</textarea>
+                </div>
+                <div class="sa3-structure-editor">
+                  <span class="sa3-structure-label">마무리</span>
+                  <textarea class="user-input sa3-part-input" id="sa3-end-close" oninput="syncSectionFromFields('end')">오늘의 기분이 사과처럼 그저 막연한 이미지로만 남지 않으려면, 그 감정을 말할 수 있는 관계가 먼저 있어야 한다. 청소년이 더 이상 괜찮은 척하지 않아도 되는 사회가 될 때, 이경의 "괜찮아"는 비로소 진짜 괜찮음으로 바뀔 수 있을 것이다.</textarea>
+                </div>
+              </div>
+              <div class="sa3-structure-preview" id="sa3-end-preview"></div>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-end" oninput="updateEssayCount()">이경이 반복해서 내뱉는 "괜찮아"는 사실 괜찮지 않다는 신호다. "오늘의 기분은 사과"는 청소년의 마음을 예쁘게만 포장하지 않는다. 오히려 착한 척, 괜찮은 척, 무난한 척을 강요하는 관계의 분위기가 얼마나 잔인할 수 있는지를 조용하게 드러낸다. 그래서 나는 이 소설이 따뜻하면서도 아픈 작품이라고 느꼈다. 누군가를 쉽게 비난하지는 않지만, 그렇다고 지금의 관계 문화를 그냥 넘어가지도 않기 때문이다. 결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다. 오늘의 기분이 사과처럼 그저 막연한 이미지로만 남지 않으려면, 그 감정을 말할 수 있는 관계가 먼저 있어야 한다. 청소년이 더 이상 괜찮은 척하지 않아도 되는 사회가 될 때, 이경의 "괜찮아"는 비로소 진짜 괜찮음으로 바뀔 수 있을 것이다.</textarea>
+            </div>
+          </div>
+        </div>
+        </div>
+        <textarea class="user-input sa3-hidden-essay" id="sa3-essay" aria-hidden="true" tabindex="-1"></textarea>
+      </div>
+      
+      <div class="btn-row sa3-actions" style="margin-top:1.25rem; gap:0.5rem;">
+        <button class="btn-coach" onclick="coachEssay()">🤖 비평문 종합 첨삭</button>
+        <button class="btn-next" onclick="openManuscriptModal()">원고지 미리보기</button>
+        <button class="btn-next primary-next" onclick="focusSA3Part(3)" style="margin-left:auto;">3단계: 제출 양식 검수하기 ›</button>
+      </div>
+      <div class="coaching-box" id="cb-essay" style="margin-top:1rem;"><div class="coaching-header">🤖 비평문 종합 첨삭 결과</div><div class="coaching-content" id="cc-essay"></div></div>
+    </div> <!-- /sa3-view-2 -->
 
-[정리] …"
-        oninput="updateEssayCount()"></textarea>
-      <div class="char-info" id="sa3-char">0자 / 목표 1500자</div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-coach" onclick="coachEssay()">🤖 비평문 종합 첨삭</button>
-      <button class="btn-next primary-next" onclick="completeAll()" style="margin-left:auto;">🎉 전체 완료!</button>
-    </div>
-    <div class="coaching-box" id="cb-essay"><div class="coaching-header">🤖 비평문 종합 첨삭 결과</div><div class="coaching-content" id="cc-essay"></div></div>
+    <!-- 3. 최종 검수 탭 -->
+    <div class="sa3-part-view" id="sa3-view-3">
+      <div class="sec-eyebrow">STEP 3 · 3단계</div>
+      <div class="sec-title">실시간 제출 양식 점검</div>
+      <div class="sec-desc">실시간으로 작성된 내용이 조건에 맞는지 파악하고, 원고지 제출 전 연습 삼아 최종 확인해보자.</div>
+      
+      <div style="margin-top:1.25rem;">
+        <div class="sa3-panel" id="sa3-print-area" style="padding:1.5rem 1.75rem;">
+          
+          <div class="exam-paper-header">
+            <div class="exam-title">&lt;수행평가3&gt; 사회 문제의 창의적 해결을 위한 글쓰기</div>
+            <table class="exam-info-table">
+              <tr>
+                <th>학번</th><td></td>
+                <th>이름</th><td></td>
+                <th>점수</th><td></td>
+              </tr>
+              <tr>
+                <th>책 제목</th><td colspan="3" id="exam-book-title" style="text-align:left; padding-left:1rem; font-weight:700;"></td>
+                <th>작가</th><td id="exam-book-author"></td>
+              </tr>
+            </table>
+
+            <div class="exam-direction">○ 자신이 선택한 소설을 읽고 &lt;조건&gt;에 맞게 비평하시오.</div>
+
+            <div class="exam-conditions">
+              <div class="ec-title">&lt; 조 건 &gt;</div>
+              <ol>
+                <li>제목과 연관된 서평 주제를 담을 것(내용이 유사하지 않도록 유의)</li>
+                <li>[도입] - [전개1] - [전개2] - [전개3] - [정리] 5개 문단으로 나누어 서술할 것, 반드시 <span style="color:#f472b6; text-decoration:underline;">문단</span>으로 나누어 서술할 것(들여쓰기 할 것)</li>
+                <li>통일성, 응집성을 갖춘 완결된 글이 되도록 서술할 것.</li>
+                <li>청색 또는 흑색의 볼펜을 사용할 것. 수정테이프 사용가능. 글씨를 또박 또박 쓸 것.</li>
+                <li>올바른 맞춤법, 띄어쓰기를 하며 주어진 분량을 지킬 것(1500±50)</li>
+                <li>다른 자료나 메모 등은 참고할 수 없습니다.</li>
+              </ol>
+            </div>
+
+            <div class="exam-subject-input">
+              제목: <span class="subject-line"></span>
+            </div>
+          </div>
+
+          <div class="sa3-rubric-list" id="sa3-rubric-list" style="margin-top:1.5rem;"></div>
+          <div class="char-info" id="sa3-char">0자 / 목표 1500자</div>
+          
+          <div class="manuscript-wrap" style="margin-top:2rem;">
+            <div class="sa3-panel-title">원고지 자동 생성 미리보기</div>
+            <div class="manuscript-note">1페이지 600자(25칸×24줄) 기준입니다. (들여쓰기 칸 띄어쓰기에 유의하세요)</div>
+            <div class="manuscript-pages" id="sa3-manuscript-pages" onclick="openManuscriptModal()"></div>
+            <div class="manuscript-preview-cta">미리보기를 클릭하면 크게 볼 수 있어요</div>
+            <div class="print-manuscript-pages" id="sa3-print-pages" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row sa3-actions" style="margin-top:1.5rem;">
+        <button class="btn-next" onclick="focusSA3Part(2)">← 본문 편집하기</button>
+        <button class="btn-next" onclick="openSA3PrintPage()">🖨 원고지 출력</button>
+        <button class="btn-next primary-next" onclick="completeAll()" style="margin-left:auto;">🎉 전체 완료!</button>
+      </div>
 
     <!-- 완성 배너 -->
     <div class="complete-banner" id="complete-banner">
@@ -272,18 +914,155 @@
         <strong id="final-book-name" style="color:var(--lit-primary);"></strong>으로 최고의 결과를 내봐 💪
       </div>
       <div class="btn-row" style="justify-content:center;margin-top:1.25rem;">
+        <button class="btn-next" onclick="openSA3PrintPage()">원고지 출력</button>
         <button class="btn-next" onclick="location.href='coach-korean.html'">처음부터 다시 복습</button>
         <button class="btn-next" onclick="location.href='index.html'">다른 과목 하러 가기</button>
       </div>
     </div>
-  </div>
 
-</div>
+    </div> <!-- /sa3-view-3 -->
+  </div> <!-- /section-card -->
+
+</div> <!-- /coach-wrap -->
 <div class="toast" id="global-toast"></div>
+<div class="sa3-print-root" id="sa3-print-root" aria-hidden="true"></div>
+<div class="preview-modal" id="manuscript-preview-modal" aria-hidden="true" onclick="handlePreviewBackdrop(event)">
+  <div class="preview-modal-dialog" role="dialog" aria-modal="true" aria-label="원고지 크게 보기">
+    <div class="preview-modal-header">
+      <div>
+        <div class="preview-modal-title">원고지 크게 보기</div>
+        <div class="preview-modal-subtitle">페이지를 위에서 아래로 이어서 확인할 수 있어요.</div>
+      </div>
+      <div class="preview-modal-actions">
+        <button class="preview-modal-edit" type="button" onclick="goToEssayEditor()">본문 편집</button>
+        <button class="preview-modal-print" type="button" onclick="openSA3PrintPage()">🖨 원고지 출력</button>
+        <button class="preview-modal-close" type="button" aria-label="닫기" onclick="closeManuscriptModal()">✕</button>
+      </div>
+    </div>
+    <div class="preview-modal-body">
+      <div class="preview-modal-pages" id="manuscript-preview-modal-pages"></div>
+    </div>
+  </div>
+</div>
 
 <script>
+/* ── 진행 탭 제어 함수 ── */
+function focusSA3Part(n) {
+  document.querySelectorAll('.sa3-step-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.sa3-part-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('sa3-chip-' + n).classList.add('active');
+  document.getElementById('sa3-view-' + n).classList.add('active');
+  
+  // 탭 이동 시 진행 상태를 업데이트하고 페이지 최상단으로 이동
+  updateEssayCount();
+  window.scrollTo({ top: Math.max(0, document.getElementById('step-3').offsetTop - 65), behavior: 'smooth' });
+
+  // 탭 변경 시 리사이즈 트리거 재호출(숨겨져있던 textarea가 표시될 때 높이 재계산 위함)
+  setTimeout(() => {
+    document.querySelectorAll('.sa3-part-view.active textarea.user-input').forEach(el => {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    });
+  }, 10);
+}
+
+/* ── textarea 자동 높이 조절 ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const tx = document.querySelectorAll('textarea.user-input');
+  for (let i = 0; i < tx.length; i++) {
+    const el = tx[i];
+    el.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+      const sectionName = getSectionNameByFieldId(this.id);
+      if (sectionName) syncSectionFieldHeights(sectionName);
+    });
+    setTimeout(() => {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+      const sectionName = getSectionNameByFieldId(el.id);
+      if (sectionName) syncSectionFieldHeights(sectionName);
+    }, 100);
+  }
+  
+  // 초기 글자수 반영
+  updateOutlineCount();
+  updateEssayCount();
+});
+
 /* ── 책 정보 복원 ── */
 let book = null;
+const SA3_PART_IDS = ['sa3-part-intro','sa3-part-body1','sa3-part-body2','sa3-part-body3','sa3-part-end'];
+const SA3_SECTION_GROUPS = {
+  intro: {
+    fieldIds: ['sa3-intro-scene', 'sa3-intro-feeling', 'sa3-intro-issue'],
+    hiddenId: 'sa3-part-intro',
+    previewId: 'sa3-intro-preview',
+    emptyText: '위 3칸을 채우면 도입 문단이 여기서 합쳐져 보여요.'
+  },
+  body1: {
+    fieldIds: ['sa3-body1-stat', 'sa3-body1-cause', 'sa3-body1-critique'],
+    hiddenId: 'sa3-part-body1',
+    previewId: 'sa3-body1-preview',
+    emptyText: '통계, 원인 분석, 비판적 시선을 채우면 전개1 문단이 합쳐져 보여요.'
+  },
+  body2: {
+    fieldIds: ['sa3-body2-data', 'sa3-body2-present', 'sa3-body2-link'],
+    hiddenId: 'sa3-part-body2',
+    previewId: 'sa3-body2-preview',
+    emptyText: '현실 자료, 현재 양상, 작품 연결을 채우면 전개2 문단이 합쳐져 보여요.'
+  },
+  body3: {
+    fieldIds: ['sa3-body3-school', 'sa3-body3-culture', 'sa3-body3-hope'],
+    hiddenId: 'sa3-part-body3',
+    previewId: 'sa3-body3-preview',
+    emptyText: '학교 차원, 문화 차원, 희망 근거를 채우면 전개3 문단이 합쳐져 보여요.'
+  },
+  end: {
+    fieldIds: ['sa3-end-judgment', 'sa3-end-critique', 'sa3-end-close'],
+    hiddenId: 'sa3-part-end',
+    previewId: 'sa3-end-preview',
+    emptyText: '작품 판단, 사회 비판, 마무리를 채우면 정리 문단이 합쳐져 보여요.'
+  }
+};
+const SA3_INTRO_TEMPLATES = {
+  basic: {
+    summary: '장면 + 내 감정 + 문제 제기',
+    labels: ['장면', '내 감정', '문제 제기'],
+    values: [
+      '이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다.',
+      '나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.',
+      '"오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않고, 청소년이 왜 자기 감정을 숨기게 되는지를 보여준다. 나는 이 소설이 감정 표현 억압 문제를 통해 관계를 지키려다 자기 마음을 잃어버리는 현실을 비판한다고 생각한다.'
+    ]
+  },
+  stat: {
+    summary: '통계 + 작품 연결 + 문제 제기',
+    labels: ['통계', '작품 연결', '문제 제기'],
+    values: [
+      '교육부·한국청소년정책연구원 "2023 청소년 정신건강 실태조사"에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다.',
+      '이 수치는 "오늘의 기분은 사과" 속 이경의 모습과 겹친다. 이경 역시 불편한 감정을 느끼면서도 겉으로는 자꾸 "괜찮아"라고 말하며 자기 마음을 숨긴다.',
+      '나는 이 작품이 청소년의 감정 표현 억압이 개인의 성격 문제가 아니라, 현실 속 관계 분위기와 사회 구조에서 비롯된 문제임을 보여준다고 생각한다.'
+    ]
+  },
+  question: {
+    summary: '질문 + 장면 + 해석',
+    labels: ['질문', '장면', '해석'],
+    values: [
+      '왜 청소년은 힘들어도 괜찮은 척해야 할까?',
+      '"오늘의 기분은 사과" 속 이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 그 장면은 청소년이 자기 감정보다 관계의 분위기를 더 먼저 살피게 되는 현실을 떠올리게 한다.',
+      '나는 이 작품이 감정을 솔직하게 드러내지 못하게 만드는 관계 문화를 보여주며, 청소년의 감정 억압 문제를 비판하고 있다고 생각한다.'
+    ]
+  },
+  claim: {
+    summary: '입장 + 작품 근거 + 문제 제기',
+    labels: ['입장', '작품 근거', '문제 제기'],
+    values: [
+      '감정 표현을 약함으로 보는 문화는 바뀌어야 한다.',
+      '"오늘의 기분은 사과"는 이경이 반복해서 "괜찮아"라고 말하는 장면을 통해 청소년이 얼마나 쉽게 자기 마음을 숨기게 되는지를 보여준다.',
+      '나는 이 작품이 감정을 숨기는 태도를 개인의 미성숙이 아니라 사회가 만든 억압의 결과로 바라보게 만든다고 생각한다.'
+    ]
+  }
+};
 (function loadBook() {
   // URL 파라미터에서 복원
   try {
@@ -297,13 +1076,376 @@ let book = null;
   }
   const chip = document.getElementById('book-chip');
   const finalName = document.getElementById('final-book-name');
-  if (book) {
-    chip.textContent = '📖 ' + book.title;
-    if (finalName) finalName.textContent = book.title;
+  const examTitle = document.getElementById('exam-book-title');
+  const examAuthor = document.getElementById('exam-book-author');
+  
+  if (!book) {
+    book = { title: '오늘의 기분은 사과', author: '김지현' };
   }
+  
+  chip.textContent = '📖 ' + book.title;
+  if (finalName) finalName.textContent = book.title;
+  if (examTitle) examTitle.textContent = book.title;
+  if (examAuthor) examAuthor.textContent = book.author || '김지현';
+  
 })();
 
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function buildSectionDraft(name) {
+  const config = SA3_SECTION_GROUPS[name];
+  if (!config) return '';
+  return config.fieldIds
+    .map(id => document.getElementById(id)?.value.trim() || '')
+    .filter(Boolean)
+    .join(' ');
+}
+
+function syncSectionFieldHeights(name) {
+  const config = SA3_SECTION_GROUPS[name];
+  if (!config) return;
+  const fields = config.fieldIds
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if (!fields.length) return;
+
+  fields.forEach(field => {
+    field.style.height = 'auto';
+  });
+  const maxHeight = Math.max(...fields.map(field => field.scrollHeight));
+  fields.forEach(field => {
+    field.style.height = `${maxHeight}px`;
+  });
+}
+
+function isIntroField(el) {
+  return !!el && ['sa3-intro-scene', 'sa3-intro-feeling', 'sa3-intro-issue'].includes(el.id);
+}
+
+function getSectionNameByFieldId(fieldId) {
+  return Object.entries(SA3_SECTION_GROUPS).find(([, config]) => config.fieldIds.includes(fieldId))?.[0] || '';
+}
+
+function syncIntroFromFields() {
+  syncSectionFromFields('intro');
+}
+
+function applyIntroTemplate(type) {
+  const template = SA3_INTRO_TEMPLATES[type];
+  if (!template) return;
+  const fieldIds = SA3_SECTION_GROUPS.intro.fieldIds;
+  fieldIds.forEach((id, index) => {
+    const field = document.getElementById(id);
+    if (field) {
+      field.value = template.values[index] || '';
+    }
+  });
+  template.labels.forEach((label, index) => {
+    const labelEl = document.getElementById(`sa3-intro-label-${index + 1}`);
+    if (labelEl) labelEl.textContent = label;
+  });
+  const summary = document.getElementById('sa3-intro-pattern-label');
+  if (summary) summary.textContent = template.summary;
+
+  Object.keys(SA3_INTRO_TEMPLATES).forEach(key => {
+    const card = document.getElementById(`sa3-intro-card-${key}`);
+    if (!card) return;
+    const active = key === type;
+    card.style.background = active ? 'rgba(244,114,182,0.1)' : 'rgba(255,255,255,0.03)';
+    card.style.borderColor = active ? 'rgba(244,114,182,0.34)' : 'rgba(255,255,255,0.06)';
+  });
+
+  syncIntroFromFields();
+}
+
+function syncSectionFromFields(name) {
+  const config = SA3_SECTION_GROUPS[name];
+  if (!config) return;
+  const merged = buildSectionDraft(name);
+  const hidden = document.getElementById(config.hiddenId);
+  const preview = document.getElementById(config.previewId);
+  if (hidden) hidden.value = merged;
+  if (preview) preview.textContent = merged || config.emptyText;
+  syncSectionFieldHeights(name);
+  updateEssayCount();
+}
+
+function collectEssayDraft() {
+  Object.keys(SA3_SECTION_GROUPS).forEach(name => {
+    const config = SA3_SECTION_GROUPS[name];
+    const hidden = document.getElementById(config.hiddenId);
+    if (hidden) hidden.value = buildSectionDraft(name);
+  });
+  const parts = SA3_PART_IDS.map(id => document.getElementById(id)?.value.trim() || '');
+  const merged = parts.filter(Boolean).join('\n\n');
+  const hidden = document.getElementById('sa3-essay');
+  if (hidden) hidden.value = merged;
+  return merged;
+}
+
+function getEssayTitle() {
+  const intro = document.getElementById('sa3-part-intro')?.value.trim() || '';
+  const firstSentence = intro
+    .replace(/\s+/g, ' ')
+    .split(/[.!?]\s|다\.\s|요\.\s|다$/)[0]
+    .trim();
+  const clipped = firstSentence.replace(/^["'“”‘’\s]+|["'“”‘’\s]+$/g, '');
+  if (clipped && clipped.length >= 6) {
+    return clipped.length > 28 ? `${clipped.slice(0, 28)}...` : clipped;
+  }
+  return `${book?.title || '선택 도서'}를 읽고`;
+}
+
+function createManuscriptCells(chars, totalCells) {
+  let html = '';
+  for (let i = 0; i < totalCells; i++) {
+    const ch = chars[i];
+    html += `<div class="manuscript-cell${!ch || ch === ' ' ? ' empty' : ''}">${ch ? escapeHtml(ch) : '&nbsp;'}</div>`;
+  }
+  return html;
+}
+
+function createRowNumbers(startNumber, rows) {
+  let html = '';
+  for (let row = 0; row < rows; row++) {
+    html += `<div class="manuscript-row-number">${(startNumber + (row * 25)).toLocaleString()}</div>`;
+  }
+  return html;
+}
+
+function renderManuscriptSheet(chars, options) {
+  const {
+    title,
+    rows,
+    startNumber,
+    withHeader = false,
+    filledChars = chars.length
+  } = options;
+
+  const gridClass = rows === 48 ? 'grid-48' : 'grid-24';
+  const gridHtml = createManuscriptCells(chars, rows * 25);
+  const numbersHtml = createRowNumbers(startNumber, rows);
+
+  if (withHeader) {
+    return `
+      <section class="manuscript-sheet left">
+        <div class="manuscript-page-title">${title}</div>
+        <div class="manuscript-headline">&lt;수행평가3&gt; 사회 문제의 창의적 해결을 위한 글쓰기</div>
+        <table class="manuscript-info-table" aria-hidden="true">
+          <tr>
+            <th>학번</th><td></td>
+            <th>이름</th><td></td>
+            <th>점수</th><td></td>
+          </tr>
+          <tr>
+            <th>책 제목</th><td colspan="3" class="book-cell">${escapeHtml(book?.title || '오늘의 기분은 사과')}</td>
+            <th>작가</th><td>${escapeHtml(book?.author || '김지현')}</td>
+          </tr>
+        </table>
+        <div class="manuscript-guideline">
+          <div class="manuscript-guideline-title">&lt; 조 건 &gt;</div>
+          <div class="manuscript-guideline-lead">○ 자신이 선택한 소설을 읽고 &lt;조건&gt;에 맞게 비평하시오.</div>
+          <ol>
+            <li>제목과 연관된 서평 주제를 담고, 내용이 유사하지 않도록 유의할 것.</li>
+            <li>[도입]-[전개1]-[전개2]-[전개3]-[정리] 5문단으로 쓰고 각 문단은 들여쓰기 할 것.</li>
+            <li>통일성과 응집성을 갖춘 완결된 글이 되도록 서술할 것.</li>
+            <li>올바른 맞춤법과 띄어쓰기를 지키고 분량 1500±50자를 맞출 것.</li>
+          </ol>
+        </div>
+        <div class="manuscript-subject">제목: <span class="manuscript-subject-line">${escapeHtml(getEssayTitle())}</span></div>
+        <div class="manuscript-grid-area">
+          <div class="manuscript-grid ${gridClass}">${gridHtml}</div>
+          <div class="manuscript-row-numbers">${numbersHtml}</div>
+        </div>
+        <div class="manuscript-meta"><span>좌측 원고지</span><span>${filledChars.toLocaleString()} / ${(rows * 25).toLocaleString()}자</span></div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="manuscript-sheet right">
+      <div class="manuscript-page-title">${title}</div>
+      <div class="manuscript-grid-area">
+        <div class="manuscript-grid ${gridClass}">${gridHtml}</div>
+        <div class="manuscript-row-numbers">${numbersHtml}</div>
+      </div>
+      <div class="manuscript-meta"><span>우측 원고지</span><span>${filledChars.toLocaleString()} / ${(rows * 25).toLocaleString()}자</span></div>
+    </section>
+  `;
+}
+
+function renderPrintManuscriptPages(text) {
+  const container = document.getElementById('sa3-print-pages');
+  const printRoot = document.getElementById('sa3-print-root');
+  if (!container || !printRoot) return;
+  const normalized = text
+    .split(/\n{2,}/)
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(part => ` ${part}`)
+    .join('');
+  const chars = [...normalized];
+  const pageSize = 600;
+  const totalPages = Math.max(1, Math.ceil(chars.length / pageSize));
+
+  let html = '';
+  for (let page = 0; page < totalPages; page++) {
+    const pageChars = chars.slice(page * pageSize, (page + 1) * pageSize);
+    html += `
+      <div class="print-manuscript-page">
+        ${renderManuscriptSheet(pageChars, {
+          title: `원고지 ${page + 1}장 · ${pageChars.length.toLocaleString()}/600자`,
+          rows: 24,
+          startNumber: (page * pageSize) + 25,
+          withHeader: false,
+          filledChars: pageChars.length
+        })}
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+  printRoot.innerHTML = `<div class="print-manuscript-pages">${html}</div>`;
+}
+
+function openManuscriptModal() {
+  const modal = document.getElementById('manuscript-preview-modal');
+  const modalPages = document.getElementById('manuscript-preview-modal-pages');
+  const source = document.getElementById('sa3-print-pages');
+  if (!modal || !modalPages || !source) return;
+  modalPages.innerHTML = source.innerHTML;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeManuscriptModal() {
+  const modal = document.getElementById('manuscript-preview-modal');
+  const modalPages = document.getElementById('manuscript-preview-modal-pages');
+  if (!modal || !modalPages) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  modalPages.innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+function goToEssayEditor() {
+  closeManuscriptModal();
+  focusSA3Part(2);
+}
+
+function toggleIntroFields() {
+  const wrap = document.getElementById('sa3-intro-fields');
+  const toggle = document.getElementById('sa3-intro-toggle');
+  if (!wrap || !toggle) return;
+  wrap.classList.toggle('collapsed');
+  toggle.classList.toggle('collapsed', wrap.classList.contains('collapsed'));
+}
+
+function togglePartFields(fieldsId, toggleId) {
+  const wrap = document.getElementById(fieldsId);
+  const toggle = document.getElementById(toggleId);
+  if (!wrap || !toggle) return;
+  wrap.classList.toggle('collapsed');
+  toggle.classList.toggle('collapsed', wrap.classList.contains('collapsed'));
+}
+
+function handlePreviewBackdrop(event) {
+  if (event.target?.id === 'manuscript-preview-modal') {
+    closeManuscriptModal();
+  }
+}
+
+function renderRubricStatus(text) {
+  const rubric = document.getElementById('sa3-rubric-list');
+  if (!rubric) return;
+  const parts = SA3_PART_IDS.map(id => document.getElementById(id)?.value.trim() || '');
+  const filledParts = parts.filter(Boolean).length;
+  const length = text.length;
+  const items = [
+    { label: '5문단 분리', state: filledParts === 5 ? 'ok' : filledParts >= 3 ? 'warn' : 'bad', msg: filledParts === 5 ? '완료' : `${filledParts}/5 입력` },
+    { label: '1500±50자', state: length >= 1449 && length <= 1551 ? 'ok' : length > 1200 ? 'warn' : 'bad', msg: length >= 1449 && length <= 1551 ? '적정' : `${length}자` },
+    { label: '통계·출처', state: /통계|%|출처|조사/.test(text) ? 'ok' : 'bad', msg: /통계|%|출처|조사/.test(text) ? '포함' : '보완 필요' },
+    { label: '비판적 시선', state: /비판|문제|무섭|잔인|넘어가지/.test(text) ? 'ok' : 'warn', msg: /비판|문제|무섭|잔인|넘어가지/.test(text) ? '드러남' : '약함' },
+    { label: '순수·혼란 감정', state: /이해|답답|혼란|순수|숨긴 채/.test(text) ? 'ok' : 'warn', msg: /이해|답답|혼란|순수|숨긴 채/.test(text) ? '드러남' : '보완 필요' }
+  ];
+  rubric.innerHTML = items.map(item => `<div class="sa3-rubric-item"><span class="sa3-rubric-label">${item.label}</span><strong class="sa3-rubric-state ${item.state}">${item.msg}</strong></div>`).join('');
+}
+
+function renderManuscriptPreview(text) {
+  const container = document.getElementById('sa3-manuscript-pages');
+  if (!container) return;
+  const normalized = text
+    .split(/\n{2,}/)
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(part => ` ${part}`)
+    .join('');
+  const chars = [...normalized];
+
+  const firstSheetSize = 600;
+  const rightSheetSize = 1200;
+  const totalCapacity = firstSheetSize + rightSheetSize;
+  const firstChars = chars.slice(0, firstSheetSize);
+  const rightChars = chars.slice(firstSheetSize, totalCapacity);
+
+  let html = `
+    <div class="manuscript-spread">
+      ${renderManuscriptSheet(firstChars, {
+        title: `원고지 1면 · ${firstChars.length.toLocaleString()}/600자`,
+        rows: 24,
+        startNumber: 25,
+        withHeader: true,
+        filledChars: firstChars.length
+      })}
+      ${renderManuscriptSheet(rightChars, {
+        title: `원고지 2면 · ${rightChars.length.toLocaleString()}/1200자`,
+        rows: 48,
+        startNumber: 625,
+        filledChars: rightChars.length
+      })}
+    </div>
+  `;
+
+  if (chars.length > totalCapacity) {
+    const overflowChars = chars.slice(totalCapacity);
+    const extraSheets = Math.ceil(overflowChars.length / rightSheetSize);
+    for (let i = 0; i < extraSheets; i++) {
+      const sheetChars = overflowChars.slice(i * rightSheetSize, (i + 1) * rightSheetSize);
+      const startNumber = 1825 + (i * rightSheetSize);
+      html += `
+        <div class="manuscript-spread">
+          ${renderManuscriptSheet(sheetChars, {
+            title: `추가 원고지 ${i + 3}면 · ${sheetChars.length.toLocaleString()}/1200자`,
+            rows: 48,
+            startNumber,
+            filledChars: sheetChars.length
+          })}
+        </div>
+      `;
+    }
+    html += `<div class="manuscript-overflow">1500자 기준을 넘겨 추가 원고지까지 펼쳐서 보여주고 있어요. 제출 전 분량을 다시 확인해보세요.</div>`;
+  }
+
+  container.innerHTML = html;
+  renderPrintManuscriptPages(text);
+}
+
 /* ── 구조 점검 (템플릿) ── */
+function updateOutlineCount() {
+  const outlineEl = document.getElementById('sa3-outline');
+  const cntSpan = document.getElementById('cnt-outline');
+  if (outlineEl && cntSpan) {
+    cntSpan.textContent = outlineEl.value.length.toLocaleString();
+  }
+}
+
 async function coachOutline() {
   const outline = document.getElementById('sa3-outline').value.trim();
   const cbEl = document.getElementById('cb-outline'), ccEl = document.getElementById('cc-outline');
@@ -335,7 +1477,7 @@ async function coachOutline() {
 
 /* ── 비평문 종합 첨삭 (템플릿) ── */
 async function coachEssay() {
-  const essay = document.getElementById('sa3-essay').value.trim();
+  const essay = collectEssayDraft().trim();
   const cbEl = document.getElementById('cb-essay'), ccEl = document.getElementById('cc-essay');
   if (!essay) { showToast('비평문을 먼저 작성해봐!'); return; }
   const n = essay.length;
@@ -376,12 +1518,37 @@ async function coachEssay() {
 }
 
 function updateEssayCount() {
-  const n = document.getElementById('sa3-essay').value.length;
+  const essay = collectEssayDraft();
+  const n = essay.length;
   const el = document.getElementById('sa3-char');
+  const subjectLine = document.querySelector('.subject-line');
   el.textContent = `${n.toLocaleString()}자 / 목표 1500자`;
   el.className = 'char-info';
   if (n >= 1449 && n <= 1551) el.classList.add('ok');
   else if (n > 1100) el.classList.add('warn');
+  if (subjectLine) subjectLine.textContent = getEssayTitle();
+  renderRubricStatus(essay);
+  renderManuscriptPreview(essay);
+
+  // 개별 파트 글자수 업데이트
+  const partsMap = [
+    { id: 'sa3-part-intro', cnt: 'cnt-intro', target: 250 },
+    { id: 'sa3-part-body1', cnt: 'cnt-body1', target: 350 },
+    { id: 'sa3-part-body2', cnt: 'cnt-body2', target: 300 },
+    { id: 'sa3-part-body3', cnt: 'cnt-body3', target: 350 },
+    { id: 'sa3-part-end', cnt: 'cnt-end', target: 250 }
+  ];
+  partsMap.forEach(p => {
+    const inputEl = document.getElementById(p.id);
+    const cntSpan = document.getElementById(p.cnt);
+    if (inputEl && cntSpan) {
+      const charCount = inputEl.value.length;
+      cntSpan.textContent = charCount.toLocaleString();
+      // 단락별 권장 글자수의 80% 이상이면 안정권 색상 처리
+      if(charCount >= p.target * 0.8) cntSpan.style.color = 'var(--lit-primary)';
+      else cntSpan.style.color = 'var(--text-dim)';
+    }
+  });
 }
 
 function completeAll() {
@@ -390,11 +1557,43 @@ function completeAll() {
   document.getElementById('complete-banner').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+  function openSA3PrintPage() {
+    const essay = collectEssayDraft();
+    const payload = {
+      book,
+      essay,
+      title: getEssayTitle()
+    };
+    try {
+      sessionStorage.setItem('coachPrint:sa3', JSON.stringify(payload));
+    } catch (e) { }
+    try {
+      localStorage.setItem('coachPrint:sa3', JSON.stringify(payload));
+    } catch (e) { }
+    window.open(`coach-korean-print-sa3.html?v=${Date.now()}`, '_blank', 'noopener');
+  }
+
+function printManuscript() {
+  focusSA3Part(3);
+  updateEssayCount();
+  setTimeout(() => window.print(), 80);
+}
+
 function showToast(msg) {
   const t = document.getElementById('global-toast'); if (!t) return;
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2600);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyIntroTemplate('basic');
+  Object.keys(SA3_SECTION_GROUPS).forEach(name => syncSectionFromFields(name));
+  updateEssayCount();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeManuscriptModal();
+});
 </script>
 </body>
 </html>
