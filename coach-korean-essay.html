@@ -126,8 +126,8 @@
     .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); gap: 1.5rem; }
     .brand { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
     .brand span { color: var(--lit-primary); }
-    .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; justify-content: flex-end; }
-    .nav-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.15s; }
+    .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; justify-content: flex-end; min-width: 0; }
+    .nav-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.15s; white-space: nowrap; flex: 0 0 auto; }
     .nav-tab:hover { background: var(--bg-card2); color: var(--text); }
     .nav-tab.lit { background: var(--lit-bg); color: var(--lit-primary); border: 1px solid var(--lit-border); }
 
@@ -145,7 +145,7 @@
 
     /* 공통 네비게이션 서브탭바 */
     .sub-tabbar { display: flex; align-items: center; gap: 0.25rem; padding: 0.75rem max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto; position: sticky; top: 57px; z-index: 200; }
-    .sub-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.82rem; font-family: var(--font-sans); padding: 0.4rem 0.9rem; cursor: pointer; white-space: nowrap; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+    .sub-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.82rem; font-family: var(--font-sans); padding: 0.4rem 0.9rem; cursor: pointer; white-space: nowrap; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; flex: 0 0 auto; }
     .sub-tab .step-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05rem; color: var(--text-dim); }
     .sub-tab:hover { color: var(--text); background: var(--bg-card2); }
     .sub-tab.lit.active { border-color: var(--lit-border); background: var(--lit-bg); color: var(--lit-primary); }
@@ -201,6 +201,9 @@
     .struct-stage { font-size: 0.72rem; font-weight: 700; color: var(--lit-primary); letter-spacing: 0.05rem; text-transform: uppercase; margin-bottom: 0.2rem; }
     .struct-detail { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; font-family: var(--font-serif); }
     .struct-detail strong { color: var(--text); }
+    .sa3-guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 1.25rem; }
+    .sa3-example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+    .sa3-variation-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
 
     /* 입력 */
     .input-section { margin-top: 1.25rem; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; }
@@ -223,9 +226,9 @@
     .sa3-part-input { min-height: 120px; }
     .sa3-hidden-essay { display: none; }
     .sa3-rubric-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; margin-bottom: 0.7rem; }
-    .sa3-rubric-item { display: grid; gap: 0.14rem; min-height: 52px; border: 1px solid var(--border); border-radius: 9px; padding: 0.46rem 0.58rem; background: rgba(255,255,255,0.02); }
-    .sa3-rubric-label { font-size: 0.69rem; color: var(--text-secondary); line-height: 1.15; }
-    .sa3-rubric-state { font-size: 0.76rem; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+    .sa3-rubric-item { display: grid; gap: 0.14rem; min-height: 52px; align-content: start; border: 1px solid var(--border); border-radius: 9px; padding: 0.46rem 0.58rem; background: rgba(255,255,255,0.02); }
+    .sa3-rubric-label { font-size: 0.69rem; color: var(--text-secondary); line-height: 1.15; overflow-wrap: anywhere; }
+    .sa3-rubric-state { font-size: 0.76rem; font-weight: 800; line-height: 1.1; white-space: nowrap; overflow-wrap: anywhere; }
     .sa3-rubric-state.ok { color: var(--success); }
     .sa3-rubric-state.warn { color: var(--warning); }
     .sa3-rubric-state.bad { color: #f87171; }
@@ -319,6 +322,18 @@
     .btn-coach { background: var(--lit-primary); color: #fff; border: 1px solid var(--lit-primary); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.1s, filter 0.15s; font-family: var(--font-sans); }
     .btn-coach:hover { opacity: 1; filter: brightness(1.06); }
     .btn-coach:active { transform: scale(0.97); }
+    .btn-coach:disabled,
+    .btn-coach[aria-disabled="true"] {
+      background: rgba(244,114,182,0.14) !important;
+      border-color: rgba(244,114,182,0.22) !important;
+      color: rgba(255,255,255,0.62) !important;
+      opacity: 1;
+      cursor: not-allowed;
+      filter: saturate(0.35) !important;
+      transform: none !important;
+      pointer-events: none;
+      box-shadow: none;
+    }
     .btn-next { background: var(--lit-primary); color: #fff; border: 1px solid var(--lit-primary); border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
     .btn-next:hover { color: #fff; filter: brightness(1.06); }
     .btn-next.primary-next { background: var(--lit-primary); color: #fff; border-color: var(--lit-primary); }
@@ -328,6 +343,14 @@
     .sa3-count-wrap { display:flex; align-items:center; gap:0.45rem; font-size:0.82rem; color:var(--text-dim); font-family:var(--font-mono); }
     .sa3-count-wrap .count-value { font-size:0.9rem; font-weight:700; color:var(--text-secondary); }
     .sa3-count-wrap .count-target { color:var(--text-secondary); }
+    .sa3-count-wrap .btn-concept { margin-left: 0; }
+    .sa3-editor-panel {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+    }
+    .sa3-part-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.65rem; margin-bottom: 0.45rem; }
     .sa3-part-toggle { display:flex; align-items:center; gap:0.4rem; cursor:pointer; user-select:none; width:100%; min-height:1.5rem; }
     .sa3-part-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
     .sa3-part-fields.collapsed { display:none; }
@@ -339,7 +362,9 @@
     .sa3-intro-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
     .sa3-intro-fields.collapsed { display:none; }
     .sa3-intro-toggle.collapsed .sa3-intro-arrow { transform: rotate(-90deg); }
+    .sa3-part-title-text { flex: 1 1 auto; min-width: 0; white-space: normal; line-height: 1.45; }
     .sa3-structure-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; margin-top: 0.55rem; }
+    .sa3-intro-card-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
     .sa3-template-row { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem; }
     .sa3-template-chip { background: rgba(255,255,255,0.04); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 0.34rem 0.72rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: var(--font-sans); }
     .sa3-template-chip.active { color: var(--lit-primary); border-color: var(--lit-border); background: rgba(244,114,182,0.08); }
@@ -377,6 +402,119 @@
       .preview-modal-pages .manuscript-sheet { padding: 0.8rem; }
       .preview-modal-actions { gap: 0.4rem; }
       .preview-modal-print, .preview-modal-edit { padding: 0.48rem 0.78rem; font-size: 0.72rem; }
+    }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .page-header {
+        height: 52px;
+        padding: 0 0.9rem;
+        gap: 0.55rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .sub-tabbar,
+      .sa3-stepper {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .page-header::-webkit-scrollbar,
+      .sub-tabbar::-webkit-scrollbar,
+      .sa3-stepper::-webkit-scrollbar {
+        display: none;
+      }
+      .brand { font-size: 1.08rem; flex: 0 0 auto; }
+      .nav-tabs { gap: 0.35rem; min-width: max-content; flex: 0 0 auto; }
+      .nav-tab { padding: 0.24rem 0.55rem; font-size: 0.72rem; }
+      .sub-tabbar {
+        top: 52px;
+        padding: 0.55rem 0.9rem;
+        scroll-snap-type: x proximity;
+      }
+      .sub-tab { scroll-snap-align: start; }
+      .sa3-stepper { margin: -0.1rem 0 0.85rem; }
+      .sa3-step-chip { padding: 0.45rem 0.65rem; min-width: 72px; }
+      .sa3-book-chip { max-width: none; }
+      .section-card { margin: 0.85rem 0.75rem 0; padding: 1.2rem 1rem 1.35rem; border-radius: 14px; }
+      .sec-title,
+      .sec-desc,
+      .reading-lens-title,
+      .rule-body,
+      .struct-detail {
+        overflow-wrap: anywhere;
+      }
+      .reading-lens { padding: 0.95rem 1rem; }
+      .sa3-guide-grid,
+      .sa3-example-grid,
+      .sa3-variation-grid,
+      .sa3-structure-grid {
+        grid-template-columns: 1fr;
+      }
+      .sa3-intro-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sa3-panel { padding: 0.95rem; }
+      .sa3-editor-panel { padding: 0; }
+      .sa3-rubric-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sa3-rubric-state { white-space: normal; }
+      .sa3-part-head {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.55rem;
+      }
+      .sa3-count-wrap {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+      .sa3-count-wrap > div { margin-left: auto; }
+      .sa3-intro-inline-tools,
+      .sa3-part-toggle {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .sa3-structure-editor textarea {
+        min-height: 92px;
+        font-size: 0.8rem;
+        line-height: 1.55;
+      }
+      textarea.user-input {
+        font-size: 0.82rem;
+        min-height: 96px;
+        padding: 0.78rem 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header { height: 48px; }
+      .sub-tabbar { top: 48px; padding: 0.5rem 0.75rem; }
+      .nav-tab { padding: 0.2rem 0.44rem; font-size: 0.68rem; }
+      .section-card { margin: 0.75rem 0.6rem 0; padding: 1.05rem 0.82rem 1.2rem; }
+      .sa3-rubric-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sa3-rubric-item { min-height: 0; padding: 0.52rem 0.56rem; }
+      .sa3-rubric-label,
+      .sa3-rubric-state {
+        white-space: normal;
+        line-height: 1.25;
+      }
+      .sa3-intro-card-grid { grid-template-columns: 1fr; }
+      .sa3-count-wrap > div { margin-left: 0; }
+      .sa3-count-wrap { align-items: flex-start; }
+      #sa3-view-3 .sa3-actions {
+        flex-wrap: nowrap;
+        gap: 0.38rem;
+      }
+      #sa3-view-3 .sa3-actions .btn-next {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0.68rem 0.42rem;
+        font-size: 0.72rem;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+      #sa3-view-3 .sa3-actions .btn-next.primary-next {
+        margin-left: 0 !important;
+      }
     }
 
     @page {
@@ -599,7 +737,7 @@
     </div>
 
     <!-- 조건 그리드 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem;">
+    <div class="sa3-guide-grid">
       <div class="rule-block"><div class="rule-title">📌 분량</div><div class="rule-body"><strong>1500 ± 50자</strong><br>1449~1551자 사이</div></div>
       <div class="rule-block"><div class="rule-title">📌 구조</div><div class="rule-body"><strong>5문단 필수</strong><br>도입-원인-현재 양상-해결-정리</div></div>
       <div class="rule-block warn"><div class="rule-title">⚠ 반입 불가</div><div class="rule-body">계획서·교과서·폰<br>전부 반입 불가</div></div>
@@ -653,7 +791,7 @@
         <div class="rule-body" style="margin-bottom:0.9rem;">
           아래 네 문장은 모두 <strong>"오늘의 기분은 사과"</strong>와 청소년의 감정 억압 문제를 다루지만, <strong>도입 방식이 달라지면 글의 인상도 달라집니다.</strong>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+        <div class="sa3-example-grid">
           <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
             <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">기본형</div>
             <div class="rule-body" style="font-size:0.8rem;">
@@ -696,7 +834,7 @@
         <div class="rule-body" style="margin-bottom:0.9rem;">
           아래는 <strong>이론적으로 전개를 변형하는 방식</strong>입니다. 수행평가에서는 기본형이 가장 안전하지만, 글쓰기 흐름을 이해하는 공부용으로 함께 알아두면 좋아요.
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;">
+        <div class="sa3-variation-grid">
           <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
             <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">전개1 변형</div>
             <div class="rule-body" style="font-size:0.8rem;">
@@ -741,28 +879,25 @@
         <div style="font-size:0.78rem; line-height:1.5; color:var(--text-secondary);">
           <strong style="color:var(--text); display:block; margin-bottom:0.15rem;">미리 입력된 본문 샘플은 마음대로 지우거나 이어서 쓸 수 있습니다!</strong>
           편집기란을 누르고 안내 문구를 참고하여 자신만의 1500자 비평문을 완성해 보세요.
-          <div style="margin-top:0.6rem;">
-            <button class="btn-concept" type="button" onclick="openConcept('k-sa3-overview')">💡 비평문이란? 개념 이해</button>
-          </div>
         </div>
       </div>
 
       <!-- 비평문 본문 입력 -->
       <div style="margin-top:1.25rem;">
-        <div class="sa3-panel" style="padding:1.25rem 1.75rem;">
+        <div class="sa3-panel sa3-editor-panel">
           <div class="sa3-part-list">
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:0.65rem; margin-bottom:0.45rem;">
+            <div class="sa3-part-head">
               <div style="flex:1; min-width:0;">
                 <div class="sa3-intro-inline-tools">
                   <div class="sa3-part-name sa3-intro-toggle" id="sa3-intro-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="toggleIntroFields()">
                     <span class="sa3-intro-arrow">▾</span>
                     <span class="sa3-intro-title">[도입] <span id="sa3-intro-pattern-label" style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">장면 + 내 감정 + 문제 제기</span></span>
                   </div>
-                  <button class="btn-concept" type="button" onclick="openConcept('k-sa3-intro')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
+                <button class="btn-concept" type="button" onclick="openConcept('k-sa3-intro')">💡 개념 이해</button>
                 <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
                 <div><span class="count-value" id="cnt-intro">0</span> <span class="count-target">/ 250자</span></div>
               </div>
@@ -773,7 +908,7 @@
                 <div style="font-size:0.79rem; line-height:1.65; color:#e5e7eb; margin-bottom:0.55rem;">
                   가장 기본형은 <strong>장면 → 내 감정 → 문제 제기</strong> 순서예요. 다만 도입은 꼭 한 방식만 정답이 아니고, 시작을 어떻게 여느냐에 따라 글 분위기가 달라집니다.
                 </div>
-                <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.5rem;">
+                <div class="sa3-intro-card-grid">
                   <button type="button" onclick="applyIntroTemplate('basic')" id="sa3-intro-card-basic" style="padding:0.6rem 0.7rem; border-radius:10px; background:rgba(244,114,182,0.1); border:1px solid rgba(244,114,182,0.34); text-align:left; cursor:pointer;">
                     <div style="font-size:0.76rem; font-weight:800; color:#ffffff; margin-bottom:0.2rem;">기본형</div>
                     <div style="font-size:0.72rem; color:#cbd5e1;">장면 → 감정 → 문제 제기</div>
@@ -811,15 +946,15 @@
             <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-intro" oninput="updateEssayCount()">이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 분위기를 망칠까 봐, 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다. 나는 이 소설이 감정 표현을 억압하는 사회적 분위기가 어떻게 청소년의 관계를 무너뜨리는지를 정확하게 비판하고 있다고 생각한다. 교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 역대 최고를 기록했고, 우울감 경험률도 27.7%에 달했다.</textarea>
           </div>
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+            <div class="sa3-part-head">
               <div style="flex:1; min-width:0;">
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body1-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body1-fields','sa3-body1-toggle')">
                   <span class="sa3-part-arrow">▾</span>
-                  <span>[전개1 - 원인 분석] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">통계 + 원인 분석 + 비판적 시선</span></span>
-                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body1')">💡 개념 이해</button>
+                  <span class="sa3-part-title-text">[전개1 - 원인 분석] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">통계 + 원인 분석 + 비판적 시선</span></span>
                 </div>
               </div>
               <div class="sa3-count-wrap">
+                <button class="btn-concept" type="button" onclick="openConcept('k-sa3-body1')">💡 개념 이해</button>
                 <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
                 <div><span class="count-value" id="cnt-body1">0</span> <span class="count-target">/ 350자</span></div>
               </div>
@@ -844,15 +979,15 @@
             </div>
           </div>
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+            <div class="sa3-part-head">
               <div style="flex:1; min-width:0;">
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body2-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body2-fields','sa3-body2-toggle')">
                   <span class="sa3-part-arrow">▾</span>
-                  <span>[전개2 - 현재 양상] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">현실 자료 + 혼란스러운 현재성 + 작품 연결</span></span>
-                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body2')">💡 개념 이해</button>
+                  <span class="sa3-part-title-text">[전개2 - 현재 양상] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">현실 자료 + 혼란스러운 현재성 + 작품 연결</span></span>
                 </div>
               </div>
               <div class="sa3-count-wrap">
+                <button class="btn-concept" type="button" onclick="openConcept('k-sa3-body2')">💡 개념 이해</button>
                 <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
                 <div><span class="count-value" id="cnt-body2">0</span> <span class="count-target">/ 300자</span></div>
               </div>
@@ -877,15 +1012,15 @@
             </div>
           </div>
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+            <div class="sa3-part-head">
               <div style="flex:1; min-width:0;">
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body3-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body3-fields','sa3-body3-toggle')">
                   <span class="sa3-part-arrow">▾</span>
-                  <span>[전개3 - 해결 방안] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">학교 차원 + 문화 차원 + 희망 근거</span></span>
-                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body3')">💡 개념 이해</button>
+                  <span class="sa3-part-title-text">[전개3 - 해결 방안] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">학교 차원 + 문화 차원 + 희망 근거</span></span>
                 </div>
               </div>
               <div class="sa3-count-wrap">
+                <button class="btn-concept" type="button" onclick="openConcept('k-sa3-body3')">💡 개념 이해</button>
                 <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
                 <div><span class="count-value" id="cnt-body3">0</span> <span class="count-target">/ 350자</span></div>
               </div>
@@ -910,15 +1045,15 @@
             </div>
           </div>
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+            <div class="sa3-part-head">
               <div style="flex:1; min-width:0;">
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-end-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-end-fields','sa3-end-toggle')">
                   <span class="sa3-part-arrow">▾</span>
-                  <span>[정리] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">따뜻하지만 아픈 작품이라는 판단 + 사회 비판</span></span>
-                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-end')">💡 개념 이해</button>
+                  <span class="sa3-part-title-text">[정리] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">따뜻하지만 아픈 작품이라는 판단 + 사회 비판</span></span>
                 </div>
               </div>
               <div class="sa3-count-wrap">
+                <button class="btn-concept" type="button" onclick="openConcept('k-sa3-end')">💡 개념 이해</button>
                 <button class="btn-mini-preview" type="button" onclick="openManuscriptModal()">원고지보기</button>
                 <div><span class="count-value" id="cnt-end">0</span> <span class="count-target">/ 250자</span></div>
               </div>
@@ -949,8 +1084,8 @@
       </div>
       
       <div class="btn-row sa3-actions" style="margin-top:1.25rem; gap:0.5rem;">
-        <button class="btn-coach" onclick="coachEssay()">🤖 비평문 종합 첨삭</button>
-        <button class="btn-coach" id="btn-trim1500" onclick="trimTo1500()" style="background:rgba(124,106,240,0.15); border-color:rgba(124,106,240,0.4); color:#a78bfa;">✂️ 1500자로 정리</button>
+        <button class="btn-coach" type="button" onclick="coachEssay()" disabled aria-disabled="true" title="추후 사용 예정">🤖 비평문 종합 첨삭</button>
+        <button class="btn-coach" id="btn-trim1500" type="button" onclick="trimTo1500()" disabled aria-disabled="true" title="추후 사용 예정" style="background:rgba(124,106,240,0.15); border-color:rgba(124,106,240,0.4); color:#a78bfa;">✂️ 1500자로 정리</button>
         <button class="btn-next" onclick="openManuscriptModal()">원고지 미리보기</button>
         <button class="btn-next primary-next" onclick="focusSA3Part(3)" style="margin-left:auto;">3단계: 제출 양식 검수하기 ›</button>
       </div>
@@ -1066,6 +1201,18 @@
 
 <script>
 /* ── 진행 탭 제어 함수 ── */
+function getEssayStickyOffset(extra = 12) {
+  const header = document.querySelector('.page-header');
+  const subTabbar = document.querySelector('.sub-tabbar');
+  return (header?.offsetHeight || 0) + (subTabbar?.offsetHeight || 0) + extra;
+}
+
+function scrollEssayTo(target, extra = 12) {
+  if (!target) return;
+  const top = target.getBoundingClientRect().top + window.scrollY - getEssayStickyOffset(extra);
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
 function focusSA3Part(n) {
   document.querySelectorAll('.sa3-step-chip').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.sa3-part-view').forEach(v => v.classList.remove('active'));
@@ -1074,7 +1221,7 @@ function focusSA3Part(n) {
   
   // 탭 이동 시 진행 상태를 업데이트하고 페이지 최상단으로 이동
   updateEssayCount();
-  window.scrollTo({ top: Math.max(0, document.getElementById('step-3').offsetTop - 65), behavior: 'smooth' });
+  scrollEssayTo(document.getElementById('step-3'));
 
   // 탭 변경 시 리사이즈 트리거 재호출(숨겨져있던 textarea가 표시될 때 높이 재계산 위함)
   setTimeout(() => {
