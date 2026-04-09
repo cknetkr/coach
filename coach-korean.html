@@ -1201,35 +1201,63 @@ https://eiec.kdi.re.kr/policy/callDownload.do?num=260036&filenum=1&dtime=2024112
       </div>
     </div>
 
-    <div class="report-sheet report-plan-sheet" id="report-sheet-sa2" style="display:none;">
+    <div class="report-sheet report-plan-sheet" id="report-sheet-sa2-page1" style="display:none;">
+      <div class="report-sheet-title">〈수행평가2〉 비평문 계획서</div>
+      <div class="report-sheet-meta">
+        <div class="report-meta-cell report-meta-title"><span>책 제목:</span><strong id="report-sa2-book-title-1"></strong></div>
+        <div class="report-meta-cell"><span>지은이:</span><strong id="report-sa2-book-author-1"></strong></div>
+        <div class="report-meta-cell report-meta-page"><span>page</span></div>
+      </div>
+      <div class="report-form">
+        <div class="report-form-row">
+          <div class="report-form-label">사회 문제 제시</div>
+          <div class="report-form-body" id="report-sa2-problem-1"></div>
+        </div>
+        <div class="report-form-row">
+          <div class="report-form-label">사회 문제 분석</div>
+          <div class="report-form-body" id="report-sa2-cause-1"></div>
+        </div>
+        <div class="report-form-row">
+          <div class="report-form-label">해결 방안 탐색</div>
+          <div class="report-form-body" id="report-sa2-solution-1"></div>
+        </div>
+        <div class="report-form-row">
+          <div class="report-form-label">AI 활용 아이디어 정리</div>
+          <div class="report-form-body" id="report-sa2-ai-1"></div>
+        </div>
+        <div class="report-form-row">
+          <div class="report-form-label">정보 검증 과정</div>
+          <div class="report-form-body" id="report-sa2-verify-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-sheet report-plan-sheet" id="report-sheet-sa2-page2" style="display:none; margin-top:1rem;">
       <div class="report-sheet-title">〈수행평가2〉 비평문 계획서</div>
       <div class="report-sheet-meta">
         <div class="report-meta-cell report-meta-title"><span>책 제목:</span><strong id="report-sa2-book-title"></strong></div>
         <div class="report-meta-cell"><span>지은이:</span><strong id="report-sa2-book-author"></strong></div>
         <div class="report-meta-cell report-meta-page"><span>page</span></div>
       </div>
-      <div class="sa2-plan-report-grid">
-        <div class="sa2-plan-left-label">작품의 주제와 관련된 사회 문제 제시</div>
-        <div class="sa2-plan-main-cell" id="report-sa2-problem"></div>
-      </div>
-      <div class="sa2-plan-structure">
+      <div class="sa2-plan-structure" style="border-top:1px solid #888;">
         <div class="sa2-plan-vertical">비평문 구조 계획</div>
         <div class="sa2-plan-sections">
-          <div class="sa2-plan-section">
-            <div class="sa2-plan-section-label">도입</div>
-            <div class="sa2-plan-section-body" id="report-sa2-intro"></div>
+          <div class="sa2-plan-section plan-single-group">
+            <div class="sa2-plan-section-body plan-body-stack plan-single-stack">
+              <div class="sa2-plan-subsection"><span>[도입]</span><div id="report-sa2-intro"></div></div>
+            </div>
           </div>
           <div class="sa2-plan-section plan-body-group">
-            <div class="sa2-plan-section-label">전개</div>
             <div class="sa2-plan-section-body plan-body-stack">
               <div class="sa2-plan-subsection"><span>[전개1]</span><div id="report-sa2-body1"></div></div>
               <div class="sa2-plan-subsection"><span>[전개2]</span><div id="report-sa2-body2"></div></div>
               <div class="sa2-plan-subsection"><span>[전개3]</span><div id="report-sa2-body3"></div></div>
             </div>
           </div>
-          <div class="sa2-plan-section">
-            <div class="sa2-plan-section-label">정리</div>
-            <div class="sa2-plan-section-body" id="report-sa2-end"></div>
+          <div class="sa2-plan-section plan-single-group">
+            <div class="sa2-plan-section-body plan-body-stack plan-single-stack">
+              <div class="sa2-plan-subsection"><span>[정리]</span><div id="report-sa2-end"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -2233,14 +2261,22 @@ function openReport(mode = 'auto') {
   state.reportMode = resolvedMode;
 
   const sa1Sheet = document.getElementById('report-sheet-sa1');
-  const sa2Sheet = document.getElementById('report-sheet-sa2');
+  const sa2SheetPage1 = document.getElementById('report-sheet-sa2-page1');
+  const sa2SheetPage2 = document.getElementById('report-sheet-sa2-page2');
   if (sa1Sheet) sa1Sheet.style.display = resolvedMode === 'sa1' ? '' : 'none';
-  if (sa2Sheet) sa2Sheet.style.display = resolvedMode === 'sa2' ? '' : 'none';
+  if (sa2SheetPage1) sa2SheetPage1.style.display = resolvedMode === 'sa2' ? '' : 'none';
+  if (sa2SheetPage2) sa2SheetPage2.style.display = resolvedMode === 'sa2' ? '' : 'none';
 
   document.getElementById('report-sa1-book-title').textContent = reportBook?.title || '';
   document.getElementById('report-sa1-book-author').textContent = reportBook?.author || '';
-  document.getElementById('report-sa2-book-title').textContent = reportBook?.title || '';
-  document.getElementById('report-sa2-book-author').textContent = reportBook?.author || '';
+  const sa2BookTitle1 = document.getElementById('report-sa2-book-title-1');
+  const sa2BookAuthor1 = document.getElementById('report-sa2-book-author-1');
+  const sa2BookTitle2 = document.getElementById('report-sa2-book-title');
+  const sa2BookAuthor2 = document.getElementById('report-sa2-book-author');
+  if (sa2BookTitle1) sa2BookTitle1.textContent = reportBook?.title || '';
+  if (sa2BookAuthor1) sa2BookAuthor1.textContent = reportBook?.author || '';
+  if (sa2BookTitle2) sa2BookTitle2.textContent = reportBook?.title || '';
+  if (sa2BookAuthor2) sa2BookAuthor2.textContent = reportBook?.author || '';
 
   for (let i = 1; i <= 6; i++) {
     const target = document.getElementById(`report-sa1-${i}`);
@@ -2253,6 +2289,11 @@ function openReport(mode = 'auto') {
     target.textContent = getSA2Answer(i) || '';
   }
   const sa2PlanMap = [
+    ['report-sa2-problem-1', getSA2Answer(1)],
+    ['report-sa2-cause-1', getSA2Answer(2)],
+    ['report-sa2-solution-1', getSA2Answer(3)],
+    ['report-sa2-ai-1', getSA2Answer(4)],
+    ['report-sa2-verify-1', getSA2Answer(5)],
     ['report-sa2-problem', getSA2Answer(1)],
     ['report-sa2-intro', document.getElementById('sa2-plan-intro')?.value.trim() || ''],
     ['report-sa2-body1', document.getElementById('sa2-plan-body1')?.value.trim() || ''],

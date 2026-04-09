@@ -126,7 +126,7 @@
     .page-header { position: sticky; top: 0; z-index: 300; height: 57px; background: rgba(14,15,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem)); gap: 1.5rem; }
     .brand { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
     .brand span { color: var(--lit-primary); }
-    .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; }
+    .nav-tabs { display: flex; gap: 0.25rem; margin-left: auto; justify-content: flex-end; }
     .nav-tab { background: none; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.15s; }
     .nav-tab:hover { background: var(--bg-card2); color: var(--text); }
     .nav-tab.lit { background: var(--lit-bg); color: var(--lit-primary); border: 1px solid var(--lit-border); }
@@ -332,7 +332,10 @@
     .sa3-part-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
     .sa3-part-fields.collapsed { display:none; }
     .sa3-part-toggle.collapsed .sa3-part-arrow { transform: rotate(-90deg); }
-    .sa3-intro-toggle { display:flex; align-items:center; gap:0.4rem; cursor:pointer; user-select:none; width:100%; min-height:1.5rem; }
+    .sa3-intro-toggle { display:flex; align-items:center; gap:0.4rem; cursor:pointer; user-select:none; width:100%; min-height:1.5rem; min-width: 0; }
+    .sa3-intro-title { flex: 1 1 auto; min-width: 0; white-space: normal; line-height: 1.45; }
+    .sa3-intro-inline-tools { display: flex; align-items: center; gap: 0.45rem; min-width: 0; }
+    .sa3-intro-inline-tools .btn-concept { margin-left: 0; flex: 0 0 auto; }
     .sa3-intro-arrow { display:inline-flex; align-items:center; justify-content:center; width:1.1rem; color:var(--lit-primary); font-size:1rem; font-weight:800; line-height:1; transition: transform 0.18s ease; }
     .sa3-intro-fields.collapsed { display:none; }
     .sa3-intro-toggle.collapsed .sa3-intro-arrow { transform: rotate(-90deg); }
@@ -343,7 +346,7 @@
     .sa3-template-help { margin-top:0.45rem; font-size:0.72rem; color: var(--text-secondary); line-height:1.55; }
     .sa3-structure-editor { padding: 0; background: transparent; border: none; }
     .sa3-structure-label { display:block; font-size: 0.72rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem; }
-    .sa3-structure-editor textarea { min-height: 92px; font-size: 0.76rem; }
+    .sa3-structure-editor textarea { min-height: 42px; font-size: 0.76rem; line-height: 1.35; padding-top: 0.5rem; padding-bottom: 0.5rem; }
     .sa3-structure-preview { margin-top: 0.7rem; font-size: 0.9rem; color: #ffffff; line-height: 1.7; }
 
     /* 완성 배너 */
@@ -533,7 +536,6 @@
 <header class="page-header">
   <a href="index.html" class="brand">코치<span>.</span></a>
   <nav class="nav-tabs">
-    <button class="nav-tab report-btn" onclick="openSA3Report()" style="background:rgba(244,114,182,0.12); border:1px solid var(--lit-border); color:var(--lit-primary); font-weight:700; cursor:pointer; padding:0.4rem 0.9rem; border-radius:var(--radius-sm);">📋 보고서</button>
     <a href="coach-korean-s0.html" class="nav-tab lit">📚 국어</a>
     <a href="coach-math.html" class="nav-tab" style="background:#0f172a; color:#38bdf8; border:1px solid rgba(56,189,248,0.2);">📐 수학</a>
     <a href="coach-english.html" class="nav-tab" style="background:#1e1b4b; color:#818cf8; border:1px solid rgba(129,140,248,0.2);">🎧 영어</a>
@@ -556,7 +558,6 @@
   <button class="sub-tab lit active" id="sn-3">
     <span class="step-label">STEP 3</span><span id="sc-3">수행3</span>
   </button>
-  <span class="sa3-book-chip" id="book-chip">📖 책을 먼저 선정해주세요</span>
 </nav>
 
 <div class="coach-wrap">
@@ -751,12 +752,14 @@
         <div class="sa3-panel" style="padding:1.25rem 1.75rem;">
           <div class="sa3-part-list">
           <div class="sa3-part-block">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:0.65rem; margin-bottom:0.45rem;">
               <div style="flex:1; min-width:0;">
-                <div class="sa3-part-name sa3-intro-toggle" id="sa3-intro-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="toggleIntroFields()">
-                  <span class="sa3-intro-arrow">▾</span>
-                  <span>[도입] <span id="sa3-intro-pattern-label" style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">장면 + 내 감정 + 문제 제기</span></span>
-                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-intro')">💡 개념 이해</button>
+                <div class="sa3-intro-inline-tools">
+                  <div class="sa3-part-name sa3-intro-toggle" id="sa3-intro-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="toggleIntroFields()">
+                    <span class="sa3-intro-arrow">▾</span>
+                    <span class="sa3-intro-title">[도입] <span id="sa3-intro-pattern-label" style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">장면 + 내 감정 + 문제 제기</span></span>
+                  </div>
+                  <button class="btn-concept" type="button" onclick="openConcept('k-sa3-intro')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -1199,7 +1202,7 @@ const SA3_INTRO_TEMPLATES = {
     book = { title: '오늘의 기분은 사과', author: '김지현' };
   }
   
-  chip.textContent = '📖 ' + book.title;
+  if (chip) chip.textContent = '📖 ' + book.title;
   if (finalName) finalName.textContent = book.title;
   if (examTitle) examTitle.textContent = book.title;
   if (examAuthor) examAuthor.textContent = book.author || '김지현';
@@ -1867,6 +1870,11 @@ function completeAll() {
 function openSA3Report() {
   document.querySelectorAll('.sa3-step-chip').forEach(c => c.classList.remove('active'));
   document.getElementById('sa3-chip-4')?.classList.add('active');
+  const isMobilePreview = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobilePreview) {
+    openManuscriptModal();
+    return;
+  }
   openSA3PrintPage();
 }
 

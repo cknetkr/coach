@@ -269,7 +269,7 @@
 
 .sa2-plan-sections {
   display: grid;
-  grid-template-rows: 84px 1fr 84px;
+  grid-template-rows: auto 1fr auto;
 }
 
 .sa2-plan-section {
@@ -288,6 +288,11 @@
 
 .plan-body-group {
   min-height: 310px;
+  grid-template-columns: 1fr;
+}
+
+.plan-single-group {
+  grid-template-columns: 1fr;
 }
 
 .plan-body-stack {
@@ -296,9 +301,21 @@
   padding: 0;
 }
 
+.plan-single-stack {
+  grid-template-rows: minmax(0, auto);
+}
+
+.plan-single-group .sa2-plan-subsection {
+  min-height: 58px;
+}
+
+.plan-single-group .sa2-plan-subsection > div {
+  min-height: 52px;
+}
+
 .sa2-plan-subsection {
   display: grid;
-  grid-template-columns: 70px 1fr;
+  grid-template-columns: 1fr;
   border-top: 1px solid #bbb;
   min-height: 96px;
 }
@@ -308,10 +325,10 @@
 }
 
 .sa2-plan-subsection > span {
-  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.4rem 0.35rem;
+  padding: 0.34rem 0.55rem;
   display: flex;
   align-items: flex-start;
 }
@@ -508,5 +525,26 @@
   .report-action-row {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  /* 수행2 2페이지: 모바일 텍스트 잘림 방지 */
+  .sa2-plan-sections {
+    grid-template-rows: auto auto auto;
+  }
+
+  .plan-body-group {
+    min-height: 0;
+  }
+
+  .plan-body-stack {
+    grid-template-rows: repeat(3, minmax(120px, auto));
+  }
+
+  .sa2-plan-subsection {
+    min-height: 0;
+  }
+
+  .sa2-plan-subsection > div {
+    min-height: 96px;
   }
 }
