@@ -114,7 +114,6 @@
 <header class="page-header">
   <a href="index.html" class="brand">코치<span>.</span></a>
   <nav class="nav-tabs">
-    <button class="nav-tab report-btn" onclick="openCurrentPrintPage()">📋 보고서</button>
     <a href="coach-korean-s0.html" class="nav-tab lit">📚 국어</a>
     <a href="coach-math.html" class="nav-tab math">📐 수학</a>
     <a href="coach-english.html" class="nav-tab eng">🎧 영어</a>
@@ -1700,6 +1699,11 @@ function openCurrentPrintPage() {
 }
 
   function openPrintPage(mode) {
+    const isMobilePreview = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobilePreview) {
+      openReport(mode);
+      return;
+    }
     const payload = mode === 'sa2' ? buildSA2PrintPayload() : buildSA1PrintPayload();
     const fileName = mode === 'sa2' ? 'coach-korean-print-sa2.html' : 'coach-korean-print-sa1.html';
     try {
