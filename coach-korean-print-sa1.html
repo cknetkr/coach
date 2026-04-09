@@ -21,7 +21,7 @@
     .form { border-left: 1.5px solid #374151; border-bottom: 1.5px solid #374151; }
     .row { display: grid; grid-template-columns: 80px 1fr; border-top: 1.5px solid #374151; break-inside: avoid; page-break-inside: avoid; }
     .row:first-child { border-top: none; }
-    .label { background: #f7f7f9; border-right: 1.5px solid #374151; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; font-weight: 800; color: #4338ca; line-height: 1.5; padding: 8px 6px; white-space: pre-line; }
+    .label { background: #f7f7f9; border-right: 1.5px solid #374151; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; font-weight: 800; color: #4338ca; line-height: 1.5; padding: 8px 6px; white-space: pre-line; word-break: keep-all; overflow-wrap: normal; line-break: strict; }
     .body { min-height: 80px; padding: 5px 10px 7px; font-size: 13px; line-height: 1.85; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; border-right: 1.5px solid #374151; }
     .guide { display: block; margin-bottom: 3px; font-size: 10px; font-weight: 600; color: #9ca3af; text-align: right; line-height: 1.2; }
     .empty { color: #cbd5e1; }
@@ -50,8 +50,8 @@
   </div>
   <script>
     const guides = [
-      ['작품 선정이유', '이 책을 왜 읽게 되었는지와 그 이유를 구체적으로'],
-      ['인물 및 배경분석', '주요 인물 특성과 작품의 시대적·사회적 배경'],
+      ['작품 선정 이유', '이 책을 왜 읽게 되었는지와 그 이유를 구체적으로'],
+      ['인물 및 배경 분석', '주요 인물 특성과 작품의 시대적·사회적 배경'],
       ['간단한 줄거리', '이야기의 주요 사건을 중심으로 정리'],
       ['책이 내게 준 생각과\n태도의 변화', '읽기 전후 어떤 생각의 변화가 있었는지'],
       ['책의 주제와 관련되는\n나의 경험과 사회 현실', '작품 내용이 나의 경험이나 사회 문제와 어떻게 연결되는지'],

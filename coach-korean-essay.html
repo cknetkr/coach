@@ -7,6 +7,103 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
+    /* ── 개념 이해 모달 ── */
+    .btn-concept {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      appearance: none; border: 1px solid rgba(244,114,182,0.35);
+      background: linear-gradient(135deg, rgba(244,114,182,0.14), rgba(124,106,240,0.14));
+      color: #fbcfe8; border-radius: 999px;
+      padding: 0.3rem 0.7rem; margin-left: 0.5rem;
+      font-size: 0.7rem; font-weight: 800; cursor: pointer;
+      font-family: inherit; letter-spacing: 0.02em;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-concept:hover {
+      background: linear-gradient(135deg, rgba(244,114,182,0.28), rgba(124,106,240,0.28));
+      border-color: rgba(244,114,182,0.6); color: #fff;
+      transform: translateY(-1px);
+    }
+    .concept-modal {
+      position: fixed; inset: 0; z-index: 1300;
+      display: none; align-items: center; justify-content: center;
+      padding: 1.25rem;
+      background: rgba(6, 8, 14, 0.86); backdrop-filter: blur(12px);
+    }
+    .concept-modal.open { display: flex; }
+    .concept-modal-dialog {
+      width: min(760px, 100%); max-height: calc(100vh - 2.5rem);
+      background: linear-gradient(180deg, #151824 0%, #0f1119 100%);
+      border: 1px solid rgba(244,114,182,0.3);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.5), 0 0 60px rgba(244,114,182,0.08);
+      overflow: hidden; display: grid; grid-template-rows: auto minmax(0, 1fr);
+    }
+    .concept-modal-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.1rem 1.35rem;
+      border-bottom: 1px solid rgba(244,114,182,0.18);
+      background: linear-gradient(180deg, rgba(244,114,182,0.1), rgba(255,255,255,0.01));
+    }
+    .concept-modal-titlewrap { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+    .concept-modal-eyebrow {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em;
+      color: #fbcfe8; text-transform: uppercase;
+    }
+    .concept-modal-title {
+      font-size: 1.05rem; font-weight: 800; color: #fff;
+      font-family: 'Noto Serif KR', serif;
+    }
+    .concept-modal-close {
+      appearance: none; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05); color: #fff;
+      border-radius: 999px; width: 38px; height: 38px;
+      font-size: 1.1rem; cursor: pointer; flex-shrink: 0;
+    }
+    .concept-modal-close:hover { background: rgba(255,255,255,0.12); }
+    .concept-modal-body {
+      overflow: auto; padding: 1.35rem 1.5rem 1.6rem;
+      color: #e5e7eb; font-size: 0.86rem; line-height: 1.75;
+    }
+    .concept-section { margin-bottom: 1.15rem; }
+    .concept-section:last-child { margin-bottom: 0; }
+    .concept-section-title {
+      display: inline-block;
+      font-size: 0.76rem; font-weight: 800;
+      color: #f472b6; margin-bottom: 0.45rem;
+      padding: 0.2rem 0.55rem;
+      background: rgba(244,114,182,0.12);
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+    .concept-section p { margin: 0 0 0.55rem; }
+    .concept-section ul { margin: 0.3rem 0 0.55rem; padding-left: 1.15rem; }
+    .concept-section li { margin-bottom: 0.35rem; }
+    .concept-section strong { color: #fbcfe8; font-weight: 700; }
+    .concept-tip {
+      margin-top: 0.9rem; padding: 0.85rem 1rem;
+      background: rgba(52,211,153,0.08);
+      border-left: 3px solid #34d399;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.82rem;
+    }
+    .concept-tip strong { color: #6ee7b7; }
+    .concept-warning {
+      margin-top: 0.9rem; padding: 0.85rem 1rem;
+      background: rgba(251,146,60,0.08);
+      border-left: 3px solid #fb923c;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.82rem;
+    }
+    .concept-warning strong { color: #fdba74; }
+    @media (max-width: 640px) {
+      .concept-modal { padding: 0.75rem; }
+      .concept-modal-dialog { max-height: calc(100vh - 1.5rem); border-radius: 16px; }
+      .concept-modal-header { padding: 0.9rem 1rem; }
+      .concept-modal-title { font-size: 0.95rem; }
+      .concept-modal-body { padding: 1.1rem 1.1rem 1.3rem; font-size: 0.82rem; }
+      .btn-concept { padding: 0.26rem 0.58rem; font-size: 0.66rem; margin-left: 0.35rem; }
+    }
     :root {
       --page-max: 1200px;
       --bg: #0e0f14; --bg-card: #161820; --bg-card2: #1c1e26; --bg-input: #11121a;
@@ -436,7 +533,7 @@
 <header class="page-header">
   <a href="index.html" class="brand">코치<span>.</span></a>
   <nav class="nav-tabs">
-    <button class="nav-tab report-btn" onclick="const p = window.opener || window.parent; if(p && p.openReport) { p.openReport(); } else { window.location.href='coach-korean.html?step=3'; } " style="background:rgba(244,114,182,0.12); border:1px solid var(--lit-border); color:var(--lit-primary); font-weight:700; cursor:pointer; padding:0.4rem 0.9rem; border-radius:var(--radius-sm);">📋 보고서</button>
+    <button class="nav-tab report-btn" onclick="openSA3Report()" style="background:rgba(244,114,182,0.12); border:1px solid var(--lit-border); color:var(--lit-primary); font-weight:700; cursor:pointer; padding:0.4rem 0.9rem; border-radius:var(--radius-sm);">📋 보고서</button>
     <a href="coach-korean-s0.html" class="nav-tab lit">📚 국어</a>
     <a href="coach-math.html" class="nav-tab" style="background:#0f172a; color:#38bdf8; border:1px solid rgba(56,189,248,0.2);">📐 수학</a>
     <a href="coach-english.html" class="nav-tab" style="background:#1e1b4b; color:#818cf8; border:1px solid rgba(129,140,248,0.2);">🎧 영어</a>
@@ -480,13 +577,16 @@
       <button class="sa3-step-chip" id="sa3-chip-3" onclick="focusSA3Part(3)">
         <span class="sa3-step-no">3</span><span class="sa3-step-text">최종 검수</span>
       </button>
+      <button class="sa3-step-chip" id="sa3-chip-4" onclick="openSA3Report()">
+        <span class="sa3-step-no">4</span><span class="sa3-step-text">수행3 출력</span>
+      </button>
     </div>
 
     <!-- 0. 가이드 탭 -->
     <div class="sa3-part-view active" id="sa3-view-0">
       <div class="sec-eyebrow">STEP 3 · 비평문 작성</div>
       <div class="sec-title">비평문 1500자 작성 가이드</div>
-      <div class="sec-desc">수행2에서 정리한 사회 문제, 원인, 해결 방안을 바탕으로 5문단 비평문을 완성하는 단계야. 필요한 기준만 빠르게 보고 바로 쓰기로 넘어갈 수 있게 정리해둘게.</div>
+      <div class="sec-desc">수행2에서 정리한 사회 문제, 원인, 해결 방안을 바탕으로 5문단 비평문을 완성하는 단계입니다. 필요한 기준을 빠르게 확인하고 바로 작성으로 넘어갈 수 있도록 정리해 두었습니다.</div>
 
     <div class="rule-block" style="margin-bottom:1.25rem;">
       <div class="rule-title">📚 먼저 기억할 핵심</div>
@@ -508,7 +608,7 @@
     <div class="rule-block" style="margin-bottom:1.25rem;">
       <div class="rule-title">🧭 쓰면서 계속 확인할 것</div>
       <div class="rule-body">
-        <strong>통계 활용</strong>: 수행2에서 정리한 자료를 그대로 쓰고, <strong>(교육부·한국청소년정책연구원, 2023)</strong>처럼 기관명과 연도를 함께 적습니다.<br>
+        <strong>통계 활용</strong>: 수행2에서 정리한 자료를 그대로 쓰고, <strong>교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』</strong>처럼 공식 자료명과 수치를 함께 적습니다.<br>
         <strong>문학 연결</strong>: 이경, 유림, 전솔 같은 인물이나 장면을 각 문단에서 한 번 이상 연결하면 비평문다운 힘이 살아납니다.<br>
         <strong>마무리 전략</strong>: 결말에서는 다시 "괜찮아" 같은 핵심 이미지로 돌아오면 처음과 끝이 자연스럽게 이어집니다.
       </div>
@@ -533,7 +633,7 @@
     <div class="sa3-part-view" id="sa3-view-1">
       <div class="sec-eyebrow">STEP 3 · 1단계</div>
       <div class="sec-title">도입/전개 가이드</div>
-      <div class="sec-desc">도입은 글의 첫인상을 만드는 부분이야. 같은 주제를 써도 무엇으로 시작하느냐에 따라 글의 분위기와 설득 방식이 달라져.</div>
+      <div class="sec-desc">도입은 글의 첫인상을 결정하는 부분입니다. 같은 주제라도 무엇으로 시작하느냐에 따라 분위기와 설득 방식이 달라집니다.</div>
 
       <div class="rule-block" style="margin-bottom:1.25rem;">
         <div class="rule-title">📚 도입을 여는 4가지 기본 패턴</div>
@@ -562,7 +662,7 @@
           <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
             <div style="font-size:0.82rem;font-weight:800;color:var(--lit-primary);margin-bottom:0.45rem;">통계형</div>
             <div class="rule-body" style="font-size:0.8rem;">
-              청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 답했다. 이런 현실은 "오늘의 기분은 사과" 속 이경의 모습과 겹친다. 이 작품은 감정을 숨기는 청소년의 현실을 비판적으로 드러낸다.
+              교육부·질병관리청 조사에 따르면 중·고등학생의 스트레스 인지율은 42.3%, 우울감 경험률은 27.7%였다. 이런 현실은 "오늘의 기분은 사과" 속 이경의 모습과 겹친다. 이 작품은 감정을 숨기는 청소년의 현실을 비판적으로 드러낸다.
             </div>
           </div>
           <div style="padding:0.85rem 0.95rem;border:1px solid rgba(244,114,182,0.18);border-radius:12px;background:rgba(15,23,42,0.34);">
@@ -640,6 +740,9 @@
         <div style="font-size:0.78rem; line-height:1.5; color:var(--text-secondary);">
           <strong style="color:var(--text); display:block; margin-bottom:0.15rem;">미리 입력된 본문 샘플은 마음대로 지우거나 이어서 쓸 수 있습니다!</strong>
           편집기란을 누르고 안내 문구를 참고하여 자신만의 1500자 비평문을 완성해 보세요.
+          <div style="margin-top:0.6rem;">
+            <button class="btn-concept" type="button" onclick="openConcept('k-sa3-overview')">💡 비평문이란? 개념 이해</button>
+          </div>
         </div>
       </div>
 
@@ -653,6 +756,7 @@
                 <div class="sa3-part-name sa3-intro-toggle" id="sa3-intro-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="toggleIntroFields()">
                   <span class="sa3-intro-arrow">▾</span>
                   <span>[도입] <span id="sa3-intro-pattern-label" style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">장면 + 내 감정 + 문제 제기</span></span>
+                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-intro')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -692,16 +796,16 @@
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label" id="sa3-intro-label-2">내 감정</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-intro-feeling" oninput="syncIntroFromFields()">나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-intro-feeling" oninput="syncIntroFromFields()">나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 분위기를 망칠까 봐, 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label" id="sa3-intro-label-3">문제 제기</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-intro-issue" oninput="syncIntroFromFields()">"오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않는다. 제목처럼 감정이란 때로 말로 설명되지 않고 그저 어떤 이미지로만 남는다. 나는 이 소설이 감정 표현을 억압하는 관계 속에서 자기 마음을 잃어가는 청소년의 현실을 비판하고 있다고 생각한다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-intro-issue" oninput="syncIntroFromFields()">나는 이 소설이 감정 표현을 억압하는 사회적 분위기가 어떻게 청소년의 관계를 무너뜨리는지를 정확하게 비판하고 있다고 생각한다. 교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 역대 최고를 기록했고, 우울감 경험률도 27.7%에 달했다.</textarea>
                 </div>
               </div>
               <div class="sa3-structure-preview" id="sa3-intro-preview"></div>
             </div>
-            <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-intro" oninput="updateEssayCount()">이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다. "오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않는다. 제목처럼 감정이란 때로 말로 설명되지 않고 그저 어떤 이미지로만 남는다. 나는 이 소설이 감정 표현을 억압하는 관계 속에서 자기 마음을 잃어가는 청소년의 현실을 비판하고 있다고 생각한다.</textarea>
+            <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-intro" oninput="updateEssayCount()">이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다. 나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 분위기를 망칠까 봐, 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다. 나는 이 소설이 감정 표현을 억압하는 사회적 분위기가 어떻게 청소년의 관계를 무너뜨리는지를 정확하게 비판하고 있다고 생각한다. 교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 역대 최고를 기록했고, 우울감 경험률도 27.7%에 달했다.</textarea>
           </div>
           <div class="sa3-part-block">
             <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.45rem;">
@@ -709,6 +813,7 @@
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body1-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body1-fields','sa3-body1-toggle')">
                   <span class="sa3-part-arrow">▾</span>
                   <span>[전개1 - 원인 분석] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">통계 + 원인 분석 + 비판적 시선</span></span>
+                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body1')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -720,19 +825,19 @@
               <div class="sa3-structure-grid">
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">통계</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body1-stat" oninput="syncSectionFromFields('body1')">교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-stat" oninput="syncSectionFromFields('body1')">많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">원인 분석</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body1-cause" oninput="syncSectionFromFields('body1')">청소년이 감정을 솔직하게 드러내지 못하는 가장 큰 이유는 또래 관계 안에서 생기는 낙인이다. 이 수치는 많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다는 뜻이다. 또 학교는 갈등을 줄이라고 하지만 감정을 설명하고 받아들이는 법은 충분히 가르치지 않는다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-cause" oninput="syncSectionFromFields('body1')">청소년이 감정을 솔직하게 드러내지 못하는 첫 번째 원인은 또래 관계 안에서 형성되는 낙인이다. 두 번째 원인은 학교의 정서 교육 부재다. 학교는 갈등을 줄이라고 하지만, 감정을 언어로 표현하고 받아들이는 법은 충분히 가르치지 않는다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">비판적 시선</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body1-critique" oninput="syncSectionFromFields('body1')">소설 속 이경도 상처받았지만 유림에게 말하지 못한다. 나는 여기서 개인의 성격보다 분위기의 힘이 더 무섭다고 느꼈다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서는 솔직함이 용기보다 실수로 취급되기 쉽다. 감정을 말했다가 관계가 어색해지는 경험을 반복하면, 학생들은 점점 침묵을 더 안전한 방식으로 내면화하게 된다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body1-critique" oninput="syncSectionFromFields('body1')">소설 속 이경도 상처받았지만 유림에게 끝내 말하지 못한다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서, 솔직함은 용기가 아니라 실수로 취급되기 쉽다.</textarea>
                 </div>
               </div>
               <div class="sa3-structure-preview" id="sa3-body1-preview"></div>
-              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body1" oninput="updateEssayCount()">청소년이 감정을 솔직하게 드러내지 못하는 가장 큰 이유는 또래 관계 안에서 생기는 낙인이다. 교육부·한국청소년정책연구원 '2023 청소년 정신건강 실태조사'에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다. 이 수치는 많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다는 뜻이다. 소설 속 이경도 상처받았지만 유림에게 말하지 못한다. 나는 여기서 개인의 성격보다 분위기의 힘이 더 무섭다고 느꼈다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서는 솔직함이 용기보다 실수로 취급되기 쉽다. 또 학교는 갈등을 줄이라고 하지만 감정을 설명하고 받아들이는 법은 충분히 가르치지 않는다. 감정을 말했다가 관계가 어색해지는 경험을 반복하면, 학생들은 점점 침묵을 더 안전한 방식으로 내면화하게 된다.</textarea>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body1" oninput="updateEssayCount()">청소년이 감정을 솔직하게 드러내지 못하는 첫 번째 원인은 또래 관계 안에서 형성되는 낙인이다. 많은 학생들이 속마음을 안전하게 말할 공간이 없다고 느낀다. 두 번째 원인은 학교의 정서 교육 부재다. 학교는 갈등을 줄이라고 하지만, 감정을 언어로 표현하고 받아들이는 법은 충분히 가르치지 않는다. 소설 속 이경도 상처받았지만 유림에게 끝내 말하지 못한다. 조용히 참는 사람이 더 성숙해 보이는 분위기 속에서, 솔직함은 용기가 아니라 실수로 취급되기 쉽다.</textarea>
             </div>
           </div>
           <div class="sa3-part-block">
@@ -741,6 +846,7 @@
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body2-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body2-fields','sa3-body2-toggle')">
                   <span class="sa3-part-arrow">▾</span>
                   <span>[전개2 - 현재 양상] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">현실 자료 + 혼란스러운 현재성 + 작품 연결</span></span>
+                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body2')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -752,19 +858,19 @@
               <div class="sa3-structure-grid">
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">현실 자료</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body2-data" oninput="syncSectionFromFields('body2')">교육부·질병관리청 '2024 청소년 건강행태 조사'에 따르면 중·고등학생의 스트레스 인지율은 42.3%로, 전년 대비 5%p 올라 조사 이래 최대 상승폭을 기록했다. 같은 조사에서 최근 1년 내 우울감을 경험한 비율도 27.7%로, 10명 중 3명꼴이었다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-data" oninput="syncSectionFromFields('body2')">스트레스와 우울을 경험하는 학생은 많지만, 정작 그것을 말로 꺼내는 학생은 드물다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">혼란스러운 현재성</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body2-present" oninput="syncSectionFromFields('body2')">이 문제는 소설 속 이야기에서 끝나지 않는다. 이렇게 많은 학생이 스트레스와 우울을 경험하면서도, 정작 그 감정을 말로 꺼내는 사람은 드물다. 힘들다고 말하면 예민하게 보일까 봐, 분위기를 망칠까 봐 조용히 삼키는 쪽을 택한다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-present" oninput="syncSectionFromFields('body2')">힘들다고 하면 예민하게 보일까 봐, 분위기를 망칠까 봐 침묵을 택하기 때문이다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">작품 연결</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body2-link" oninput="syncSectionFromFields('body2')">소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓인다. 모두가 힘들어하면서도 아무도 먼저 이상하다고 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body2-link" oninput="syncSectionFromFields('body2')">소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓이고, 모두가 힘들어하면서도 아무도 먼저 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
                 </div>
               </div>
               <div class="sa3-structure-preview" id="sa3-body2-preview"></div>
-              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body2" oninput="updateEssayCount()">이 문제는 소설 속 이야기에서 끝나지 않는다. 교육부·질병관리청 '2024 청소년 건강행태 조사'에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 조사 이래 최대 상승폭을 기록했고, 최근 1년 내 우울감을 경험한 비율도 27.7%에 달했다. 이렇게 많은 학생이 스트레스와 우울을 경험하면서도, 정작 그 감정을 말로 꺼내는 사람은 드물다. 힘들다고 말하면 예민하게 보일까 봐, 분위기를 망칠까 봐 조용히 삼키는 쪽을 택한다. 소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓인다. 모두가 힘들어하면서도 아무도 먼저 이상하다고 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body2" oninput="updateEssayCount()">스트레스와 우울을 경험하는 학생은 많지만, 정작 그것을 말로 꺼내는 학생은 드물다. 힘들다고 하면 예민하게 보일까 봐, 분위기를 망칠까 봐 침묵을 택하기 때문이다. 소설 속 유림과 이경의 관계도 그렇다. 겉으로는 평범해 보여도 속으로는 말하지 못한 감정이 계속 쌓이고, 모두가 힘들어하면서도 아무도 먼저 말하지 못한다는 점에서, 이 소설은 청소년의 내면과 그것을 억누르는 사회 분위기를 함께 비판하고 있다.</textarea>
             </div>
           </div>
           <div class="sa3-part-block">
@@ -773,6 +879,7 @@
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-body3-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-body3-fields','sa3-body3-toggle')">
                   <span class="sa3-part-arrow">▾</span>
                   <span>[전개3 - 해결 방안] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">학교 차원 + 문화 차원 + 희망 근거</span></span>
+                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-body3')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -784,19 +891,19 @@
               <div class="sa3-structure-grid">
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">학교 차원</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body3-school" oninput="syncSectionFromFields('body3')">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 먼저 학교 안에서 감정 언어화 교육과 대화 훈련을 운영할 필요가 있다. 자신의 감정을 정확히 말하는 연습과 상대의 감정을 함부로 판단하지 않는 연습이 함께 이루어져야 한다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-school" oninput="syncSectionFromFields('body3')">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 학교 안에서 감정을 말하는 법을 체계적으로 가르치는 교육이 필요하다. 교육부 「학생 마음건강 종합방안」(2024)은 사회정서교육 의무 운영과 전교 상담인력 확보를 명시하고 있어 제도적 근거는 이미 마련되어 있다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">문화 차원</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body3-culture" oninput="syncSectionFromFields('body3')">사회적으로도 감정 표현을 유난함이나 약함으로 보는 시선을 바꿔야 한다. 힘들다고 말하는 것이 짐이 아니라 신뢰의 표현임을 알 수 있도록, 또래 상담이나 감정 언어화 캠페인 같은 문화적 접근이 함께 이루어져야 한다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-culture" oninput="syncSectionFromFields('body3')">사회적으로도 감정 표현을 유난함이 아닌 신뢰의 표현으로 받아들이는 문화가 필요하다. 한국청소년상담복지개발원의 또래상담 프로그램처럼 공감과 소통을 키우는 공인된 방안의 학교 단위 확대가 그 출발점이다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">희망 근거</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-body3-hope" oninput="syncSectionFromFields('body3')">나는 소설 속 전솔의 존재가 중요하다고 느꼈다. 전솔은 이경에게 솔직하게 말을 건네고, 그 말이 싸움이 아닌 연결이 될 수 있다는 가능성을 보여준다. 이것은 개인의 용기만이 아니라, 그 솔직함을 받아줄 수 있는 관계와 환경이 먼저 만들어져야 한다는 것을 뜻한다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-body3-hope" oninput="syncSectionFromFields('body3')">또래 상담은 단순한 위로를 넘어, 감정을 언어로 주고받는 실질적 훈련의 장이 될 수 있다는 점에서 제도적 확대가 시급하다.</textarea>
                 </div>
               </div>
               <div class="sa3-structure-preview" id="sa3-body3-preview"></div>
-              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body3" oninput="updateEssayCount()">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 먼저 학교 안에서 감정 언어화 교육과 대화 훈련을 운영할 필요가 있다. 자신의 감정을 정확히 말하는 연습과 상대의 감정을 함부로 판단하지 않는 연습이 함께 이루어져야 한다. 사회적으로도 감정 표현을 유난함이나 약함으로 보는 시선을 바꿔야 한다. 힘들다고 말하는 것이 짐이 아니라 신뢰의 표현임을 알 수 있도록, 또래 상담이나 감정 언어화 캠페인 같은 문화적 접근이 함께 이루어져야 한다. 나는 소설 속 전솔의 존재가 중요하다고 느꼈다. 전솔은 이경에게 솔직하게 말을 건네고, 그 말이 싸움이 아닌 연결이 될 수 있다는 가능성을 보여준다. 이것은 개인의 용기만이 아니라, 그 솔직함을 받아줄 수 있는 관계와 환경이 먼저 만들어져야 한다는 것을 뜻한다.</textarea>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-body3" oninput="updateEssayCount()">그렇다면 해결도 개인의 마음가짐만 강조해서는 안 된다. 학교 안에서 감정을 말하는 법을 체계적으로 가르치는 교육이 필요하다. 교육부 「학생 마음건강 종합방안」(2024)은 사회정서교육 의무 운영과 전교 상담인력 확보를 명시하고 있어 제도적 근거는 이미 마련되어 있다. 사회적으로도 감정 표현을 유난함이 아닌 신뢰의 표현으로 받아들이는 문화가 필요하다. 한국청소년상담복지개발원의 또래상담 프로그램처럼 공감과 소통을 키우는 공인된 방안의 학교 단위 확대가 그 출발점이다. 또래 상담은 단순한 위로를 넘어, 감정을 언어로 주고받는 실질적 훈련의 장이 될 수 있다는 점에서 제도적 확대가 시급하다.</textarea>
             </div>
           </div>
           <div class="sa3-part-block">
@@ -805,6 +912,7 @@
                 <div class="sa3-part-name sa3-part-toggle" id="sa3-end-toggle" style="margin-bottom:0; font-size:0.92rem;" onclick="togglePartFields('sa3-end-fields','sa3-end-toggle')">
                   <span class="sa3-part-arrow">▾</span>
                   <span>[정리] <span style="font-size:0.82rem; color:#cbd5e1; font-weight:600;">따뜻하지만 아픈 작품이라는 판단 + 사회 비판</span></span>
+                  <button class="btn-concept" type="button" onclick="event.stopPropagation(); openConcept('k-sa3-end')">💡 개념 이해</button>
                 </div>
               </div>
               <div class="sa3-count-wrap">
@@ -816,11 +924,11 @@
               <div class="sa3-structure-grid">
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">작품 판단</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-end-judgment" oninput="syncSectionFromFields('end')">이경이 반복해서 내뱉는 "괜찮아"는 사실 괜찮지 않다는 신호다. "오늘의 기분은 사과"는 청소년의 마음을 예쁘게만 포장하지 않는다. 오히려 착한 척, 괜찮은 척, 무난한 척을 강요하는 관계의 분위기가 얼마나 잔인할 수 있는지를 조용하게 드러낸다. 그래서 나는 이 소설이 따뜻하면서도 아픈 작품이라고 느꼈다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-end-judgment" oninput="syncSectionFromFields('end')">소설 속 전솔의 존재가 중요한 것도 이 때문이다. 그 솔직함을 받아줄 관계와 환경이 먼저 만들어져야 한다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">사회 비판</span>
-                  <textarea class="user-input sa3-part-input" id="sa3-end-critique" oninput="syncSectionFromFields('end')">누군가를 쉽게 비난하지는 않지만, 그렇다고 지금의 관계 문화를 그냥 넘어가지도 않기 때문이다. 결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다.</textarea>
+                  <textarea class="user-input sa3-part-input" id="sa3-end-critique" oninput="syncSectionFromFields('end')">결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다.</textarea>
                 </div>
                 <div class="sa3-structure-editor">
                   <span class="sa3-structure-label">마무리</span>
@@ -828,20 +936,23 @@
                 </div>
               </div>
               <div class="sa3-structure-preview" id="sa3-end-preview"></div>
-              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-end" oninput="updateEssayCount()">이경이 반복해서 내뱉는 "괜찮아"는 사실 괜찮지 않다는 신호다. "오늘의 기분은 사과"는 청소년의 마음을 예쁘게만 포장하지 않는다. 오히려 착한 척, 괜찮은 척, 무난한 척을 강요하는 관계의 분위기가 얼마나 잔인할 수 있는지를 조용하게 드러낸다. 그래서 나는 이 소설이 따뜻하면서도 아픈 작품이라고 느꼈다. 누군가를 쉽게 비난하지는 않지만, 그렇다고 지금의 관계 문화를 그냥 넘어가지도 않기 때문이다. 결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다. 오늘의 기분이 사과처럼 그저 막연한 이미지로만 남지 않으려면, 그 감정을 말할 수 있는 관계가 먼저 있어야 한다. 청소년이 더 이상 괜찮은 척하지 않아도 되는 사회가 될 때, 이경의 "괜찮아"는 비로소 진짜 괜찮음으로 바뀔 수 있을 것이다.</textarea>
+              <textarea class="user-input sa3-part-input sa3-hidden-essay" id="sa3-part-end" oninput="updateEssayCount()">소설 속 전솔의 존재가 중요한 것도 이 때문이다. 그 솔직함을 받아줄 관계와 환경이 먼저 만들어져야 한다. 결국 우리가 바꿔야 하는 것은 한 학생의 성격이 아니라, 솔직함보다 침묵을 더 편하게 만드는 환경이다. 오늘의 기분이 사과처럼 그저 막연한 이미지로만 남지 않으려면, 그 감정을 말할 수 있는 관계가 먼저 있어야 한다. 청소년이 더 이상 괜찮은 척하지 않아도 되는 사회가 될 때, 이경의 "괜찮아"는 비로소 진짜 괜찮음으로 바뀔 수 있을 것이다.</textarea>
             </div>
           </div>
         </div>
         </div>
+        <input type="hidden" id="sa3-title" value="괜찮지 않아도 괜찮은 사회를 위하여">
         <textarea class="user-input sa3-hidden-essay" id="sa3-essay" aria-hidden="true" tabindex="-1"></textarea>
       </div>
       
       <div class="btn-row sa3-actions" style="margin-top:1.25rem; gap:0.5rem;">
         <button class="btn-coach" onclick="coachEssay()">🤖 비평문 종합 첨삭</button>
+        <button class="btn-coach" id="btn-trim1500" onclick="trimTo1500()" style="background:rgba(124,106,240,0.15); border-color:rgba(124,106,240,0.4); color:#a78bfa;">✂️ 1500자로 정리</button>
         <button class="btn-next" onclick="openManuscriptModal()">원고지 미리보기</button>
         <button class="btn-next primary-next" onclick="focusSA3Part(3)" style="margin-left:auto;">3단계: 제출 양식 검수하기 ›</button>
       </div>
       <div class="coaching-box" id="cb-essay" style="margin-top:1rem;"><div class="coaching-header">🤖 비평문 종합 첨삭 결과</div><div class="coaching-content" id="cc-essay"></div></div>
+      <div class="coaching-box" id="cb-trim" style="margin-top:0.75rem; border-color:rgba(124,106,240,0.35); background:rgba(124,106,240,0.08);"><div class="coaching-header" style="color:#a78bfa;">✂️ 1500자 정리 결과</div><div class="coaching-content" id="cc-trim"></div></div>
     </div> <!-- /sa3-view-2 -->
 
     <!-- 3. 최종 검수 탭 -->
@@ -912,6 +1023,11 @@
         수행1(독서 감상 기록지) → 수행2(비평문 계획) → 수행3(비평문 1500자)<br>
         모든 단계를 마쳤어. 시험 당일엔 구조와 통계만 머릿속에 넣고 들어가면 돼!<br><br>
         <strong id="final-book-name" style="color:var(--lit-primary);"></strong>으로 최고의 결과를 내봐 💪
+      </div>
+      <div style="margin-top:1.1rem; padding:0.85rem 1.1rem; background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.35); border-radius:10px; font-size:0.82rem; color:#fbbf24; line-height:1.65; text-align:left;">
+        ⚠️ <strong style="color:#fde68a;">실제 시험 주의사항</strong><br>
+        시험장에서는 <strong>메모·자료·이 코치 화면을 참고할 수 없습니다.</strong><br>
+        지금 여기서 연습한 <strong>5문단 구조</strong>와 <strong>통계 출처</strong>를 머릿속에 완전히 익혀두세요.
       </div>
       <div class="btn-row" style="justify-content:center;margin-top:1.25rem;">
         <button class="btn-next" onclick="openSA3PrintPage()">원고지 출력</button>
@@ -1031,15 +1147,15 @@ const SA3_INTRO_TEMPLATES = {
     labels: ['장면', '내 감정', '문제 제기'],
     values: [
       '이경은 속으로는 불편한데도 겉으로는 자꾸 "괜찮아"라고 말한다.',
-      '나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 괜히 분위기를 망칠까 봐, 혹은 내가 너무 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.',
-      '"오늘의 기분은 사과"는 이런 마음을 단순한 성장통으로 넘기지 않고, 청소년이 왜 자기 감정을 숨기게 되는지를 보여준다. 나는 이 소설이 감정 표현 억압 문제를 통해 관계를 지키려다 자기 마음을 잃어버리는 현실을 비판한다고 생각한다.'
+      '나는 이 장면이 답답하면서도 이해됐다. 솔직하게 말하고 싶지만 분위기를 망칠까 봐, 예민한 사람처럼 보일까 봐 말을 삼킨 적이 있기 때문이다.',
+      '나는 이 소설이 감정 표현을 억압하는 사회적 분위기가 어떻게 청소년의 관계를 무너뜨리는지를 정확하게 비판하고 있다고 생각한다. 교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 역대 최고를 기록했고, 우울감 경험률도 27.7%에 달했다.'
     ]
   },
   stat: {
     summary: '통계 + 작품 연결 + 문제 제기',
     labels: ['통계', '작품 연결', '문제 제기'],
     values: [
-      '교육부·한국청소년정책연구원 "2023 청소년 정신건강 실태조사"에 따르면 청소년의 42.7%가 고민이 있어도 주변에 말하기 어렵다고 응답했다.',
+      '교육부·질병관리청 『제20차(2024년) 청소년건강행태조사』에 따르면 중·고등학생의 스트레스 인지율은 42.3%로 역대 최고를 기록했고, 우울감 경험률도 27.7%에 달했다.',
       '이 수치는 "오늘의 기분은 사과" 속 이경의 모습과 겹친다. 이경 역시 불편한 감정을 느끼면서도 겉으로는 자꾸 "괜찮아"라고 말하며 자기 마음을 숨긴다.',
       '나는 이 작품이 청소년의 감정 표현 억압이 개인의 성격 문제가 아니라, 현실 속 관계 분위기와 사회 구조에서 비롯된 문제임을 보여준다고 생각한다.'
     ]
@@ -1089,6 +1205,95 @@ const SA3_INTRO_TEMPLATES = {
   if (examAuthor) examAuthor.textContent = book.author || '김지현';
   
 })();
+
+/* ── 수행1·2 데이터 수신 및 편집기 반영 ── */
+function loadContext() {
+  let ctx = null;
+  try {
+    const raw = sessionStorage.getItem('coachSA3Context');
+    if (raw) ctx = JSON.parse(raw);
+  } catch(e) {}
+  if (!ctx) return;
+
+  const sa2 = ctx.sa2 || {};
+  const sa1 = ctx.sa1 || {};
+
+  // 수행2 구조계획이 있으면 편집기 서브필드에 반영
+  // [도입] — 수행2 도입 계획 → sa3-intro-issue (문제 제기 칸)
+  if (sa2.intro) {
+    const el = document.getElementById('sa3-intro-issue');
+    if (el && !el.value.includes(sa2.intro.slice(0, 10))) el.value = sa2.intro;
+  }
+
+  // [전개1] — 수행2 원인분석 → body1 cause 칸
+  // [원인N] 레이블, 출처 설명 문장 자동 제거
+  if (sa2.cause) {
+    const cleaned = sa2.cause
+      .replace(/\[원인\s*\d+\][^\n]*/g, '')   // [원인1], [원인2] 레이블 제거
+      .replace(/출처\s*:\s*[^\n]*/g, '')
+      .replace(/[^\n]*공식\s*자료[^\n]*/g, '')
+      .replace(/[^\n]*근거가\s*된다[^\n]*/g, '')
+      .replace(/[^\n]*입증한다[^\n]*/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    const el = document.getElementById('sa3-body1-cause');
+    if (el) el.value = cleaned;
+  }
+  // [전개1] — 수행2 전개1 계획으로 body1-stat 칸 보완
+  if (sa2.body1) {
+    const el = document.getElementById('sa3-body1-stat');
+    if (el && !el.value.trim()) el.value = sa2.body1;
+  }
+
+  // [전개2] — 수행2 전개2 계획은 body2-present에 넣지 않음 (계획서 메타 문장 노출 방지)
+  // body2-link에만 수행1 사회연결 내용 반영
+
+  // [전개3] — 수행2 해결방안 → body3 school/culture 칸
+  // [전개3] — 수행2 해결방안은 비평문 기본값을 유지 (계획서 논문 문체 노출 방지)
+  // sa3-body3-school, sa3-body3-culture 기본값이 이미 비평문 톤으로 설정되어 있음
+  if (sa2.body3) {
+    const el = document.getElementById('sa3-body3-hope');
+    if (el && !el.value.trim()) el.value = sa2.body3;
+  }
+
+  // [정리] — 수행2 정리 계획 → end judgment 칸
+  if (sa2.end) {
+    const el = document.getElementById('sa3-end-judgment');
+    if (el) el.value = sa2.end;
+  }
+
+  // 수행1 사회연결(항목5) → body2 link 칸에 보완
+  if (sa1.social) {
+    const el = document.getElementById('sa3-body2-link');
+    if (el && !el.value.trim()) el.value = sa1.social;
+  }
+
+  // 수행1 항목1 선정이유([장면]+[내 경험]+[사회적 의미]) → 도입 장면·감정 칸 보완
+  if (sa1.reason) {
+    const sceneMatch = sa1.reason.match(/\[장면\]\s*([\s\S]*?)(?=\[내 경험\]|$)/);
+    const expMatch   = sa1.reason.match(/\[내 경험\]\s*([\s\S]*?)(?=\[사회적 의미\]|$)/);
+    const elScene    = document.getElementById('sa3-intro-scene');
+    const elFeeling  = document.getElementById('sa3-intro-feeling');
+    if (elScene   && !elScene.value.trim())   elScene.value   = sceneMatch   ? sceneMatch[1].trim()   : sa1.reason;
+    if (elFeeling && !elFeeling.value.trim()) elFeeling.value = expMatch     ? expMatch[1].trim()     : '';
+  }
+
+  // 수행1 항목6 인상 문구(인용) → 전개1 비판적 시선 칸 보완
+  if (sa1.quote) {
+    const el = document.getElementById('sa3-body1-critique');
+    if (el && !el.value.trim()) el.value = sa1.quote;
+  }
+
+  // 수행2 항목4 AI 아이디어 → 전개3 희망 근거 칸 보완 (body3-hope가 아직 비어 있을 때만)
+  if (sa2.ai) {
+    const el = document.getElementById('sa3-body3-hope');
+    if (el && !el.value.trim()) el.value = sa2.ai;
+  }
+
+  // 모든 섹션 hidden textarea 동기화 및 글자수 갱신
+  Object.keys(SA3_SECTION_GROUPS).forEach(name => syncSectionFromFields(name));
+  updateEssayCount();
+}
 
 function escapeHtml(text) {
   return text
@@ -1191,6 +1396,8 @@ function collectEssayDraft() {
 }
 
 function getEssayTitle() {
+  const customTitle = document.getElementById('sa3-title')?.value.trim() || '';
+  if (customTitle) return customTitle;
   const intro = document.getElementById('sa3-part-intro')?.value.trim() || '';
   const firstSentence = intro
     .replace(/\s+/g, ' ')
@@ -1449,7 +1656,7 @@ function updateOutlineCount() {
 async function coachOutline() {
   const outline = document.getElementById('sa3-outline').value.trim();
   const cbEl = document.getElementById('cb-outline'), ccEl = document.getElementById('cc-outline');
-  if (!outline) { showToast('설계도를 먼저 써봐!'); return; }
+  if (!outline) { showToast('설계도를 먼저 작성해 주세요!'); return; }
   cbEl.classList.add('visible'); ccEl.textContent = '구조 점검 중…'; ccEl.classList.add('loading');
   await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
 
@@ -1463,7 +1670,7 @@ async function coachOutline() {
   ccEl.textContent = `[구조 완성도]: ${score}/5점
 
 1문단(서론): ${hasPara1 ? '✓ 문제 제기 포함됨' : '✗ 서론에 책의 사회 문제와 비평 방향을 1~2문장으로 명시해야 해'}
-2문단(원인): 책 속 장면과 현실 통계를 연결하는 단락이 있는지 확인해봐
+2문단(원인): 책 속 장면과 현실 통계를 연결하는 단락이 있는지 확인해 보세요
 3문단(해결): ${hasPara3 ? '✓ 해결 방안 포함됨' : '✗ 법·제도적 + 사회·문화적 해결 방안이 각각 1문장 이상 있어야 해'}
 4문단(비평): 작가의 시각과 네 의견이 어떻게 다른지 드러나야 해 (단순 요약 금지)
 5문단(결론): ${hasPara5 ? '✓ 마무리 포함됨' : '✗ 결론에서 개인적 실천 다짐이나 사회적 의의로 마무리해야 해'}
@@ -1475,11 +1682,92 @@ async function coachOutline() {
   ccEl.classList.remove('loading');
 }
 
+/* ── 1500자 정리 ── */
+function trimTo1500() {
+  const TARGET = 1500;
+  const MIN = 1449, MAX = 1551;
+
+  // 파트별 목표 비율 (합계 1.0)
+  const PARTS = [
+    { id: 'sa3-part-intro',  ratio: 250 / 1500 },
+    { id: 'sa3-part-body1',  ratio: 350 / 1500 },
+    { id: 'sa3-part-body2',  ratio: 300 / 1500 },
+    { id: 'sa3-part-body3',  ratio: 350 / 1500 },
+    { id: 'sa3-part-end',    ratio: 250 / 1500 },
+  ];
+
+  const cbEl = document.getElementById('cb-trim');
+  const ccEl = document.getElementById('cc-trim');
+  cbEl.classList.add('visible');
+
+  const total = collectEssayDraft().length;
+
+  // 범위 안이면 안내만
+  if (total >= MIN && total <= MAX) {
+    ccEl.textContent = `✓ 현재 ${total}자로 이미 1500±50자 범위 안에 있습니다. 정리가 필요하지 않습니다.`;
+    return;
+  }
+
+  // 부족한 경우 — 자를 수 없음, 안내만
+  if (total < MIN) {
+    ccEl.textContent = `⚠ 현재 ${total}자로 목표보다 ${MIN - total}자 부족합니다.\n각 문단을 조금씩 늘려주세요.\n\n문단별 추천 분량:\n  도입: 250자 / 전개1: 350자 / 전개2: 300자 / 전개3: 350자 / 정리: 250자`;
+    return;
+  }
+
+  // 초과한 경우 — 파트별 비율로 배분해서 문장 단위로 자르기
+  const excess = total - TARGET;
+  let log = `✂️ ${total}자 → 목표 1500자 (${excess}자 축소)\n\n`;
+  let actualTotal = 0;
+
+  PARTS.forEach(({ id, ratio }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const partTarget = Math.round(TARGET * ratio);
+    const text = el.value.trim();
+
+    if (text.length <= partTarget) {
+      actualTotal += text.length;
+      log += `  ${id.replace('sa3-part-', '')} : ${text.length}자 (유지)\n`;
+      return;
+    }
+
+    // 문장 단위로 자르기 — 마침표/느낌표/물음표 기준
+    const sentences = text.match(/[^。.!?！？\n]+[。.!?！？\n]?/g) || [text];
+    let trimmed = '';
+    for (const s of sentences) {
+      if ((trimmed + s).length > partTarget) break;
+      trimmed += s;
+    }
+    // 최소 1문장은 보존
+    if (!trimmed.trim()) trimmed = sentences[0] || text;
+    trimmed = trimmed.trim();
+
+    const before = text.length;
+    el.value = trimmed;
+    actualTotal += trimmed.length;
+    log += `  ${id.replace('sa3-part-', '')} : ${before}자 → ${trimmed.length}자 (${before - trimmed.length}자 축소)\n`;
+
+    // 서브필드 연동 (각 파트의 hidden textarea 기준으로 syncSection)
+    const sectionName = Object.entries(SA3_SECTION_GROUPS).find(([, c]) => c.hiddenId === id)?.[0];
+    if (sectionName) syncSectionFromFields(sectionName);
+  });
+
+  updateEssayCount();
+  log += `\n최종 ${actualTotal}자`;
+  if (actualTotal >= MIN && actualTotal <= MAX) {
+    log += ' ✓ 범위 달성';
+  } else if (actualTotal > MAX) {
+    log += ` — 아직 ${actualTotal - MAX}자 초과. 각 문단에서 반복 표현을 직접 줄여주세요.`;
+  }
+  ccEl.textContent = log;
+}
+
 /* ── 비평문 종합 첨삭 (템플릿) ── */
 async function coachEssay() {
   const essay = collectEssayDraft().trim();
   const cbEl = document.getElementById('cb-essay'), ccEl = document.getElementById('cc-essay');
-  if (!essay) { showToast('비평문을 먼저 작성해봐!'); return; }
+  if (!essay) { showToast('비평문을 먼저 작성해 주세요!'); return; }
   const n = essay.length;
   cbEl.classList.add('visible'); ccEl.textContent = '첨삭 중…'; ccEl.classList.add('loading');
   await new Promise(r => setTimeout(r, 700 + Math.random() * 500));
@@ -1522,10 +1810,19 @@ function updateEssayCount() {
   const n = essay.length;
   const el = document.getElementById('sa3-char');
   const subjectLine = document.querySelector('.subject-line');
-  el.textContent = `${n.toLocaleString()}자 / 목표 1500자`;
   el.className = 'char-info';
-  if (n >= 1449 && n <= 1551) el.classList.add('ok');
-  else if (n > 1100) el.classList.add('warn');
+  if (n >= 1449 && n <= 1551) {
+    el.textContent = `${n.toLocaleString()}자 / 1500±50자 ✓ 적정`;
+    el.classList.add('ok');
+  } else if (n > 1551) {
+    el.textContent = `${n.toLocaleString()}자 / 1500±50자 ✗ ${n - 1551}자 초과`;
+    el.classList.add('over');
+  } else if (n > 1100) {
+    el.textContent = `${n.toLocaleString()}자 / 1500±50자 (${1449 - n}자 남음)`;
+    el.classList.add('warn');
+  } else {
+    el.textContent = `${n.toLocaleString()}자 / 1500±50자`;
+  }
   if (subjectLine) subjectLine.textContent = getEssayTitle();
   renderRubricStatus(essay);
   renderManuscriptPreview(essay);
@@ -1544,9 +1841,19 @@ function updateEssayCount() {
     if (inputEl && cntSpan) {
       const charCount = inputEl.value.length;
       cntSpan.textContent = charCount.toLocaleString();
-      // 단락별 권장 글자수의 80% 이상이면 안정권 색상 처리
-      if(charCount >= p.target * 0.8) cntSpan.style.color = 'var(--lit-primary)';
-      else cntSpan.style.color = 'var(--text-dim)';
+      if (charCount >= p.target) {
+        cntSpan.style.color = 'var(--success)';
+        cntSpan.title = '✓ 목표 분량 달성';
+      } else if (charCount >= p.target * 0.8) {
+        cntSpan.style.color = 'var(--lit-primary)';
+        cntSpan.title = `목표 ${p.target}자까지 ${p.target - charCount}자 남음`;
+      } else if (charCount > 0) {
+        cntSpan.style.color = 'var(--warning)';
+        cntSpan.title = `⚠ 분량 부족 — 목표 ${p.target}자까지 ${p.target - charCount}자 더 필요`;
+      } else {
+        cntSpan.style.color = 'var(--text-dim)';
+        cntSpan.title = `목표 ${p.target}자`;
+      }
     }
   });
 }
@@ -1555,6 +1862,12 @@ function completeAll() {
   if (book) document.getElementById('final-book-name').textContent = book.title;
   document.getElementById('complete-banner').classList.add('visible');
   document.getElementById('complete-banner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function openSA3Report() {
+  document.querySelectorAll('.sa3-step-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('sa3-chip-4')?.classList.add('active');
+  openSA3PrintPage();
 }
 
   function openSA3PrintPage() {
@@ -1586,13 +1899,188 @@ function showToast(msg) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  applyIntroTemplate('basic');
+  loadContext();           // 수행1·2 데이터 편집기 반영 (샘플보다 우선)
+  // 수행2 데이터가 없을 때만 기본 템플릿 적용
+  try {
+    const raw = sessionStorage.getItem('coachSA3Context');
+    if (!raw) applyIntroTemplate('basic');
+  } catch(e) { applyIntroTemplate('basic'); }
   Object.keys(SA3_SECTION_GROUPS).forEach(name => syncSectionFromFields(name));
   updateEssayCount();
 });
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') closeManuscriptModal();
+});
+</script>
+<!-- ── 개념 이해 모달 ── -->
+<div class="concept-modal" id="concept-modal" aria-hidden="true" onclick="handleConceptBackdrop(event)">
+  <div class="concept-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="concept-modal-title">
+    <div class="concept-modal-header">
+      <div class="concept-modal-titlewrap">
+        <div class="concept-modal-eyebrow">💡 개념 이해</div>
+        <div class="concept-modal-title" id="concept-modal-title">개념</div>
+      </div>
+      <button class="concept-modal-close" type="button" aria-label="닫기" onclick="closeConcept()">✕</button>
+    </div>
+    <div class="concept-modal-body" id="concept-modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ── 수행3 비평문 개념 사전 ── */
+const CONCEPTS = {
+  'k-sa3-overview': {
+    title: '비평문이란 무엇인가',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">감상문 ≠ 비평문</div>
+        <p><strong>감상문</strong>은 "내가 어떻게 느꼈는가"를 쓰는 글입니다. <strong>비평문</strong>은 작품·사회 현실·글쓴이의 판단이 결합된 <strong>설득의 글</strong>입니다. 비평문에는 반드시 <strong>논지(thesis)</strong>가 있어야 하고, 독자는 그 논지에 설득되어야 합니다.</p>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">비평문의 3요소</div>
+        <ul>
+          <li><strong>작품 분석</strong> — 인물·장면·설정을 통해 작품이 무엇을 말하는지 해석</li>
+          <li><strong>사회 현실</strong> — 작품의 주제가 현실 사회의 어떤 문제와 맞닿아 있는지 통계·자료로 입증</li>
+          <li><strong>가치 판단</strong> — 글쓴이의 시각에서 작품이 사회 문제에 어떤 통찰을 주는지 평가</li>
+        </ul>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">표준 구조 — 5문단 1500자</div>
+        <ul>
+          <li>① <strong>도입</strong>(약 250자) — 장면 + 내 감정 + 문제 제기</li>
+          <li>② <strong>전개1</strong>(약 350자) — 통계 + 원인 분석 + 비판적 시선</li>
+          <li>③ <strong>전개2</strong>(약 300자) — 현재 양상 + 작품 연결</li>
+          <li>④ <strong>전개3</strong>(약 350자) — 해결 방안 + 희망 근거</li>
+          <li>⑤ <strong>정리</strong>(약 250자) — 작품 판단 + 사회 비판 + 마무리</li>
+        </ul>
+      </div>
+      <div class="concept-tip"><strong>💡 Tip.</strong> 도입의 마지막 문장 = 글 전체의 논지. 이 논지가 전개1·2·3을 관통해야 글이 흩어지지 않습니다.</div>
+    `
+  },
+  'k-sa3-intro': {
+    title: '도입 — 장면·내 감정·문제 제기 3요소',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">도입의 3요소</div>
+        <ul>
+          <li><strong>장면</strong> — 독자를 훅킹하는 구체적 대사나 행동. 추상 금지, 인용할 수 있으면 더 좋음.</li>
+          <li><strong>내 감정</strong> — 그 장면을 읽으며 내가 느낀 것. 독자와 공감대를 만드는 장치.</li>
+          <li><strong>문제 제기</strong> — 이 글이 다룰 사회 문제 + 글 전체의 논지 예고.</li>
+        </ul>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">도입의 마지막 문장 = 논지</div>
+        <p>도입의 마지막 문장은 <strong>글 전체의 논지(thesis)</strong>가 되어야 합니다. 이 한 문장이 나머지 4문단 전체를 이끌어갑니다. 예: "나는 이 소설이 ~ 비판하고 있다고 생각한다."</p>
+      </div>
+      <div class="concept-warning"><strong>⚠ 주의.</strong> 장면 설명만 길게 늘어놓고 문제 제기가 없으면 감상문이 됩니다. 독자는 "그래서 무슨 얘기를 하려는 거야?"라는 질문에 첫 문단에서 답을 들을 수 있어야 합니다.</div>
+    `
+  },
+  'k-sa3-body1': {
+    title: '전개1 — 통계 + 원인 분석 + 비판적 시선',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">전개1의 역할 — "왜"에 답하기</div>
+        <p>전개1은 "이 사회 문제가 <strong>왜</strong> 생기는가?"에 답합니다. 여기서 <strong>객관 자료와 주관 해석의 결합</strong>이 이뤄지는데, 이것이 비평문의 힘입니다.</p>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">3단 구성</div>
+        <ul>
+          <li><strong>통계</strong> — 수행2에서 검증한 공식 자료 활용. 수치는 신뢰의 근거.</li>
+          <li><strong>원인 분석</strong> — 수행2에서 분석한 원인을 문학적 톤으로 재서술. 왜 이 문제가 생기는가?</li>
+          <li><strong>비판적 시선</strong> — 통계 너머의 해석. 개인의 문제를 넘어 <strong>구조·문화</strong>를 비판.</li>
+        </ul>
+      </div>
+      <div class="concept-tip"><strong>💡 Tip.</strong> 통계를 그대로 나열만 하면 보고서입니다. 통계 뒤에 "이 수치는 ~을 뜻한다", "이것은 개인의 문제가 아니라 ~의 증거다"라고 해석을 붙여야 비평이 됩니다.</div>
+    `
+  },
+  'k-sa3-body2': {
+    title: '전개2 — 현재 양상 + 작품 연결',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">전개2의 역할 — "지금 어떻게"에 답하기</div>
+        <p>전개1이 "왜"라면 전개2는 "<strong>지금 어떻게</strong>"입니다. 문제의 현재성을 보여주고, 작품의 구체 장면을 겹쳐서 독자에게 <strong>"이건 지금의 이야기"</strong>임을 각인합니다.</p>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">현실과 작품의 겹침</div>
+        <ul>
+          <li><strong>현실 자료</strong> — 통계, 기사, 보고서로 문제가 지금도 진행 중임을 증명</li>
+          <li><strong>혼란스러운 현재성</strong> — 문제를 겪고 있는 사람들의 실제 모습, 내면</li>
+          <li><strong>작품 연결</strong> — 소설 속 인물이 바로 그 현실을 어떻게 보여주는지</li>
+        </ul>
+      </div>
+      <div class="concept-tip"><strong>💡 Tip.</strong> 여기서 작품 속 인물은 통계 숫자에 얼굴을 붙이는 역할을 합니다. "42.3%" 같은 숫자를 "이경과 유림의 침묵"으로 바꿔 읽게 만드는 것이 비평문의 기술입니다.</div>
+    `
+  },
+  'k-sa3-body3': {
+    title: '전개3 — 해결 방안 + 희망 근거',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">비판만 있으면 패배주의</div>
+        <p>전개1·2에서 문제를 강하게 비판했다면, 전개3에서는 <strong>반드시 가능성의 근거</strong>를 제시해야 합니다. 비판만 남기고 끝나면 독자는 무력감만 느낍니다.</p>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">3층 구성</div>
+        <ul>
+          <li><strong>학교·제도 차원</strong> — 수행2의 법·제도적 해결책을 문학적 톤으로 풀기. 법률 용어 과용 금지.</li>
+          <li><strong>사회·문화 차원</strong> — 수행2의 사회·문화적 해결책. 인식 전환, 캠페인, 또래 상담.</li>
+          <li><strong>희망 근거</strong> — 작품 속에서 희망의 단서 찾기. 조력자 인물, 변화의 순간, 작은 용기의 장면.</li>
+        </ul>
+      </div>
+      <div class="concept-warning"><strong>⚠ 주의.</strong> 수행2의 "교육부 고시 연 10시간 의무화" 같은 제도 용어를 비평문에 그대로 복붙하면 문체가 깨집니다. 비평문 톤으로 <strong>"학교가 감정을 말하는 법을 가르쳐야 한다"</strong> 같은 자연스러운 문장으로 풀어쓰세요.</div>
+    `
+  },
+  'k-sa3-end': {
+    title: '정리 — 수미상관 마무리',
+    body: `
+      <div class="concept-section">
+        <div class="concept-section-title">수미상관이란</div>
+        <p><strong>수미상관(首尾相關)</strong>은 글의 머리와 꼬리가 서로 호응하는 구성 기법입니다. 도입에서 던진 장면·대사·이미지를 정리에서 다시 불러오면 글이 하나의 원으로 완성됩니다.</p>
+      </div>
+      <div class="concept-section">
+        <div class="concept-section-title">정리의 3요소</div>
+        <ul>
+          <li><strong>작품 판단</strong> — 작품에 대한 최종 평가. 이중 판단이 좋음 (예: "따뜻하지만 아픈", "잔인하지만 정직한").</li>
+          <li><strong>사회 비판</strong> — 이 글이 결국 바꾸고자 하는 것 한 줄.</li>
+          <li><strong>마무리 여운</strong> — 도입 장면·대사를 다시 호출하며 독자에게 남기는 한 문장. 논지가 울림으로 바뀌는 순간.</li>
+        </ul>
+      </div>
+      <div class="concept-tip"><strong>💡 Tip.</strong> 좋은 정리 문단은 새 정보를 더하지 않습니다. 이미 말한 것을 다른 각도에서 다시 울리게 할 뿐입니다. "정리는 요약이 아니라 공명(共鳴)이다"라는 원칙을 기억하세요.</div>
+    `
+  }
+};
+
+function openConcept(id) {
+  const concept = CONCEPTS[id];
+  if (!concept) return;
+  const modal = document.getElementById('concept-modal');
+  const titleEl = document.getElementById('concept-modal-title');
+  const bodyEl = document.getElementById('concept-modal-body');
+  if (!modal || !titleEl || !bodyEl) return;
+  titleEl.textContent = concept.title;
+  bodyEl.innerHTML = concept.body;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeConcept() {
+  const modal = document.getElementById('concept-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function handleConceptBackdrop(event) {
+  if (event.target?.id === 'concept-modal') closeConcept();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('concept-modal');
+    if (modal?.classList.contains('open')) closeConcept();
+  }
 });
 </script>
 </body>

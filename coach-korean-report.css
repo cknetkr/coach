@@ -146,6 +146,8 @@
   padding: 0.55rem 0.42rem;
   white-space: pre-line;
   word-break: keep-all;
+  overflow-wrap: normal;
+  line-break: strict;
 }
 
 .report-form-guide {

@@ -200,7 +200,7 @@ const _DICT_BANK = {
     "Innovation is not just about technology — it is about solving human problems creatively."
   ],
   '오디오': [
-    " Eriksson combines impossible scenes to challenge what we think photography can do.",
+    "Eriksson combines impossible scenes to challenge what we think photography can do.",
     "Each image tells a story that blurs the line between reality and imagination.",
     "Stand in front of the artwork and let your eyes travel from one detail to the next."
   ]
@@ -223,13 +223,15 @@ function _tplDictGen(usr) {
   const isMed  = level.includes('중문') || level.includes('normal');
 
   const lines = [];
-  for (let i = 0; i < Math.min(count, 5); i++) {
+  for (let i = 0; i < Math.min(count, 8); i++) {
     const base = bank[i % bank.length];
     let sentence = base;
     if (isHard && i % 2 === 1)
       sentence = base.replace(/\.$/, ', and that belief has the power to transform entire communities.');
     else if (isMed && i % 3 === 0)
       sentence = base.replace(/\.$/, ', which is something we should all think about.');
+    else if (i >= bank.length)
+      sentence = base.replace(/\.$/, i % 2 === 0 ? ', and it can make a real difference in everyday life.' : ', which is why many students find this topic meaningful.');
     lines.push(`${i + 1}. ${sentence}`);
   }
   return lines.join('\n');
@@ -238,8 +240,13 @@ function _tplDictGen(usr) {
 function _tplDictGrade(usr) {
   const origLine = (usr.match(/원문[:\n]+([\s\S]*?)\n\n/) || [])[1] || '';
   const studLine = (usr.match(/학생 답안[:\n]+([\s\S]*)$/) || [])[1] || '';
-  const origWords = origLine.trim().split(/\s+/).filter(Boolean);
-  const studWords = studLine.trim().split(/\s+/).filter(Boolean);
+  const normalizeDictationText = (text) => String(text || '')
+    .replace(/^\s*\d+\.\s*/gm, '')
+    .replace(/[“”"'`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const origWords = normalizeDictationText(origLine).split(/\s+/).filter(Boolean);
+  const studWords = normalizeDictationText(studLine).split(/\s+/).filter(Boolean);
   const correct = origWords.filter((w, i) => studWords[i] && w.replace(/[,.!?]/g,'').toLowerCase() === studWords[i].replace(/[,.!?]/g,'').toLowerCase()).length;
   const total = origWords.length || 20;
   const pct = total > 0 ? Math.round(correct / total * 100) : 75;

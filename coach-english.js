@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const intEl  = document.getElementById('eng-dday-int');
   if (dictEl) { const d=Math.ceil((dictTest-now)/86400000); dictEl.textContent = d<=0?'당일!':d+'일 전'; }
   if (intEl)  { const d=Math.ceil((intTest-now)/86400000);  intEl.textContent  = d<=0?'당일!':d+'일 전'; }
+  updateDictationTTSRateLabel();
+  populateDictationVoices();
   updateSim();
 });
 
@@ -22,6 +24,153 @@ const DICT_TOPICS = [
   {icon:'🎨',num:'주제 8',title:'오디오 가이드',desc:'에릭 요한슨 작품 세계'},
 ];
 let selectedDictTopic = null, dictScriptVisible = true, dictCount = 0;
+const dictTTSState = {
+  lines: [],
+  currentIndex: -1,
+  playingAll: false
+};
+
+function supportsDictationTTS() {
+  return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+}
+
+function setDictationTTSStatus(message, tone = '') {
+  const el = document.getElementById('dict-tts-status');
+  if (!el) return;
+  el.textContent = message;
+  el.className = `dict-tts-status${tone ? ` ${tone}` : ''}`;
+}
+
+function updateDictationTTSRateLabel() {
+  const slider = document.getElementById('dict-tts-rate');
+  const label = document.getElementById('dict-tts-rate-label');
+  if (!slider || !label) return;
+  label.textContent = `${Number(slider.value).toFixed(1)}x`;
+}
+
+function populateDictationVoices() {
+  const select = document.getElementById('dict-tts-voice');
+  if (!select) return;
+  if (!supportsDictationTTS()) {
+    select.innerHTML = '<option value="">브라우저 TTS 미지원</option>';
+    setDictationTTSStatus('이 브라우저에서는 TTS를 지원하지 않습니다.', 'warn');
+    return;
+  }
+  const voices = window.speechSynthesis.getVoices()
+    .filter((voice) => /^en(-|_)/i.test(voice.lang) || /English/i.test(voice.name));
+  const current = select.value;
+  select.innerHTML = '<option value="">기본 영어 음성</option>' + voices.map((voice) => (
+    `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`
+  )).join('');
+  if (voices.some((voice) => voice.name === current)) select.value = current;
+  if (!voices.length) {
+    setDictationTTSStatus('영어 음성을 불러오는 중입니다. 잠시 후 다시 눌러보세요.', 'warn');
+  } else if (!dictTTSState.lines.length) {
+    setDictationTTSStatus('스크립트를 생성하면 TTS로 들을 수 있습니다.');
+  }
+}
+
+if (supportsDictationTTS()) {
+  window.speechSynthesis.onvoiceschanged = populateDictationVoices;
+}
+
+function getDictationVoice() {
+  if (!supportsDictationTTS()) return null;
+  const selectedName = document.getElementById('dict-tts-voice')?.value;
+  if (!selectedName) return null;
+  return window.speechSynthesis.getVoices().find((voice) => voice.name === selectedName) || null;
+}
+
+function parseDictationLines(text) {
+  return String(text || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => line.replace(/^\d+\.\s*/, '').trim())
+    .filter(Boolean);
+}
+
+function highlightDictationLineButton(index) {
+  document.querySelectorAll('#dict-tts-line-buttons .dict-tts-line-btn').forEach((button, buttonIndex) => {
+    button.classList.toggle('active', buttonIndex === index);
+  });
+}
+
+function renderDictationLineButtons() {
+  const container = document.getElementById('dict-tts-line-buttons');
+  if (!container) return;
+  if (!dictTTSState.lines.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = dictTTSState.lines.map((_, index) => (
+    `<button type="button" class="dict-tts-line-btn" onclick="playDictationSentence(${index})">문장 ${index + 1}</button>`
+  )).join('');
+  highlightDictationLineButton(dictTTSState.currentIndex);
+}
+
+function syncDictationTTSFromScript() {
+  const scriptText = document.getElementById('dict-script')?.textContent || '';
+  dictTTSState.lines = parseDictationLines(scriptText);
+  dictTTSState.currentIndex = -1;
+  dictTTSState.playingAll = false;
+  renderDictationLineButtons();
+  if (!supportsDictationTTS()) {
+    setDictationTTSStatus('이 브라우저에서는 TTS를 지원하지 않습니다.', 'warn');
+    return;
+  }
+  if (!dictTTSState.lines.length) {
+    setDictationTTSStatus('스크립트를 생성하면 TTS로 들을 수 있습니다.');
+    return;
+  }
+  setDictationTTSStatus(`TTS 준비 완료 · 총 ${dictTTSState.lines.length}문장`, 'active');
+}
+
+function stopDictationTTS(options = {}) {
+  if (!supportsDictationTTS()) return;
+  const { preserveStatus = false } = options;
+  window.speechSynthesis.cancel();
+  dictTTSState.currentIndex = -1;
+  dictTTSState.playingAll = false;
+  highlightDictationLineButton(-1);
+  if (!preserveStatus) {
+    setDictationTTSStatus(
+      dictTTSState.lines.length ? '재생을 멈췄습니다. 다시 듣고 싶은 문장을 선택하세요.' : '스크립트를 생성하면 TTS로 들을 수 있습니다.'
+    );
+  }
+}
+
+function createDictationUtterance(text, index) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  const slider = document.getElementById('dict-tts-rate');
+  const selectedVoice = getDictationVoice();
+  utterance.lang = selectedVoice?.lang || 'en-US';
+  utterance.rate = slider ? Number(slider.value) : 0.9;
+  utterance.pitch = 1;
+  if (selectedVoice) utterance.voice = selectedVoice;
+  utterance.onstart = () => {
+    dictTTSState.currentIndex = index;
+    highlightDictationLineButton(index);
+    setDictationTTSStatus(`문장 ${index + 1} 재생 중`, 'active');
+  };
+  utterance.onend = () => {
+    if (dictTTSState.playingAll && index < dictTTSState.lines.length - 1) {
+      window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[index + 1], index + 1));
+      return;
+    }
+    dictTTSState.currentIndex = -1;
+    dictTTSState.playingAll = false;
+    highlightDictationLineButton(-1);
+    setDictationTTSStatus('재생이 끝났습니다. 필요한 문장을 다시 들어보세요.');
+  };
+  utterance.onerror = () => {
+    dictTTSState.currentIndex = -1;
+    dictTTSState.playingAll = false;
+    highlightDictationLineButton(-1);
+    setDictationTTSStatus('TTS 재생 중 문제가 생겼습니다. 다시 시도해보세요.', 'warn');
+  };
+  return utterance;
+}
 
 (function renderDictTopics() {
   const grid = document.getElementById('topic-grid');
@@ -45,6 +194,7 @@ async function generateDictation() {
   const count = document.getElementById('dict-count').value;
   const el = document.getElementById('dict-script');
   const box = document.getElementById('dict-script-box');
+  stopDictationTTS({ preserveStatus: true });
   box.style.display = 'block'; dictScriptVisible = true;
   document.getElementById('script-toggle-label').textContent = '스크립트 숨기기';
   el.style.opacity = '1'; el.style.filter = 'none';
@@ -52,7 +202,42 @@ async function generateDictation() {
   const sys = `당신은 영어 수행평가 받아쓰기 연습 전문가입니다. 고등학교 2학년 수준(CEFR B1~B2)의 받아쓰기 연습 문장을 생성하십시오.`;
   const usr = `주제: ${selectedDictTopic.title} (${selectedDictTopic.desc})\n난이도: ${levelMap[level]}\n문장 수: ${count}문장\n\n요구사항:\n- 각 문장은 번호(1. 2. 3...)를 붙여 한 줄씩 출력\n- 자연스러운 영어 구어체\n- 한국어 번역 포함 금지\n- 문장만 출력`;
   await callClaude(sys, usr, el);
+  syncDictationTTSFromScript();
 }
+
+function playDictationAll() {
+  if (!dictTTSState.lines.length) { showToast('먼저 받아쓰기 스크립트를 생성하십시오'); return; }
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  stopDictationTTS({ preserveStatus: true });
+  dictTTSState.playingAll = true;
+  window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[0], 0));
+}
+
+function playDictationSentence(index) {
+  if (!dictTTSState.lines[index]) { showToast('해당 문장을 찾을 수 없습니다'); return; }
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  stopDictationTTS({ preserveStatus: true });
+  dictTTSState.playingAll = false;
+  window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[index], index));
+}
+
+function pauseDictationTTS() {
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  if (!window.speechSynthesis.speaking || window.speechSynthesis.paused) { showToast('현재 재생 중인 음성이 없습니다'); return; }
+  window.speechSynthesis.pause();
+  setDictationTTSStatus('일시정지됨 · 이어듣기를 누르면 계속 재생합니다.', 'warn');
+}
+
+function resumeDictationTTS() {
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  if (!window.speechSynthesis.paused) { showToast('이어들을 음성이 없습니다'); return; }
+  window.speechSynthesis.resume();
+  setDictationTTSStatus(
+    dictTTSState.currentIndex >= 0 ? `문장 ${dictTTSState.currentIndex + 1} 재생 중` : '재생 중',
+    'active'
+  );
+}
+
 function toggleScript() {
   const el = document.getElementById('dict-script');
   const label = document.getElementById('script-toggle-label');
@@ -72,6 +257,7 @@ async function gradeDictation() {
   await callClaude(sys, `원문:\n${script}\n\n학생 답안:\n${myAnswer}`, el);
 }
 function clearDictation() {
+  stopDictationTTS({ preserveStatus: true });
   document.getElementById('dict-my-answer').value = '';
   const fb = document.getElementById('dict-feedback');
   fb.textContent = '스크립트를 생성하고 받아쓰기 후 채점을 실행하십시오.';
@@ -198,3 +384,7 @@ async function getSimStrategy() {
   const usr = `현재 예상 점수:\n- 정기시험: ${exam}점 → 반영 후 ${Math.round(exam*0.4*10)/10}점\n- 문장완성: ${sent}/20점\n- 받아쓰기: ${dict}/20점\n- 영어면접: ${int_}/20점\n- 합계: ${total}/100점\n\n각 영역별 약점을 분석하고 지금 당장 실행할 수 있는 우선순위 3가지 훈련 계획을 구체적으로 제시하십시오.`;
   await callClaude(sys, usr, el);
 }
+
+window.addEventListener('beforeunload', () => {
+  stopDictationTTS({ preserveStatus: true });
+});

@@ -41,6 +41,29 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
           <span id="script-toggle-label">스크립트 숨기기</span>
         </button>
       </div>
+      <div class="dict-tts-panel">
+        <div class="dict-tts-toolbar">
+          <button class="btn-primary eng" type="button" onclick="playDictationAll()">🔊 전체 듣기</button>
+          <button class="btn-secondary" type="button" onclick="pauseDictationTTS()">⏸ 일시정지</button>
+          <button class="btn-secondary" type="button" onclick="resumeDictationTTS()">▶ 이어듣기</button>
+          <button class="btn-secondary" type="button" onclick="stopDictationTTS()">⏹ 정지</button>
+        </div>
+        <div class="dict-tts-options">
+          <label class="dict-tts-option">
+            <span>속도</span>
+            <input type="range" id="dict-tts-rate" min="0.7" max="1.2" step="0.1" value="0.9" oninput="updateDictationTTSRateLabel()">
+            <strong id="dict-tts-rate-label">0.9x</strong>
+          </label>
+          <label class="dict-tts-option">
+            <span>음성</span>
+            <select class="field-input" id="dict-tts-voice" style="width:auto;min-width:180px;resize:none;">
+              <option value="">기본 영어 음성</option>
+            </select>
+          </label>
+        </div>
+        <div class="dict-tts-status" id="dict-tts-status">스크립트를 생성하면 TTS로 들을 수 있습니다.</div>
+        <div class="dict-tts-line-buttons" id="dict-tts-line-buttons"></div>
+      </div>
       <div class="ai-feedback has-content" id="dict-script"></div>
     </div>
     <div class="mc">

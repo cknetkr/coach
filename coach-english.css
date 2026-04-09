@@ -32,3 +32,15 @@
 .sim-label { flex: 1; font-size: 0.85rem; color: var(--text-secondary); }
 .sim-val { font-size: 1rem; font-weight: 700; min-width: 48px; text-align: right; color: var(--eng-primary); }
 input[type=range] { accent-color: var(--eng-primary); flex: 1; }
+.dict-tts-panel { margin-bottom: 0.9rem; padding: 0.9rem 1rem; border: 1px solid rgba(56,189,248,0.24); border-radius: var(--radius-sm); background: rgba(56,189,248,0.06); }
+.dict-tts-toolbar, .dict-tts-options, .dict-tts-line-buttons { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+.dict-tts-options { margin-top: 0.7rem; align-items: center; }
+.dict-tts-option { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: var(--text-secondary); }
+.dict-tts-option strong { color: var(--eng-primary); min-width: 2.8rem; text-align: right; }
+.dict-tts-status { margin-top: 0.65rem; font-size: 0.76rem; color: #bae6fd; line-height: 1.5; }
+.dict-tts-status.warn { color: #fcd34d; }
+.dict-tts-status.active { color: #e0f2fe; }
+.dict-tts-line-buttons { margin-top: 0.7rem; }
+.dict-tts-line-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-secondary); border-radius: 999px; padding: 0.34rem 0.72rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.dict-tts-line-btn:hover { border-color: var(--eng-border); color: #fff; }
+.dict-tts-line-btn.active { background: var(--eng-bg); border-color: var(--eng-border); color: var(--eng-primary); }
