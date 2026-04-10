@@ -26,7 +26,7 @@
   - 제목과 첫 화면 문구를 `수행평가` 중심으로 다시 정리
   - `국어 · 영어 · 대수` 샘플 구성이 한눈에 보이게 조정
   - 핵심 메시지를 `흐름 정리 → 개념 정리 → 샘플 확인` 순서로 통일
-  - 카카오톡/소셜 미리보기용 `og:image`를 더 크게 보이는 `kakao-preview-hongi-fillcrop2.jpg`로 교체
+  - 카카오 캐시 우회를 위해 `canonical`, `og:url` 고정값을 제거하고 `kakao-preview-hongi-final.jpg`로 교체
 
 - 허브 `index.html`은 자비스 엔진형 소개 문구로 수정됨
   - 단순 과목 링크가 아니라
