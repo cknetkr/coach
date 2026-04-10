@@ -28,6 +28,17 @@
   - 핵심 메시지를 `흐름 정리 → 개념 정리 → 샘플 확인` 순서로 통일
   - 카카오 캐시 우회를 위해 `canonical`, `og:url` 고정값을 제거하고 `kakao-preview-hongi-final.jpg`로 교체
 
+- 수학 `coach-math.html`
+  - `coach-math-book.js` 추가
+    - 교과서 범위, 단원 맵, 핵심 개념을 한 파일로 분리
+  - `coach-math-problems.js` 추가
+    - 대표 문제, 서술형 샘플, 변형문제 기본형을 한 파일로 분리
+  - `coach-math-variants.js`, `math-s4-variant-view.js` 추가
+    - STEP 4 타임어택을 변형문제 데이터와 화면 파일로 분리
+    - 전체 세트 / 근호·지수 / 로그·상용로그 / 서술형 선택형 구조로 변경
+  - `math-s0.js`, `math-s1.js`, `coach-math.js`
+    - 새 교과서 데이터 파일을 읽도록 기본 연결 완료
+
 - 허브 `index.html`은 자비스 엔진형 소개 문구로 수정됨
   - 단순 과목 링크가 아니라
   - 무엇을 고민할지 / 어떻게 쓸지 / 자비스 엔진이 어떤 흐름인지 보이게 바뀜

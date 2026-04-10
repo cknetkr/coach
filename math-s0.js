@@ -1,6 +1,27 @@
+const mathBookMeta = window.MATH_BOOK || {};
+const mathBookPanelTitle = mathBookMeta.panelTitle || '📐 2026 대수 1차 수행평가';
+const mathBookPanelDesc = mathBookMeta.examSummary || '4월 16일(목)~17일(금) · 40분 · 교과서 p.10~39 (탐구&융합, 수학이야기 제외)';
+const mathBookRangeTitle = mathBookMeta.rangeTitle || '시험 범위 — 교과서 p.10~39';
+const mathBookExcluded = mathBookMeta.excludedLabel || '탐구&융합, 수학이야기 페이지 완전 제외';
+const mathBookRangeChips = (mathBookMeta.quickConcepts || [
+  '거듭제곱근',
+  '지수·로그',
+  '로그 조건 (밑>0, 밑≠1, 진수>0)',
+  '지수함수·로그함수',
+  '등호(=) 정렬',
+  '∴ 결론 접속사',
+]).map((chip, index) => `<span class="range-chip${index === 0 ? ' highlight' : ''}">${chip}</span>`).join('');
+const mathBookUnitCards = (mathBookMeta.units || []).map((unit) => `
+      <div class="engine-card math">
+        <div class="ec-label">${unit.pages}</div>
+        <div class="ec-title">${unit.title}</div>
+        <div class="ec-body">${unit.focus}</div>
+      </div>
+`).join('');
+
 window.MATH_S0 = String.raw`<div id="math-s0" class="inner-panel">
-    <h2 class="panel-title">📐 2026 대수 1차 수행평가</h2>
-    <p class="panel-desc">4월 16일(목)~17일(금) · 40분 · 교과서 p.10~39 (탐구&amp;융합, 수학이야기 제외)</p>
+    <h2 class="panel-title">${mathBookPanelTitle}</h2>
+    <p class="panel-desc">${mathBookPanelDesc}</p>
     <div class="engine-hero math">
       <div class="engine-kicker">Math Jarvis Engine</div>
       <div class="engine-title">수학은 정답보다 사고 순서를 먼저 잡아야 감점이 줄어듭니다.</div>
@@ -36,16 +57,16 @@ window.MATH_S0 = String.raw`<div id="math-s0" class="inner-panel">
       </table>
     </div>
     <div class="mc">
-      <div class="mc-title">시험 범위 — 교과서 p.10~39</div>
-      <div class="alert-box alert-amber"><strong>⚠ 제외 범위:</strong> 탐구&amp;융합, 수학이야기 페이지 완전 제외</div>
+      <div class="mc-title">${mathBookRangeTitle}</div>
+      <div class="alert-box alert-amber"><strong>⚠ 기본형 정리 기준:</strong> ${mathBookExcluded}</div>
       <div class="range-chips">
-        <span class="range-chip highlight">p.10~39 핵심</span>
-        <span class="range-chip">거듭제곱근</span>
-        <span class="range-chip">지수·로그</span>
-        <span class="range-chip">로그 조건 (밑&gt;0, 밑≠1, 진수&gt;0)</span>
-        <span class="range-chip">지수함수·로그함수</span>
-        <span class="range-chip">등호(=) 정렬</span>
-        <span class="range-chip">∴ 결론 접속사</span>
+        ${mathBookRangeChips}
+      </div>
+    </div>
+    <div class="mc">
+      <div class="mc-title">교과서 단원 맵 — 기본형 연결</div>
+      <div class="engine-card-grid">
+        ${mathBookUnitCards}
       </div>
     </div>
     <div class="mc">

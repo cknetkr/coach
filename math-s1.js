@@ -1,3 +1,21 @@
+const mathS1DefaultSample = (window.MATH_S1_SAMPLES && window.MATH_S1_SAMPLES[0]) || {
+  ref: '교과서 p.27 예제 5',
+  prob: 'log₂(x-1) + log₂(x+1) = 3 을 만족하는 x의 값을 구하시오.',
+  ans: 'log₂(x-1)(x+1) = 3 으로 합쳐서 x²-1 = 8, x² = 9, x = ±3 이므로 x = 3, x = -3 둘 다 답으로 썼음.',
+};
+const mathS1QuickButtons = ((window.MATH_S1_SAMPLES || []).length ? window.MATH_S1_SAMPLES : [
+  { quickLabel: '로그방정식 진수 조건 누락' },
+  { quickLabel: '지수방정식 치환 후 t>0 미확인' },
+  { quickLabel: '로그 부등식 방향 역전 실수' },
+  { quickLabel: '거듭제곱근 절댓값 누락' },
+  { quickLabel: '밑 변환 공식 적용 실수' },
+]).map((item, index) => `
+        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(${index})">${index + 1}. ${item.quickLabel}</button>
+`).join('');
+const mathGeneratedVariantButtons = (window.MATH_GENERATED_VARIANTS || []).map((item, index) => `
+        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadGeneratedVariant(${index})">${item.quickLabel}</button>
+`).join('');
+
 window.MATH_S1 = String.raw`<div id="math-s1" class="inner-panel" style="display:none;">
     <h2 class="panel-title">📚 범위 해체 &amp; 취약점 진단</h2>
     <p class="panel-desc">틀린 문제 또는 자신 없는 문제를 입력하십시오. AI가 오류 패턴을 분석합니다.</p>
@@ -6,11 +24,14 @@ window.MATH_S1 = String.raw`<div id="math-s1" class="inner-panel" style="display
     <div class="mc" style="margin-bottom:0.75rem;">
       <div class="mc-title" style="margin-bottom:0.6rem;">⚡ 자주 틀리는 유형 — 바로 불러오기</div>
       <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
-        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(0)">① 로그방정식 진수 조건 누락</button>
-        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(1)">② 지수방정식 치환 후 t>0 미확인</button>
-        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(2)">③ 로그 부등식 방향 역전 실수</button>
-        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(3)">④ 거듭제곱근 절댓값 누락</button>
-        <button class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;" onclick="loadS1Sample(4)">⑤ 밑 변환 공식 적용 실수</button>
+        ${mathS1QuickButtons}
+      </div>
+    </div>
+
+    <div class="mc" style="margin-bottom:0.75rem;">
+      <div class="mc-title" style="margin-bottom:0.6rem;">🧩 기본형 변형문제 — 바로 불러오기</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+        ${mathGeneratedVariantButtons || '<div class="empty-state">아직 등록된 변형문제가 없습니다.</div>'}
       </div>
     </div>
 
@@ -21,15 +42,15 @@ window.MATH_S1 = String.raw`<div id="math-s1" class="inner-panel" style="display
           <div style="display:flex;flex-direction:column;gap:0.75rem;">
             <div>
               <label style="font-size:0.78rem;color:var(--text-secondary);display:block;margin-bottom:0.4rem;">문제 번호 / 출처</label>
-              <input type="text" class="field-input" id="s1-problem-ref" placeholder="예) p.23 예제 3" value="교과서 p.27 예제 5" style="resize:none;">
+              <input type="text" class="field-input" id="s1-problem-ref" placeholder="예) p.23 예제 3" value="${mathS1DefaultSample.ref}" style="resize:none;">
             </div>
             <div>
               <label style="font-size:0.78rem;color:var(--text-secondary);display:block;margin-bottom:0.4rem;">문제 내용</label>
-              <textarea class="field-input" id="s1-problem-text" rows="4">log₂(x-1) + log₂(x+1) = 3 을 만족하는 x의 값을 구하시오.</textarea>
+              <textarea class="field-input" id="s1-problem-text" rows="4">${mathS1DefaultSample.prob}</textarea>
             </div>
             <div>
               <label style="font-size:0.78rem;color:var(--text-secondary);display:block;margin-bottom:0.4rem;">내 풀이 / 오답 과정</label>
-              <textarea class="field-input" id="s1-my-answer" rows="4">log₂(x-1)(x+1) = 3 으로 합쳐서 x²-1 = 8, x² = 9, x = ±3 이므로 x = 3, x = -3 둘 다 답으로 썼음.</textarea>
+              <textarea class="field-input" id="s1-my-answer" rows="4">${mathS1DefaultSample.ans}</textarea>
             </div>
           </div>
           <div class="btn-row">

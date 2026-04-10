@@ -9,8 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initRubricClick('s4-rubric', 's4-bar-fill', 's4-bar-count', 'math');
 });
 
+const externalS1Samples = Array.isArray(window.MATH_S1_SAMPLES) ? window.MATH_S1_SAMPLES : [];
+const externalS2Samples = Array.isArray(window.MATH_S2_SAMPLES) ? window.MATH_S2_SAMPLES : [];
+const externalS3Patterns = Array.isArray(window.MATH_S3_PATTERNS) ? window.MATH_S3_PATTERNS : [];
+const generatedVariants = Array.isArray(window.MATH_GENERATED_VARIANTS) ? window.MATH_GENERATED_VARIANTS : [];
+
 /* ── STEP 1: 예시 문제 샘플 ── */
-const s1Samples = [
+const s1Samples = externalS1Samples.length ? externalS1Samples : [
   {
     ref: '교과서 p.27 예제 5',
     prob: 'log₂(x-1) + log₂(x+1) = 3 을 만족하는 x의 값을 구하시오.',
@@ -39,10 +44,19 @@ const s1Samples = [
 ];
 function loadS1Sample(idx) {
   const s = s1Samples[idx];
+  if (!s) return;
   document.getElementById('s1-problem-ref').value = s.ref;
   document.getElementById('s1-problem-text').value = s.prob;
   document.getElementById('s1-my-answer').value = s.ans;
   showToast('예시 불러오기 완료 — AI 분석을 실행하십시오.');
+}
+function loadGeneratedVariant(idx) {
+  const s = generatedVariants[idx];
+  if (!s) return;
+  document.getElementById('s1-problem-ref').value = s.ref;
+  document.getElementById('s1-problem-text').value = s.prob;
+  document.getElementById('s1-my-answer').value = s.ans;
+  showToast('변형문제를 불러왔습니다. 오답 분석을 실행하십시오.');
 }
 
 /* ── STEP 1: 오답 분석 ── */
@@ -98,7 +112,7 @@ function updateS1Rubric() {
 }
 
 /* ── STEP 2: 예시 문제 샘플 ── */
-const s2Samples = [
+const s2Samples = externalS2Samples.length ? externalS2Samples : [
   {
     prob: 'log₂(x-1) + log₂(x+1) = 3 을 만족하는 x의 값을 구하시오. (서술형 6점)',
     s1: '밑: 2 > 0, 2 ≠ 1 ✓\n진수 조건: x-1 > 0 → x > 1 … ①\n         x+1 > 0 → x > -1 … ②\n공통 조건 (교집합): x > 1',
@@ -206,7 +220,7 @@ function clearStep2() {
 }
 
 /* ── STEP 3: 오답 패턴 버튼 데이터 ── */
-const s3Patterns = [
+const s3Patterns = externalS3Patterns.length ? externalS3Patterns : [
   '- 로그방정식: 진수 조건 교집합을 구하지 않아 음수 해를 포함함 (조건 누락)',
   '- 지수방정식: t=2^x 치환 후 t>0 조건 미명시, t=-1을 해로 포함함 (치환 조건 오류)',
   '- 로그 부등식: 밑이 1/3인데 부등호 방향을 유지해서 오답 (방향 역전 미적용)',
@@ -278,10 +292,141 @@ async function analyzePatterns() {
   await callClaude(sys, errors, el);
 }
 
+const mathVariantSets = Array.isArray(window.MATH_VARIANT_SETS) ? window.MATH_VARIANT_SETS : [];
+const mathVariantProblemBank = Array.isArray(window.MATH_VARIANT_PROBLEMS) ? window.MATH_VARIANT_PROBLEMS : [];
+let currentMathVariantSetId = mathVariantSets[0]?.id || null;
+
+function getMathVariantSet(setId) {
+  return mathVariantSets.find((set) => set.id === setId) || mathVariantSets[0] || null;
+}
+
+function getMathProblemsForSet(setId) {
+  const set = getMathVariantSet(setId);
+  if (!set) return [];
+  return set.problemIds.map((id) => mathVariantProblemBank.find((problem) => problem.id === id)).filter(Boolean);
+}
+
+function renderMathVariantSetButtons() {
+  const host = document.getElementById('math-s4-set-buttons');
+  if (!host) return;
+  host.innerHTML = mathVariantSets.map((set) => `
+    <button
+      class="btn-secondary variant-set-btn${set.id === currentMathVariantSetId ? ' active' : ''}"
+      onclick="selectMathVariantSet('${set.id}')"
+    >${set.label}</button>
+  `).join('');
+}
+
+function renderMathVariantCard(problem, index) {
+  const isEssay = problem.kind === 'essay';
+  const numberStyle = isEssay
+    ? 'background:rgba(245,158,11,0.15);color:var(--warning);border-color:rgba(245,158,11,0.3);'
+    : '';
+  const tagStyle = isEssay
+    ? 'background:rgba(245,158,11,0.12);color:var(--warning);border-color:rgba(245,158,11,0.3);'
+    : '';
+  const label = isEssay ? '모범 풀이' : '풀이';
+  const buttonText = isEssay ? '풀이 확인' : '정답 확인';
+  return `
+    <div class="ta-problem${isEssay ? ' ta-essay' : ''}" id="${problem.id}">
+      <div class="ta-q-row">
+        <span class="ta-num" style="${numberStyle}">${index + 1}</span>
+        <div class="ta-q-body">
+          <div class="ta-q-text">${problem.title}${problem.expression ? `<div class="ta-expr">${problem.expression}</div>` : ''}</div>
+          <div class="ta-meta">
+            <span class="ta-tag" style="${tagStyle}">${problem.category}</span>
+            <span class="ta-pts">${problem.source}</span>
+            <span class="ta-pts">${problem.timeHint}</span>
+          </div>
+        </div>
+        <button class="ta-reveal-btn" data-default-label="${buttonText}" onclick="toggleTA('${problem.id}')">${buttonText}</button>
+      </div>
+      <div class="ta-answer" id="${problem.id}-ans">
+        <div class="ta-ans-label"${isEssay ? ' style="color:var(--warning);"' : ''}>${label}</div>
+        <div class="ta-ans-reason" style="font-size:0.82rem;line-height:2;">${problem.answerHtml}</div>
+        <div class="ta-trap">${problem.trap}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMathProblemGrid(problems) {
+  const grid = document.getElementById('problem-grid');
+  if (!grid) return;
+  grid.innerHTML = problems.map((problem, index) => `
+    <div class="problem-card" id="pc-${index}" onclick="toggleProblem(${index})">
+      <div class="pc-num">문제 ${index + 1} <span style="color:var(--text-dim);font-size:0.62rem;">· ${problem.timeHint}</span></div>
+      <div class="pc-type">${problem.category}</div>
+      <div class="pc-status pending" id="pcs-${index}">미풀이</div>
+    </div>
+  `).join('');
+}
+
+function rerenderMathIn(node) {
+  if (!node || typeof renderMathInElement !== 'function') return;
+  renderMathInElement(node, {
+    delimiters: [
+      { left: '$$', right: '$$', display: true },
+      { left: '$', right: '$', display: false },
+    ],
+  });
+}
+
+function renderMathVariantSet(setId) {
+  const set = getMathVariantSet(setId);
+  if (!set) return;
+  currentMathVariantSetId = set.id;
+  const problems = getMathProblemsForSet(set.id);
+  const shortCount = problems.filter((problem) => problem.kind === 'short').length;
+  const essayCount = problems.filter((problem) => problem.kind === 'essay').length;
+  const summary = document.getElementById('math-s4-set-summary');
+  const title = document.getElementById('math-s4-pack-title');
+  const meta = document.getElementById('math-s4-pack-meta');
+  const list = document.getElementById('math-s4-variant-list');
+  const shortLabel = document.getElementById('s4-short-label');
+  const shortInput = document.getElementById('s4-short-correct');
+  const essayLabel = document.getElementById('s4-essay-label');
+  const essayInput = document.getElementById('s4-essay-pct');
+  const scoreNote = document.getElementById('s4-score-note');
+  const currentShortValue = parseInt(shortInput?.value, 10) || 0;
+  const currentEssayValue = parseFloat(essayInput?.value) || 0;
+  if (summary) summary.innerHTML = `<strong>${set.title}</strong><br>${set.description}`;
+  if (title) title.textContent = set.title;
+  if (meta) meta.textContent = `단답형 ${shortCount}문항 · 서술형 ${essayCount}문항 · 총 ${problems.length}문항`;
+  if (shortLabel) shortLabel.textContent = shortCount ? `단답형 맞은 개수 (/ ${shortCount})` : '단답형 없음 (이 세트는 서술형 전용)';
+  if (shortInput) {
+    shortInput.max = String(shortCount || 0);
+    shortInput.disabled = shortCount === 0;
+    shortInput.value = shortCount ? String(Math.min(Math.max(currentShortValue, 0), shortCount)) : '0';
+  }
+  if (essayLabel) essayLabel.textContent = essayCount ? '서술형 예상 달성률 (%)' : '서술형 없음 (이 세트는 단답형 전용)';
+  if (essayInput) {
+    essayInput.disabled = essayCount === 0;
+    essayInput.value = essayCount ? String(Math.min(Math.max(currentEssayValue, 0), 100)) : '0';
+  }
+  if (scoreNote) {
+    const scoreParts = [];
+    scoreParts.push(shortCount ? '단답형 최대 16점' : '단답형 제외');
+    scoreParts.push(essayCount ? '서술형 최대 20점' : '서술형 제외');
+    scoreNote.textContent = `현재 선택 세트 기준 환산: ${scoreParts.join(' · ')}`;
+  }
+  if (list) {
+    list.innerHTML = problems.map((problem, index) => renderMathVariantCard(problem, index)).join('');
+    rerenderMathIn(list);
+  }
+  renderMathProblemGrid(problems);
+  renderMathVariantSetButtons();
+}
+
+function selectMathVariantSet(setId) {
+  renderMathVariantSet(setId);
+  showToast(`${getMathVariantSet(setId)?.label || '세트'}를 불러왔습니다.`);
+}
 
 /* ── STEP 4 타임어택 문제 토글 ── */
 function toggleTA(id) {
   const prob = document.getElementById(id);
+  if (!prob) return;
   const ans  = document.getElementById(id + '-ans');
   const btn  = prob.querySelector('.ta-reveal-btn');
   if (!ans) return;
@@ -289,7 +434,7 @@ function toggleTA(id) {
   ans.classList.toggle('visible', !isOpen);
   prob.classList.toggle('revealed', !isOpen);
   if (btn) {
-    btn.textContent = isOpen ? '정답 확인' : '숨기기';
+    btn.textContent = isOpen ? (btn.dataset.defaultLabel || '정답 확인') : '숨기기';
     btn.classList.toggle('open', !isOpen);
   }
 }
@@ -309,7 +454,7 @@ function hideAllS4() {
     const prob = a.closest('.ta-problem');
     if (prob) prob.classList.remove('revealed');
     const btn = prob?.querySelector('.ta-reveal-btn');
-    if (btn) { btn.textContent = '정답 확인'; btn.classList.remove('open'); }
+    if (btn) { btn.textContent = btn.dataset.defaultLabel || '정답 확인'; btn.classList.remove('open'); }
   });
   showToast('전체 풀이를 닫았습니다.');
 }
@@ -328,7 +473,8 @@ function pauseTimer() { clearInterval(timerInterval); timerInterval=null; }
 function resetTimer() { pauseTimer(); timerRemaining=timerTotal; updateTimerDisplay(); }
 function updateTimerDisplay() {
   const m=Math.floor(timerRemaining/60), s=timerRemaining%60;
-  document.getElementById('timer-display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const display = document.getElementById('timer-display');
+  if (display) display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const pct = timerRemaining/timerTotal;
   const fill = document.getElementById('timer-bar');
   if (fill) {
@@ -336,26 +482,15 @@ function updateTimerDisplay() {
     fill.style.background = timerRemaining<300 ? 'var(--danger)' : timerRemaining<600 ? 'var(--warning)' : 'var(--math-primary)';
   }
 }
-(function initProblemGrid() {
-  const grid = document.getElementById('problem-grid');
-  if (!grid) return;
-  const types = [
-    '거듭제곱근','지수 계산','로그 계산','지수방정식',
-    '로그방정식','지수함수','로그함수','로그 부등식',
-    '지수 부등식','밑 변환 공식','치환형 방정식','응용 문제'
-  ];
-  const timeHints=['3분','3분','3분','4분','4분','4분','4분','5분','5분','3분','5분','6분'];
-  grid.innerHTML = types.map((t,i) => `
-    <div class="problem-card" id="pc-${i}" onclick="toggleProblem(${i})">
-      <div class="pc-num">문제 ${i+1} <span style="color:var(--text-dim);font-size:0.62rem;">· ${timeHints[i]||'4분'}</span></div>
-      <div class="pc-type">${t}</div>
-      <div class="pc-status pending" id="pcs-${i}">미풀이</div>
-    </div>
-  `).join('');
-})();
+
+if (mathVariantSets.length) {
+  renderMathVariantSet(currentMathVariantSetId);
+}
+
 function toggleProblem(idx) {
   const card = document.getElementById(`pc-${idx}`);
   const status = document.getElementById(`pcs-${idx}`);
+  if (!card || !status) return;
   if (card.classList.contains('solved')) {
     card.classList.replace('solved','skipped'); status.textContent='스킵'; status.className='pc-status skip';
   } else if (card.classList.contains('skipped')) {
@@ -365,21 +500,31 @@ function toggleProblem(idx) {
   }
 }
 function calcFinalScore() {
-  const shortCorrect = parseInt(document.getElementById('s4-short-correct').value) || 0;
-  const essayPct = parseFloat(document.getElementById('s4-essay-pct').value) || 0;
-  const shortScore = Math.round((shortCorrect/8)*16*10)/10;
-  let essayScore = 13;
-  if (essayPct>=100) essayScore=20; else if (essayPct>=94) essayScore=19;
-  else if (essayPct>=88) essayScore=18; else if (essayPct>=82) essayScore=17;
-  else if (essayPct>=76) essayScore=16; else if (essayPct>=70) essayScore=15;
-  else if (essayPct>=64) essayScore=14;
+  const activeProblems = getMathProblemsForSet(currentMathVariantSetId);
+  const shortCount = activeProblems.filter((problem) => problem.kind === 'short').length;
+  const essayCount = activeProblems.filter((problem) => problem.kind === 'essay').length;
+  const shortInput = document.getElementById('s4-short-correct');
+  const essayInput = document.getElementById('s4-essay-pct');
+  const shortCorrect = Math.min(Math.max(parseInt(shortInput?.value, 10) || 0, 0), shortCount);
+  const essayPct = Math.min(Math.max(parseFloat(essayInput?.value) || 0, 0), 100);
+  if (shortInput) shortInput.value = String(shortCorrect);
+  if (essayInput) essayInput.value = String(essayPct);
+  const shortScore = shortCount ? Math.round((shortCorrect / shortCount) * 16 * 10) / 10 : 0;
+  let essayScore = 0;
+  if (essayCount) {
+    essayScore = 13;
+    if (essayPct>=100) essayScore=20; else if (essayPct>=94) essayScore=19;
+    else if (essayPct>=88) essayScore=18; else if (essayPct>=82) essayScore=17;
+    else if (essayPct>=76) essayScore=16; else if (essayPct>=70) essayScore=15;
+    else if (essayPct>=64) essayScore=14;
+  }
   const total = shortScore + essayScore;
+  const totalMax = (shortCount ? 16 : 0) + (essayCount ? 20 : 0);
   document.getElementById('pred-short').textContent = `${shortScore}점`;
   document.getElementById('pred-essay').textContent = `${essayScore}점`;
   document.getElementById('pred-total').textContent = `${total}점`;
   document.getElementById('score-result').style.display = 'block';
-  // 등급 계산 (수행평가 36점 만점 기준 — 실제 등급은 학교 기준 따라 다름)
-  const pct = (total / 36) * 100;
+  const pct = totalMax ? (total / totalMax) * 100 : 0;
   let grade, msg, color;
   if (pct >= 97)       { grade='A+'; msg='만점 수준입니다! 실수 없이 제출하세요.'; color='#34d399'; }
   else if (pct >= 92)  { grade='A';  msg='목표 달성권입니다. 서술형 조건 누락만 없으면 됩니다.'; color='#34d399'; }
