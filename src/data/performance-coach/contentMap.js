@@ -4,15 +4,16 @@ export const performanceCoachContentMap = {
     futurePage: "PerformanceCoachHubPage.jsx",
   },
   korean: {
-    staticSource: "test/coach-korean.html",
+    staticSource: "test/pages/coach-korean.html",
     futurePage: "PerformanceCoachKoreanPage.jsx",
   },
   math: {
-    staticSource: "test/coach-math.html",
+    staticSource: "test/pages/coach-math.html",
     futurePage: "PerformanceCoachMathPage.jsx",
   },
   english: {
-    staticSource: "test/coach-english.html",
+    staticSource: "test/pages/coach-english.html",
     futurePage: "PerformanceCoachEnglishPage.jsx",
   },
 };
+

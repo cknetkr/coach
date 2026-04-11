@@ -7,15 +7,15 @@ Keep the current static prototype runnable in `test/`, while preparing a folder 
 ## Current static prototype
 
 - `test/index.html`
-- `test/coach-korean.html`
-- `test/coach-math.html`
-- `test/coach-english.html`
-- `test/coach-korean-s3.html`
-- `test/coach-shared.css`
-- `test/coach-korean.css`
-- `test/coach-math.css`
-- `test/coach-english.css`
-- `test/coach-shared.js`
+- `test/pages/coach-korean.html`
+- `test/pages/coach-math.html`
+- `test/pages/coach-english.html`
+- `test/pages/coach-korean-s3.html`
+- `test/assets/css/coach-shared.css`
+- `test/assets/css/coach-korean.css`
+- `test/assets/css/coach-math.css`
+- `test/assets/css/coach-english.css`
+- `test/assets/js/coach-shared.js`
 
 ## New selfq-aligned source scaffold
 
@@ -33,31 +33,31 @@ Keep the current static prototype runnable in `test/`, while preparing a folder 
   - Later: `test/src/pages/performance-coach/PerformanceCoachHubPage.jsx`
 
 - Korean
-  - Current: `test/coach-korean.html`
+  - Current: `test/pages/coach-korean.html`
   - Later: `test/src/pages/performance-coach/PerformanceCoachKoreanPage.jsx`
 
 - Math
-  - Current: `test/coach-math.html`
+  - Current: `test/pages/coach-math.html`
   - Later: `test/src/pages/performance-coach/PerformanceCoachMathPage.jsx`
 
 - English
-  - Current: `test/coach-english.html`
+  - Current: `test/pages/coach-english.html`
   - Later: `test/src/pages/performance-coach/PerformanceCoachEnglishPage.jsx`
 
 - Shared UI styles
-  - Current: `test/coach-shared.css`
+  - Current: `test/assets/css/coach-shared.css`
   - Later: `test/src/styles/performance-coach/shared.css`
 
 - Subject styles
-  - Current: `test/coach-korean.css`
+  - Current: `test/assets/css/coach-korean.css`
   - Later: `test/src/styles/performance-coach/korean.css`
-  - Current: `test/coach-math.css`
+  - Current: `test/assets/css/coach-math.css`
   - Later: `test/src/styles/performance-coach/math.css`
-  - Current: `test/coach-english.css`
+  - Current: `test/assets/css/coach-english.css`
   - Later: `test/src/styles/performance-coach/english.css`
 
 - Static JS helpers
-  - Current: `test/coach-shared.js`
+  - Current: `test/assets/js/coach-shared.js`
   - Later split:
     - `test/src/lib/performance-coach/aiAdapters.js`
     - page-local handlers inside each React page
@@ -73,4 +73,5 @@ Keep the current static prototype runnable in `test/`, while preparing a folder 
 
 ## Important rule
 
-Until migration starts for real, keep the current root HTML prototype as the source of truth for visual QA.
+Until migration starts for real, keep the current static prototype in `test/index.html`, `test/pages/`, and `test/assets/` as the source of truth for visual QA.
+

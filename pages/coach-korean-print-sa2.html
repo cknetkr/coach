@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>수행2 출력</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&display=swap');
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; color: #1a1a2e; }
+
+    /* ── 툴바 ── */
+    .toolbar { max-width: 1120px; margin: 0 auto; padding: 16px 20px; display: flex; justify-content: flex-end; gap: 10px; }
+    .toolbar button { border: 1.5px solid #c4b5fd; background: #fff; border-radius: 10px; padding: 9px 20px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; color: #5b21b6; transition: background 0.15s; }
+    .toolbar button:hover { background: #f5f3ff; }
+    .toolbar button:last-child { background: #6c5ce7; border-color: #6c5ce7; color: #fff; }
+    .toolbar button:last-child:hover { background: #5b4bd4; }
+
+    /* ── 용지 시트 ── */
+    .sheet { width: min(1120px, calc(100vw - 32px)); margin: 0 auto 28px; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px 22px 24px; break-after: page; page-break-after: always; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .sheet:last-of-type { break-after: auto; page-break-after: auto; }
+
+    /* ── 페이지 헤더 ── */
+    .paper-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2.5px solid #1e1b4b; }
+    .paper-head > div:first-child,
+    .paper-head > div:last-child { font-size: 11px; color: #64748b; font-weight: 600; min-width: 160px; }
+    .paper-head > div:last-child { text-align: right; }
+    .paper-head-center { flex: 1; text-align: center; font-size: 21px; font-weight: 900; color: #1e1b4b; letter-spacing: -0.03em; }
+
+    /* ── 레이아웃 (메인 + 사이드바) ── */
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 168px; gap: 14px; align-items: start; }
+    .sidebar { display: grid; gap: 10px; padding-top: 36px; }
+
+    /* ── 메모 노트 (사이드바) ── */
+    .note { background: #fff; border: 1px solid #d1fae5; border-left: 3px solid #22c55e; border-radius: 6px; padding: 8px 10px; font-size: 11px; line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
+    .note-head { display: flex; justify-content: space-between; align-items: center; color: #16a34a; font-size: 9px; font-weight: 700; margin-bottom: 5px; }
+    .note-user { font-weight: 900; text-transform: lowercase; }
+    .note p { margin: 0 0 2px; color: #166534; }
+
+    /* ── 공통 그리드 테두리 ── */
+    .grid, .meta-grid { border-left: 1.5px solid #374151; border-top: 1.5px solid #374151; }
+    .cell { border-right: 1.5px solid #374151; border-bottom: 1.5px solid #374151; min-height: 30px; padding: 5px 8px; font-size: 12px; line-height: 1.55; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+    .label { background: #fafafa; font-weight: 800; font-size: 11px; color: #374151; text-align: center; display: flex; align-items: center; justify-content: center; }
+    .meta-value { display: flex; align-items: center; font-size: 12px; }
+
+    /* ── 메타 행 (책 제목 / 지은이 / page) ── */
+    .meta-grid { display: grid; grid-template-columns: 80px minmax(0,1fr) 68px 120px 46px 56px; }
+    .meta-grid-p2 { grid-template-columns: 38px 60px minmax(0,1fr) 68px 120px 46px 56px; }
+    .meta-grid .cell { min-height: 38px; font-size: 13px; }
+    .meta-grid .label { font-size: 12px; }
+
+    /* ── 페이지 1 그리드 ── */
+    .page1-grid { display: grid; grid-template-columns: 80px minmax(0, 1fr); }
+    .section-label { background: #f7f7f9; font-weight: 800; font-size: 12px; color: #4338ca; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100px; padding: 6px; }
+    .section-body { min-height: 100px; line-height: 1.75; padding: 8px; }
+    .section-body.ai-block { padding: 0; }
+
+    /* ── AI 활용 행 ── */
+    .ai-pairs { display: grid; grid-template-rows: repeat(8, minmax(0, 1fr)); min-height: 324px; }
+    .ai-pair { display: grid; grid-template-columns: 64px 1fr; border-top: 1px solid #e2e8f0; }
+    .ai-pair:first-child { border-top: none; }
+    .ai-key { background: #fafafa; border-right: 1px solid #e2e8f0; padding: 5px 7px; font-size: 11px; font-weight: 700; color: #5b21b6; display: flex; align-items: center; white-space: pre-line; }
+    .ai-val { padding: 5px 8px; font-size: 12px; line-height: 1.6; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+
+    /* ── 정보 검증 행 ── */
+    .verify-list { display: grid; grid-template-rows: repeat(3, minmax(46px, auto)); }
+    .verify-item { border-top: 1px solid #e2e8f0; padding: 6px 10px 6px 26px; position: relative; min-height: 46px; font-size: 12px; line-height: 1.6; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+    .verify-item:first-child { border-top: none; }
+    .verify-item::before { position: absolute; left: 8px; top: 7px; font-weight: 900; color: #6c5ce7; }
+    .verify-item[data-num="1"]::before { content: "1."; }
+    .verify-item[data-num="2"]::before { content: "2."; }
+    .verify-item[data-num="3"]::before { content: "3."; }
+
+    /* ── 페이지 2 그리드 ── */
+    .page2-grid { display: grid; grid-template-columns: 38px 60px minmax(0, 1fr); }
+    .vertical { background: #f7f7f9; font-size: 11px; font-weight: 900; writing-mode: vertical-rl; text-orientation: mixed; display: flex; align-items: center; justify-content: center; letter-spacing: 0.1em; color: #4338ca; }
+    .row-label { background: #fafafa; font-size: 13px; font-weight: 800; color: #374151; display: flex; align-items: center; justify-content: center; text-align: center; white-space: pre-line; }
+    .row-label-dev { background: #fafafa; font-size: 11px; color: #5b21b6; }
+    .plan-body { padding: 0; }
+    .plan-text { min-height: 96px; padding: 8px 10px; font-size: 12px; line-height: 1.75; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+
+    /* ── 전개 스택 ── */
+    .develop-stack { display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); min-height: 306px; }
+    .develop-part { display: grid; grid-template-columns: 70px minmax(0, 1fr); border-top: 1px solid #e2e8f0; }
+    .develop-part:first-child { border-top: none; }
+    .develop-tag { background: #fafafa; border-right: 1px solid #e2e8f0; padding: 6px 8px; font-size: 11px; font-weight: 800; color: #5b21b6; display: flex; align-items: center; justify-content: center; }
+
+    /* ── 보조자료 ── */
+    .support-grid { display: grid; grid-template-columns: 98px minmax(0, 1fr); }
+    .support-label { background: #f7f7f9; font-size: 11px; font-weight: 800; color: #4338ca; display: flex; align-items: center; justify-content: center; text-align: center; white-space: pre-line; line-height: 1.65; padding: 8px; }
+    .support-items { padding: 0; }
+    .support-item { min-height: 38px; padding: 6px 10px 6px 22px; border-top: 1px solid #e2e8f0; position: relative; font-size: 12px; line-height: 1.55; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+    .support-item:first-child { border-top: none; }
+    .support-item::before { content: '•'; position: absolute; left: 8px; top: 6px; color: #6c5ce7; font-weight: 700; }
+
+    .empty { color: #cbd5e1; }
+
+    /* ── 인쇄 ── */
+    @media print {
+      @page { size: A4 portrait; margin: 7mm 8mm; }
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .sheet { width: 100%; margin: 0; border: none; border-radius: 0; padding: 0; box-shadow: none; }
+      .layout { grid-template-columns: minmax(0, 1fr) 152px; gap: 11px; }
+      .sidebar { gap: 8px; padding-top: 32px; }
+      .note { font-size: 10px; padding: 6px 8px; }
+      .paper-head-center { font-size: 19px; }
+      .section-label, .vertical, .support-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button type="button" onclick="window.close()">닫기</button>
+    <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+  </div>
+
+  <div class="sheet">
+    <div class="paper-head">
+      <div>2학년 ( &nbsp;&nbsp;&nbsp; ) 반 ( &nbsp;&nbsp;&nbsp; ) 번 ( &nbsp;&nbsp;&nbsp; )</div>
+      <div class="paper-head-center">〈수행평가2〉 비평문 계획하기</div>
+      <div style="width: 160px;"></div>
+    </div>
+    <div class="layout">
+      <div class="main">
+        <div class="meta-grid">
+          <div class="cell label">책 제목:</div>
+          <div class="cell meta-value" id="book-title-1"></div>
+          <div class="cell label">지은이:</div>
+          <div class="cell meta-value" id="book-author-1"></div>
+          <div class="cell label">page</div>
+          <div class="cell meta-value"></div>
+        </div>
+        <div class="grid page1-grid">
+          <div class="cell section-label">작품의 주제와 관련된 사회 문제 제시</div>
+          <div class="cell section-body" id="problem"></div>
+          <div class="cell section-label">사회 문제 분석</div>
+          <div class="cell section-body" id="cause"></div>
+          <div class="cell section-label">해결 방안 탐색</div>
+          <div class="cell section-body" id="solution"></div>
+          <div class="cell section-label">AI 활용 아이디어 정리</div>
+          <div class="cell section-body ai-block">
+            <div class="ai-pairs">
+              <div class="ai-pair"><div class="ai-key">질문:</div><div class="ai-val" id="ai-q1"></div></div>
+              <div class="ai-pair"><div class="ai-key">아이디어:</div><div class="ai-val" id="ai-a1"></div></div>
+              <div class="ai-pair"><div class="ai-key">질문:</div><div class="ai-val" id="ai-q2"></div></div>
+              <div class="ai-pair"><div class="ai-key">아이디어:</div><div class="ai-val" id="ai-a2"></div></div>
+              <div class="ai-pair"><div class="ai-key">질문:</div><div class="ai-val" id="ai-q3"></div></div>
+              <div class="ai-pair"><div class="ai-key">아이디어:</div><div class="ai-val" id="ai-a3"></div></div>
+              <div class="ai-pair"><div class="ai-key">질문:</div><div class="ai-val" id="ai-q4"></div></div>
+              <div class="ai-pair"><div class="ai-key">아이디어:</div><div class="ai-val" id="ai-a4"></div></div>
+            </div>
+          </div>
+          <div class="cell section-label">정보 검증 과정</div>
+          <div class="cell section-body" style="padding:0;">
+            <div class="verify-list">
+              <div class="verify-item" data-num="1" id="verify-1"></div>
+              <div class="verify-item" data-num="2" id="verify-2"></div>
+              <div class="verify-item" data-num="3" id="verify-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>2026/03/12 08:31</span></div>
+          <p>• 작품에서 드러나는 사회 문제 중 대표적인 한 가지를 작성하시오</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>2026/03/12 08:33</span></div>
+          <p>• 이 사회 문제가 발생한 원인을 다각도로 분석하여 작성하시오.</p>
+          <p>(2가지 이상의 참고자료를 밝힐 것)</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>2026/03/12 08:33</span></div>
+          <p>• 사회 문제 해결을 위한 방안을 제시하시오.</p>
+          <p>(2가지 이상의 참고 자료를 밝힐 것)</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>2026/03/12 08:38</span></div>
+          <p>• AI에게 어떤 질문(단순 질문 제외)을 했는가?</p>
+          <p>• 어떤 아이디어를 얻었는가?</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>2026/03/12 08:58</span></div>
+          <p>• 얻은 정보의 신뢰성을 어떻게 확인했는가?(사실여부 확인 과정을 제시하시오)</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <div class="paper-head">
+      <div>2학년 ( &nbsp;&nbsp;&nbsp; ) 반 ( &nbsp;&nbsp;&nbsp; ) 번 ( &nbsp;&nbsp;&nbsp; )</div>
+      <div class="paper-head-center">〈수행평가2〉 비평문 구조 계획</div>
+      <div style="width: 160px;"></div>
+    </div>
+    <div class="layout">
+      <div class="main">
+        <div class="meta-grid meta-grid-p2">
+          <div class="cell label" style="grid-column: span 2;">책 제목:</div>
+          <div class="cell meta-value" id="book-title-2"></div>
+          <div class="cell label">지은이:</div>
+          <div class="cell meta-value" id="book-author-2"></div>
+          <div class="cell label">page</div>
+          <div class="cell meta-value"></div>
+        </div>
+        <div class="grid page2-grid" style="border-top:none;">
+          <div class="cell vertical" style="grid-column: 1; grid-row: 1 / span 5;">비평문 구조 계획</div>
+          <div class="cell row-label">도입</div>
+          <div class="cell plan-body"><div class="plan-text" id="intro"></div></div>
+          <div class="cell row-label row-label-dev">[전개1]</div>
+          <div class="cell plan-body"><div class="plan-text" id="body1"></div></div>
+          <div class="cell row-label row-label-dev">[전개2]</div>
+          <div class="cell plan-body"><div class="plan-text" id="body2"></div></div>
+          <div class="cell row-label row-label-dev">[전개3]</div>
+          <div class="cell plan-body"><div class="plan-text" id="body3"></div></div>
+          <div class="cell row-label">정리</div>
+          <div class="cell plan-body"><div class="plan-text" id="end"></div></div>
+        </div>
+        <div class="grid support-grid" style="border-top:none;">
+          <div class="cell support-label">보조자료 활용 방안<br>(사진, 통계자료,<br>신문, 출판 등)</div>
+          <div class="cell support-items">
+            <div class="support-item" id="ref1"></div>
+            <div class="support-item" id="ref2"></div>
+            <div class="support-item" id="ref3"></div>
+            <div class="support-item" id="ref4"></div>
+          </div>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>도입</span></div>
+          <p>• 글의 시작 방식만 달라질 뿐, 전체 5문단 구조는 그대로 유지됩니다.</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>전개</span></div>
+          <p>• 왼쪽 큰 전개 안에 [전개1][전개2][전개3]을 나누어 적습니다.</p>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-user">user</span><span>보조자료</span></div>
+          <p>• 기사, 통계, 작품 장면, 연구 자료 등 실제로 활용할 자료를 적습니다.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    let payload = null;
+    let fallbackBook = null;
+    try { payload = JSON.parse(sessionStorage.getItem('coachPrint:sa2') || localStorage.getItem('coachPrint:sa2') || 'null'); } catch (e) {}
+    try { fallbackBook = JSON.parse(sessionStorage.getItem('coachBook') || localStorage.getItem('coachBook') || 'null'); } catch (e) {}
+    const book = payload?.book?.title ? payload.book : (fallbackBook?.title ? fallbackBook : null);
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = value || ' ';
+      if (!value) el.classList.add('empty');
+    };
+    const parseAiPairs = (text) => {
+      const lines = String(text || '').split('\n').map((line) => line.trim()).filter(Boolean);
+      const questions = [];
+      const ideas = [];
+      let target = null;
+      lines.forEach((line) => {
+        if (/^Q\d*:/.test(line) || /^질문:/.test(line)) {
+          questions.push(line.replace(/^Q\d*:\s*|^질문:\s*/, '').trim());
+          target = 'q';
+          return;
+        }
+        if (/^아이디어:/.test(line)) {
+          ideas.push(line.replace(/^아이디어:\s*/, '').trim());
+          target = 'a';
+          return;
+        }
+        if (target === 'q' && questions.length) questions[questions.length - 1] += ` ${line}`;
+        if (target === 'a' && ideas.length) ideas[ideas.length - 1] += ` ${line}`;
+      });
+      return {
+        q1: questions[0] || '',
+        a1: ideas[0] || '',
+        q2: questions[1] || '',
+        a2: ideas[1] || '',
+        q3: questions[2] || '',
+        a3: ideas[2] || '',
+        q4: questions[3] || '',
+        a4: ideas[3] || ''
+      };
+    };
+    const splitVerify = (text) => String(text || '').split('\n').map((line) => line.trim()).filter(Boolean).slice(0, 3);
+    const ai = parseAiPairs(payload?.ai || '');
+    const verify = splitVerify(payload?.verify || '');
+    setText('book-title-1', book?.title || '');
+    setText('book-author-1', book?.author || '');
+    setText('book-title-2', book?.title || '');
+    setText('book-author-2', book?.author || '');
+    setText('problem', payload?.problem || '');
+    setText('cause', payload?.cause || '');
+    setText('solution', payload?.solution || '');
+    setText('ai-q1', ai.q1);
+    setText('ai-a1', ai.a1);
+    setText('ai-q2', ai.q2);
+    setText('ai-a2', ai.a2);
+    setText('ai-q3', ai.q3);
+    setText('ai-a3', ai.a3);
+    setText('ai-q4', ai.q4);
+    setText('ai-a4', ai.a4);
+    setText('verify-1', verify[0] || '');
+    setText('verify-2', verify[1] || '');
+    setText('verify-3', verify[2] || '');
+    setText('intro', payload?.intro || '');
+    setText('body1', payload?.body1 || '');
+    setText('body2', payload?.body2 || '');
+    setText('body3', payload?.body3 || '');
+    setText('end', payload?.end || '');
+    setText('ref1', payload?.refs?.[0] || '');
+    setText('ref2', payload?.refs?.[1] || '');
+    setText('ref3', payload?.refs?.[2] || '');
+    setText('ref4', payload?.refs?.[3] || '');
+  </script>
+</body>
+</html>
+
