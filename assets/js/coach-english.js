@@ -379,6 +379,104 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
+const DICT_GUIDE_VERBS = new Set([
+  'is', 'are', 'was', 'were', 'be', 'am', 'have', 'has', 'had', 'can', 'could', 'will', 'would',
+  'should', 'may', 'might', 'must', 'do', 'does', 'did', 'make', 'makes', 'made', 'show', 'shows',
+  'tell', 'tells', 'told', 'believe', 'believes', 'think', 'thinks', 'encourage', 'encourages',
+  'start', 'starts', 'started', 'change', 'changes', 'changed', 'create', 'creates', 'created',
+  'replace', 'replaced', 'require', 'requires', 'argue', 'argued', 'spread', 'transform', 'transformed',
+  'combine', 'combines', 'travel', 'travels', 'let', 'lets', 'protect', 'protects', 'deserve', 'deserves',
+  'emphasize', 'emphasizes',
+]);
+
+function cleanDictationGuideWord(word) {
+  return String(word || '').replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, '');
+}
+
+function isLikelyDictationVerb(word) {
+  const lower = cleanDictationGuideWord(word).toLowerCase();
+  if (!lower) return false;
+  if (DICT_GUIDE_VERBS.has(lower)) return true;
+  if (/(ed|ing)$/.test(lower)) return true;
+  if (/s$/.test(lower) && lower.length > 3) return true;
+  return false;
+}
+
+function shortenDictationChunk(chunk, maxWords = 5) {
+  const words = String(chunk || '').trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return '';
+  if (words.length <= maxWords) return words.join(' ');
+  return `${words.slice(0, maxWords).join(' ')} ...`;
+}
+
+function extractDictationGuideParts(sentence) {
+  const raw = String(sentence || '').replace(/[“”"]/g, '').replace(/\s+/g, ' ').trim();
+  if (!raw) return { lead: '', core: '', tail: '' };
+
+  let lead = '';
+  let main = raw;
+  const commaIndex = raw.indexOf(',');
+  if (commaIndex > 0) {
+    lead = raw.slice(0, commaIndex).trim();
+    main = raw.slice(commaIndex + 1).trim();
+  }
+
+  const clauseMatch = main.match(/\b(that|if|when|where|because|which|who|why|how)\b/i);
+  if (clauseMatch && clauseMatch.index > 0) {
+    const markerIndex = clauseMatch.index;
+    return {
+      lead,
+      core: main.slice(0, markerIndex).trim(),
+      tail: main.slice(markerIndex).trim(),
+    };
+  }
+
+  const words = main.split(/\s+/).filter(Boolean);
+  const verbIndex = words.findIndex((word, index) => index > 0 && isLikelyDictationVerb(word));
+  if (verbIndex > 0) {
+    return {
+      lead,
+      core: words.slice(0, verbIndex + 1).join(' '),
+      tail: words.slice(verbIndex + 1).join(' ').trim(),
+    };
+  }
+
+  return {
+    lead,
+    core: words.slice(0, Math.min(4, words.length)).join(' '),
+    tail: words.slice(Math.min(4, words.length)).join(' ').trim(),
+  };
+}
+
+function buildDynamicDictationGuide(sentence) {
+  const parts = extractDictationGuideParts(sentence);
+  const lead = shortenDictationChunk(parts.lead, 5);
+  const core = shortenDictationChunk(parts.core, 5);
+  const tail = shortenDictationChunk(parts.tail, 6);
+
+  const t = parts.lead && parts.tail
+    ? `쉽게 보면 \`${lead}\`로 앞 분위기를 깔고, \`${core}\`에서 중심을 말한 뒤, \`${tail}\`가 뒤 메시지로 붙는 문장입니다.`
+    : parts.tail
+      ? `쉽게 보면 \`${core}\`가 중심이고, 뒤의 \`${tail}\`가 그 뜻을 보충하는 문장입니다.`
+      : `쉽게 보면 \`${core}\`가 이 문장의 핵심 뜻을 거의 다 끌고 가는 문장입니다.`;
+
+  const p = [lead, core, tail].filter(Boolean).join(' / ');
+
+  const m = parts.lead && parts.tail
+    ? `앞 설명 \`${lead}\`에 끌려 중심 \`${core}\`를 놓치거나, 뒤 메시지 \`${tail}\`를 통째로 못 잡는 경우가 많습니다.`
+    : parts.tail
+      ? `앞 핵심 \`${core}\`는 들었는데, 뒤에 붙는 \`${tail}\`를 날려서 문장 뜻을 반만 이해하는 경우가 많습니다.`
+      : `짧은 문장처럼 보여도 \`${core}\` 안의 중심 단어를 하나 놓치면 뜻이 바로 흐려집니다.`;
+
+  const c = parts.lead && parts.tail
+    ? `\`${lead}\` / \`${core}\` / \`${tail}\` 세 덩어리로 끊어 들으세요.`
+    : parts.tail
+      ? `\`${core}\` / \`${tail}\` 두 덩어리로 먼저 잡고, 필요하면 안에서 다시 쪼개 들으세요.`
+      : `\`${core}\`를 한 덩어리로 먼저 잡고, 안에서 핵심 단어를 다시 확인하세요.`;
+
+  return { t, p, m, c };
+}
+
 function getDictationGuide(sentence) {
   let base = String(sentence || '').trim();
   const extras = [];
@@ -391,12 +489,7 @@ function getDictationGuide(sentence) {
   }
   const baseGuide = DICT_SENTENCE_GUIDES.find((guide) => normalizeDictationSentence(guide.s) === normalizeDictationSentence(base));
   if (!baseGuide) {
-    return {
-      t: '문장 뜻을 먼저 크게 잡고, 앞 꾸밈말과 중심 동사, 뒤 핵심 메시지를 따로 떼어 들으세요.',
-      p: '귀에 먼저 걸어둘 핵심 말 2~3개만 정해 두고 듣기',
-      m: '앞 설명에 끌려 중심 동사를 놓치거나, 뒤 메시지를 통째로 못 잡는 경우가 많습니다.',
-      c: '앞 설명 / 중심 동사 / 뒤 메시지처럼 역할별로 세 덩어리로 쪼개 듣는 것이 핵심입니다.',
-    };
+    return buildDynamicDictationGuide(base);
   }
   return {
     t: [baseGuide.t, ...extras.map((item) => item.t)].join(''),
