@@ -1,6 +1,9 @@
 legacy/
 docs/playbook.md
 docs/next_session_handoff.md
+.netlify/
+tmp-chrome-desktop/
+tmp-chrome-mobile/
 
 # OS / editor noise
 .DS_Store

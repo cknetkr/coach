@@ -328,7 +328,7 @@ const _INT_Q_BANK = {
   habit:         "Describe one small daily habit you have developed, and explain how it has affected your productivity or well-being.",
   plastic:       "What specific actions can individuals and companies take to reduce their dependence on single-use plastics?",
   act_now:       "If you were to start a social campaign, what issue would you address and why is it urgent?",
-  work_right:    "Do you think teenagers should be allowed to work part-time jobs? What are the benefits and risks?",
+  privacy_right: "Do you think the right to be forgotten should be protected online? Explain why privacy and the public's right to know can come into conflict.",
   fake_news:     "How do you personally verify whether information you see online is reliable? Give a specific example.",
   innovation:    "Describe a problem in your daily life that you think could be solved through a creative or technological innovation.",
   art_guide:     "How can visual art challenge our perception of reality? Refer to a specific artwork or artist you find interesting."
@@ -340,7 +340,7 @@ function _tplIntQuestion(usr) {
   }
   const topicMatch = Object.entries({
     '팟캐스트':'dream_book','습관':'habit','플라스틱':'plastic',
-    'ACT NOW':'act_now','act_now':'act_now','노동':'work_right',
+    'ACT NOW':'act_now','act_now':'act_now','잊힐':'privacy_right','프라이버시':'privacy_right',
     '가짜뉴스':'fake_news','혁신':'innovation','오디오':'art_guide','에릭':'art_guide'
   }).find(([k]) => usr.includes(k));
   return topicMatch ? _INT_Q_BANK[topicMatch[1]] : "What is the most important lesson you have learned so far this year, and how has it shaped the way you approach challenges?";

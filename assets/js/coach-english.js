@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── 받아쓰기 데이터 ── */
-const DICT_TOPICS = [
-  {icon:'🎙️',num:'주제 1',title:'잠재력 팟캐스트',desc:'그림책 소개·잠재력 주제'},
-  {icon:'📱',num:'주제 2',title:'습관 브이로그',desc:'하루 5분 루틴·습관 형성'},
-  {icon:'📰',num:'주제 3',title:'현장 보도',desc:'플라스틱 대체 제품 현장'},
-  {icon:'📢',num:'주제 4',title:'ACT NOW 영상',desc:'사회 참여 홍보 스크립트'},
-  {icon:'🗣️',num:'주제 5',title:'일할 권리 연설',desc:'노동권 관련 연설문'},
-  {icon:'🎬',num:'주제 6',title:'가짜뉴스 영상',desc:'팩트체크·정보 리터러시'},
-  {icon:'💡',num:'주제 7',title:'혁신 담화',desc:'엄청난 생각·혁신 사례'},
-  {icon:'🎨',num:'주제 8',title:'오디오 가이드',desc:'에릭 요한슨 작품 세계'},
+const DICT_TOPICS = window.ENG_DICTATION_TOPICS || [
+  {icon:'🎙️',num:'1과 P.13',title:'The Dot 그림책',desc:'잠재력과 창의성'},
+  {icon:'📱',num:'1과 P.14',title:'5분 습관 루틴',desc:'joy journal · visualization'},
+  {icon:'📰',num:'3과 P.57',title:'Ooho 현장 리포트',desc:'병 없는 물주머니'},
+  {icon:'📢',num:'3과 P.58',title:'Act Now 캠페인',desc:'기후 행동 실천'},
+  {icon:'⚖️',num:'4과 P.79',title:'잊힐 권리 토론',desc:'디지털 프라이버시'},
+  {icon:'🎬',num:'4과 P.80',title:'가짜뉴스 판별',desc:'출처 · 근거 · 교차검증'},
+  {icon:'💡',num:'5과 P.101',title:'헬리콥터 혁신 사례',desc:'전선 결빙 해결'},
+  {icon:'🎨',num:'5과 P.102',title:'Erik Johansson',desc:'포토 콤비네이션'},
 ];
 let selectedDictTopic = null, dictCount = 0;
 const dictTTSState = {
@@ -39,6 +39,15 @@ const dictTTSState = {
   currentIndex: -1,
   playingAll: false,
   pendingNextIndex: -1
+};
+let selectedDictLevel = 'normal';
+let dictLineLevels = [];
+let dictPracticeMeta = [];
+const DICT_LEVEL_LABELS = {
+  easy: '쉬움',
+  low: '하',
+  normal: '중',
+  hard: '상',
 };
 
 const DICT_SENTENCE_GUIDES = [
@@ -75,8 +84,179 @@ const DICT_SUFFIX_GUIDES = [
   { x:', which is why many students find this topic meaningful.', t:' 그래서 많은 학생들이 이 주제를 의미 있게 느낀다.', p:'meaningful · students · topic', m:'meaningful 철자와 students의 ts 소리를 자주 놓칩니다.', c:'which is why는 앞문장의 결과를 설명하는 이유 연결 표현입니다.' },
 ];
 
+const DICT_BLANK_EXPLANATIONS = {
+  [normalizeDictationSentence("Today, I'd like to introduce The Dot by Peter Reynolds.")]: {
+    "i'd": {
+      whyBlank: "`I'd like to ...`는 발표·소개 시작문에서 통째로 쓰는 핵심 입구 표현이라 자주 빈칸으로 나옵니다. 여기서 `I'd`를 맞혀야 뒤의 `like to introduce`까지 한 덩어리로 따라갈 수 있습니다.",
+      whyWrong: "`I'd`는 소리가 매우 짧게 붙어서 들립니다. 그래서 `I`, `I'll`, `I would`, `id`처럼 잘못 적기 쉽습니다. 특히 빠르게 들으면 d 소리가 약해서 그냥 `I`로 적는 실수가 많습니다.",
+      coach: "이 문장은 `Today` / `I'd like to introduce` / `The Dot by Peter Reynolds` 세 덩어리입니다. 여기서는 두 번째 덩어리의 출발점인 `I'd`를 먼저 잡아야 합니다.",
+    },
+    "peter": {
+      whyBlank: "`Peter Reynolds`는 책과 저자를 정확히 찍는 고유명사라 시험에서 빈칸 후보가 됩니다. 내용 이해보다 `누구 작품인지`를 정확히 들었는지를 보려는 자리입니다.",
+      whyWrong: "`Peter`는 익숙한 이름이지만 실제 듣기에서는 뒤의 `Reynolds`와 붙어서 빨리 지나갑니다. 그래서 `better`, `writer`, `peter` 철자 누락처럼 흔들리기 쉽습니다.",
+      coach: "문장 끝은 `The Dot` 다음에 `by + 저자 이름` 구조입니다. 즉 여기 빈칸은 설명이 아니라 저자 이름의 첫 덩어리를 듣는 자리입니다.",
+    },
+    "reynolds": {
+      whyBlank: "`Reynolds`는 낯선 고유명사라서 교과서 원문을 정확히 들었는지 확인하기 좋은 자리입니다. 특히 `Peter Reynolds`를 한 세트로 기억했는지 보려는 빈칸입니다.",
+      whyWrong: "익숙하지 않은 이름이라 음절을 놓치기 쉽고, `Reynolds`를 `Raynolds`, `Reynold`, `Reynolds.`처럼 틀리기 쉽습니다. 마지막 `-lds` 자음군도 자주 빠집니다.",
+      coach: "문장 끝은 `by Peter Reynolds`로 끝납니다. `by` 뒤에는 설명이 아니라 사람 이름이 온다고 먼저 예상하면 훨씬 잘 들립니다.",
+    },
+  },
+};
+
+function getDictationWordCount(sentence) {
+  return String(sentence || '').trim().split(/\s+/).filter(Boolean).length;
+}
+
+function getDictationSourceLines(topic) {
+  const lines = Array.isArray(topic?.lines) ? topic.lines.filter(Boolean) : [];
+  if (!lines.length) return [];
+  return lines;
+}
+
+function normalizeDictationBlank(text) {
+  return normalizeDictationSentence(text).replace(/[^a-z0-9-]/g, '');
+}
+
+function splitDictationToken(token) {
+  const match = String(token).match(/^([^A-Za-z]*)([A-Za-z]+(?:[-'][A-Za-z]+)*)([^A-Za-z]*)$/);
+  if (!match) {
+    return { prefix: '', core: '', suffix: '', raw: token };
+  }
+  return {
+    prefix: match[1],
+    core: match[2],
+    suffix: match[3],
+    raw: token,
+  };
+}
+
+function getDictationBlankQuota(level, eligibleCount) {
+  if (level === 'easy') return 0;
+  if (level === 'low') return Math.min(1, eligibleCount);
+  if (level === 'normal') return Math.min(2, eligibleCount);
+  return Math.min(Math.max(3, Math.ceil(eligibleCount / 4)), 4, eligibleCount);
+}
+
+function selectDictationBlankIndices(tokens, level) {
+  const stopwords = new Set([
+    'the', 'and', 'that', 'with', 'from', 'into', 'your', 'they', 'them', 'this', 'will', 'have',
+    'been', 'were', 'just', 'than', 'when', 'what', 'about', 'their', 'there', 'where', 'while',
+    'which', 'because', 'would', 'could', 'should', 'after', 'before', 'around', 'every', 'other',
+  ]);
+  const primary = tokens
+    .map((token, index) => ({ ...token, index }))
+    .filter((token) => token.core && token.core.length >= 4 && !stopwords.has(token.core.toLowerCase()) && indexIsBlankable(token.index, tokens.length));
+  const secondary = tokens
+    .map((token, index) => ({ ...token, index }))
+    .filter((token) => token.core && token.core.length >= 3 && indexIsBlankable(token.index, tokens.length));
+  const eligible = primary.length ? primary : secondary;
+  const quota = getDictationBlankQuota(level, eligible.length);
+  if (!quota) return [];
+
+  const selected = [];
+  const step = eligible.length / quota;
+  for (let i = 0; i < quota; i += 1) {
+    const pick = eligible[Math.min(eligible.length - 1, Math.floor((i + 0.5) * step))];
+    if (pick && !selected.includes(pick.index)) selected.push(pick.index);
+  }
+  return selected.sort((a, b) => a - b);
+}
+
+function indexIsBlankable(index, length) {
+  if (length <= 4) return index > 0 && index < length - 1;
+  return index > 0 && index < length - 1;
+}
+
+function buildDictationPracticeMeta(line, level) {
+  const tokens = String(line || '').split(/\s+/).map(splitDictationToken);
+  const blankIndices = selectDictationBlankIndices(tokens, level);
+  const blanks = [];
+  const html = tokens.map((token, tokenIndex) => {
+    if (!blankIndices.includes(tokenIndex) || !token.core) {
+      return escapeHtml(token.raw);
+    }
+    const blankId = blanks.length;
+    blanks.push({
+      tokenIndex,
+      answer: token.core,
+      normalizedAnswer: normalizeDictationBlank(token.core),
+      display: `${token.prefix}${token.core}${token.suffix}`,
+      explanation: getDictationBlankExplanation(line, token.core, tokenIndex, tokens),
+    });
+    return `${escapeHtml(token.prefix)}<span class="dict-cloze-blank" data-blank-index="${blankId}"><span class="dict-cloze-blank__text">${'_'.repeat(Math.max(token.core.length, 4))}</span></span>${escapeHtml(token.suffix)}`;
+  }).join(' ');
+
+  return {
+    line,
+    level,
+    blanks,
+    previewHtml: html,
+    isStudyMode: level === 'easy' || !blanks.length,
+  };
+}
+
+function getDictationBlankExplanation(line, answer, tokenIndex, tokens) {
+  const normalizedSentence = normalizeDictationSentence(line);
+  const normalizedAnswer = normalizeDictationBlank(answer);
+  const manual = DICT_BLANK_EXPLANATIONS[normalizedSentence]?.[normalizedAnswer];
+  if (manual) return manual;
+
+  const lower = String(answer || '').toLowerCase();
+  const prevCore = tokens[tokenIndex - 1]?.core || '';
+  const nextCore = tokens[tokenIndex + 1]?.core || '';
+  const startsWithUpper = /^[A-Z]/.test(String(answer || ''));
+  const endsWithEd = /ed$/i.test(lower);
+  const endsWithIng = /ing$/i.test(lower);
+  const isContraction = /'/.test(String(answer || ''));
+
+  if (isContraction) {
+    return {
+      whyBlank: `\`${answer}\`는 문장 리듬을 결정하는 축약형이라 시험에서 잘 뚫립니다. 축약형을 맞혀야 뒤에 붙는 핵심 동작까지 자연스럽게 이어집니다.`,
+      whyWrong: `축약형은 소리가 짧고 약하게 지나가서 그냥 다른 단어로 듣거나 아예 놓치기 쉽습니다. 특히 apostrophe가 빠지거나 원형으로 잘못 적는 실수가 많습니다.`,
+      coach: `이 자리는 문장 뼈대를 여는 짧은 기능어입니다. 앞뒤 단어를 따로 듣기보다 \`${answer}\`를 한 덩어리 리듬으로 외우는 것이 빠릅니다.`,
+    };
+  }
+
+  if (startsWithUpper) {
+    return {
+      whyBlank: `\`${answer}\`는 고유명사라 내용 이해보다 정확한 청취를 확인하기 좋은 자리입니다. 책 제목, 인물 이름, 지명 같은 정보는 시험에서 자주 빈칸으로 나옵니다.`,
+      whyWrong: `익숙하지 않은 이름은 소리만 듣고 철자를 추측하게 되므로 오탈자가 자주 납니다. 특히 첫 음절만 듣고 비슷한 철자로 적거나 끝 자음을 빼먹기 쉽습니다.`,
+      coach: `이 위치는 설명 문장이 아니라 이름 정보가 들어가는 자리입니다. 앞뒤에 붙은 단서를 보고 \`${prevCore} + ${answer} + ${nextCore}\` 같은 이름 덩어리로 먼저 예상하세요.`,
+    };
+  }
+
+  if (endsWithEd) {
+    return {
+      whyBlank: `\`${answer}\`는 동사의 완료형·과거형 흔적이 살아 있는 자리라 문장 핵심 동작을 제대로 들었는지 보기 좋습니다.`,
+      whyWrong: `-ed는 실제 발음이 약해지기 쉬워서 기본형으로 적거나 끝소리를 빼먹는 실수가 많습니다. 듣기에서는 핵심 동사 자체보다 어미가 더 잘 날아갑니다.`,
+      coach: `이 자리는 문장의 행동을 말하는 핵심 동사입니다. 주어 다음에 어떤 일이 일어났는지 잡는 자리라고 생각하면 더 잘 들립니다.`,
+    };
+  }
+
+  if (endsWithIng) {
+    return {
+      whyBlank: `\`${answer}\`는 진행·동명사 느낌을 가진 단어라 문장 구조를 이해했는지 확인하기 좋은 자리입니다.`,
+      whyWrong: `-ing는 코로 울리듯 지나가서 g를 놓치거나 기본형으로 적는 경우가 많습니다. 특히 앞단어와 이어 들리면 단어 경계가 흐려집니다.`,
+      coach: `이 단어는 문장을 설명하는 움직임 덩어리입니다. 앞뒤를 끊지 말고 \`${prevCore} ${answer} ${nextCore}\` 리듬으로 같이 잡으세요.`,
+    };
+  }
+
+  return {
+    whyBlank: `\`${answer}\`는 이 문장에서 의미를 실제로 끌고 가는 핵심 단어라 빈칸으로 뚫기 좋습니다. 앞뒤가 다 보여도 이 단어를 못 들으면 문장 중심이 무너집니다.`,
+    whyWrong: `이 자리는 소리만 듣고 얼핏 넘어가면 비슷한 단어로 착각하기 쉽습니다. 특히 철자 하나 차이, 복수형, 시제 흔적을 같이 놓치는 경우가 많습니다.`,
+    coach: `문장을 통째로 외우려 하지 말고 \`${prevCore || '앞'} → ${answer} → ${nextCore || '뒤'}\` 흐름으로 잡으세요. 이 빈칸은 그중 가운데 핵심 덩어리입니다.`,
+  };
+}
+
 function normalizeDictationSentence(text) {
-  return String(text || '').replace(/\s+/g, ' ').replace(/[“”"'`]/g, '').trim().toLowerCase();
+  return String(text || '')
+    .replace(/[’']/g, "'")
+    .replace(/[–—]/g, '-')
+    .replace(/\s+/g, ' ')
+    .replace(/[“”"'`]/g, '')
+    .trim()
+    .toLowerCase();
 }
 
 function escapeHtml(text) {
@@ -204,14 +384,26 @@ function renderDictationPracticeCards() {
     container.innerHTML = '';
     return;
   }
-  container.innerHTML = dictTTSState.lines.map((line, index) => {
+  dictPracticeMeta = dictTTSState.lines.map((line, index) => buildDictationPracticeMeta(line, dictLineLevels[index] || selectedDictLevel));
+  container.innerHTML = dictPracticeMeta.map((meta, index) => {
+    const line = meta.line;
     const guide = getDictationGuide(line);
+    const difficultyLabel = DICT_LEVEL_LABELS[meta.level] || '중';
+    const blankCountLabel = meta.isStudyMode ? '전체 공개' : `빈칸 ${meta.blanks.length}개`;
     return `
       <article class="dict-practice-card" id="dict-card-${index}">
         <div class="dict-practice-head">
           <div>
-            <div class="dict-practice-step">문장 ${index + 1}</div>
-            <div class="dict-practice-sub">한 번 듣고 바로 밑에 적기. 필요하면 같은 문장을 다시 듣고 정답은 화살표로 확인하세요.</div>
+            <div class="dict-practice-meta">
+              <span class="dict-practice-step">문장 ${index + 1}</span>
+              <span class="dict-difficulty-chip subtle">${blankCountLabel}</span>
+              <div class="dict-level-switch">
+                ${Object.entries(DICT_LEVEL_LABELS).map(([levelKey, label]) => `
+                  <button type="button" class="dict-level-pill${meta.level === levelKey ? ' active' : ''}" onclick="setDictationLineLevel(${index}, '${levelKey}')">${label}</button>
+                `).join('')}
+              </div>
+            </div>
+            <div class="dict-practice-sub">한 번 듣고 빈칸만 채우기. 필요하면 같은 문장을 다시 듣고 정답을 확인하세요.</div>
           </div>
           <div class="dict-practice-actions">
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
@@ -221,8 +413,29 @@ function renderDictationPracticeCards() {
             </button>
           </div>
         </div>
-        <label class="dict-answer-label" for="dict-answer-${index}">내 받아쓰기 답안</label>
-        <textarea class="field-input dict-answer-input" id="dict-answer-${index}" rows="3" placeholder="문장 ${index + 1}을 듣고 바로 적어보세요."></textarea>
+        <div class="dict-cloze-line">${meta.previewHtml}</div>
+        ${meta.isStudyMode ? `
+          <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
+        ` : `
+          <div class="dict-cloze-answer-grid">
+            ${meta.blanks.map((blank, blankIndex) => `
+              <label class="dict-answer-field" for="dict-answer-${index}-${blankIndex}">
+                <span class="dict-answer-label">빈칸 ${blankIndex + 1}</span>
+                <input class="field-input dict-answer-inline" id="dict-answer-${index}-${blankIndex}" type="text" placeholder="정답 입력">
+              </label>
+            `).join('')}
+          </div>
+          <div class="dict-blank-guide-list">
+            ${meta.blanks.map((blank, blankIndex) => `
+              <div class="dict-blank-guide-card">
+                <div class="dict-coach-tag">빈칸 ${blankIndex + 1} — ${escapeHtml(blank.answer)}</div>
+                <p><strong>왜 여기 뚫렸나:</strong> ${escapeHtml(blank.explanation.whyBlank)}</p>
+                <p><strong>왜 자주 틀리나:</strong> ${escapeHtml(blank.explanation.whyWrong)}</p>
+                <p><strong>1타 해설:</strong> ${escapeHtml(blank.explanation.coach)}</p>
+              </div>
+            `).join('')}
+          </div>
+        `}
         <div class="dict-coach-grid">
           <div class="dict-coach-block">
             <div class="dict-coach-tag">전체 해석</div>
@@ -335,18 +548,51 @@ function createDictationUtterance(text, index) {
 function selectDictTopic(idx) {
   document.querySelectorAll('#topic-grid .topic-card').forEach((c,i) => c.classList.toggle('selected', i===idx));
   selectedDictTopic = DICT_TOPICS[idx];
+  refreshDictationView();
 }
+
+function resetDictationFeedback() {
+  const feedback = document.getElementById('dict-feedback');
+  if (!feedback) return;
+  feedback.textContent = '빈칸을 채운 뒤 자동 채점을 실행하십시오.';
+  feedback.classList.remove('has-content');
+}
+
+function refreshDictationView() {
+  if (!selectedDictTopic) return;
+  const el = document.getElementById('dict-script');
+  const box = document.getElementById('dict-script-box');
+  if (!el || !box) return;
+  stopDictationTTS({ preserveStatus: true });
+  const sourceLines = getDictationSourceLines(selectedDictTopic);
+  dictLineLevels = sourceLines.map((_, index) => dictLineLevels[index] || selectedDictLevel);
+  el.textContent = sourceLines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+  box.style.display = sourceLines.length ? 'block' : 'none';
+  syncDictationTTSFromScript();
+  resetDictationFeedback();
+}
+
+function setDictationLineLevel(index, level) {
+  dictLineLevels[index] = level;
+  renderDictationPracticeCards();
+  resetDictationFeedback();
+}
+
 async function generateDictation() {
   if (!selectedDictTopic) { showToast('주제를 먼저 선택하십시오'); return; }
-  const level = document.getElementById('dict-level').value;
-  const count = document.getElementById('dict-count').value;
   const el = document.getElementById('dict-script');
   const box = document.getElementById('dict-script-box');
   stopDictationTTS({ preserveStatus: true });
   box.style.display = 'block';
-  const levelMap = {easy:'단문(20~25단어)',normal:'중문(30~40단어)',hard:'복문·관용표현(50~60단어)'};
+  const sourceLines = getDictationSourceLines(selectedDictTopic);
+  if (sourceLines.length) {
+    el.textContent = sourceLines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+    syncDictationTTSFromScript();
+    showToast(`${selectedDictTopic.source || selectedDictTopic.title} 스크립트를 불러왔습니다.`);
+    return;
+  }
   const sys = `당신은 영어 수행평가 받아쓰기 연습 전문가입니다. 고등학교 2학년 수준(CEFR B1~B2)의 받아쓰기 연습 문장을 생성하십시오.`;
-  const usr = `주제: ${selectedDictTopic.title} (${selectedDictTopic.desc})\n난이도: ${levelMap[level]}\n문장 수: ${count}문장\n\n요구사항:\n- 각 문장은 번호(1. 2. 3...)를 붙여 한 줄씩 출력\n- 자연스러운 영어 구어체\n- 한국어 번역 포함 금지\n- 문장만 출력`;
+  const usr = `주제: ${selectedDictTopic.title} (${selectedDictTopic.desc})\n\n요구사항:\n- 각 문장은 번호(1. 2. 3...)를 붙여 한 줄씩 출력\n- 자연스러운 영어 구어체\n- 한국어 번역 포함 금지\n- 문장만 출력`;
   await callClaude(sys, usr, el);
   syncDictationTTSFromScript();
 }
@@ -410,37 +656,49 @@ function toggleDictationAnswer(index) {
 }
 
 function getDictationAnswerValues() {
-  return dictTTSState.lines.map((_, index) => document.getElementById(`dict-answer-${index}`)?.value.trim() || '');
+  return dictPracticeMeta.map((meta, lineIndex) => (
+    meta.blanks.map((_, blankIndex) => document.getElementById(`dict-answer-${lineIndex}-${blankIndex}`)?.value.trim() || '')
+  ));
 }
 
 function buildDictationLocalReview(lines, answers) {
-  const rows = lines.map((line, index) => {
-    const answer = answers[index] || '';
-    if (!answer) return `문장 ${index + 1}: 아직 답안을 입력하지 않았습니다.`;
-    const originalWords = normalizeDictationSentence(line).replace(/[.,!?]/g, '').split(/\s+/).filter(Boolean);
-    const answerWords = normalizeDictationSentence(answer).replace(/[.,!?]/g, '').split(/\s+/).filter(Boolean);
-    const correct = originalWords.filter((word, wordIndex) => answerWords[wordIndex] === word).length;
-    const accuracy = originalWords.length ? Math.round((correct / originalWords.length) * 100) : 0;
-    return `문장 ${index + 1}: ${accuracy}% 일치 · ${correct}/${originalWords.length}개 단어 위치 일치`;
+  const rows = lines.map((_, index) => {
+    const meta = dictPracticeMeta[index];
+    const answerSet = answers[index] || [];
+    if (!meta || meta.isStudyMode) return `문장 ${index + 1}: 쉬움 난이도는 전체 문장 공개 모드입니다.`;
+    if (!answerSet.some(Boolean)) return `문장 ${index + 1}: 아직 빈칸 답안을 입력하지 않았습니다.`;
+    const correct = meta.blanks.filter((blank, blankIndex) => normalizeDictationBlank(answerSet[blankIndex]) === blank.normalizedAnswer).length;
+    const total = meta.blanks.length;
+    const accuracy = total ? Math.round((correct / total) * 100) : 0;
+    return `문장 ${index + 1}: ${accuracy}% 일치 · ${correct}/${total}개 빈칸 정답`;
   });
   return `[문장별 빠른 체크]\n${rows.join('\n')}`;
 }
 async function gradeDictation() {
   const script = dictTTSState.lines.map((line, index) => `${index + 1}. ${line}`).join('\n');
   const answers = getDictationAnswerValues();
-  const myAnswer = answers.join('\n').trim();
+  const answerPayload = dictPracticeMeta.map((meta, index) => {
+    if (!meta || meta.isStudyMode) return `문장 ${index + 1}: 쉬움 난이도(전체 공개)`;
+    return `문장 ${index + 1}\n${meta.blanks.map((blank, blankIndex) => `- 빈칸 ${blankIndex + 1}: 정답=${blank.answer} | 학생답=${answers[index]?.[blankIndex] || '(미입력)'}`).join('\n')}`;
+  }).join('\n\n');
   const el = document.getElementById('dict-feedback');
-  if (!myAnswer) { showToast('받아쓰기 답안을 먼저 입력하십시오'); return; }
+  if (dictPracticeMeta.every((meta) => meta.isStudyMode)) {
+    showToast('쉬움 난이도는 전체 공개 모드입니다. 하·중·상에서 빈칸 채점을 사용하십시오');
+    return;
+  }
+  if (!answers.flat().some(Boolean)) { showToast('빈칸 답안을 먼저 입력하십시오'); return; }
   if (!script || script==='분석 중...') { showToast('먼저 스크립트를 생성하십시오'); return; }
-  const sys = `당신은 영어 받아쓰기 채점 전문가입니다. 원문과 학생 답안을 비교하여:\n[정확도]: 전체 단어 대비 맞힌 단어 비율\n[오류 목록]: 틀린 단어·구두점 (원문|학생답 형식)\n[유형 분석]: 철자 오류/발음 혼동/축약형 오류/구두점 오류\n[반복 훈련 포인트]: 가장 많이 틀린 유형과 교정 방법`;
-  const aiText = await callClaude(sys, `원문:\n${script}\n\n학생 답안:\n${myAnswer}`, el);
+  const sys = `당신은 영어 받아쓰기 빈칸 시험 채점 전문가입니다. 원문과 학생의 빈칸 답안을 비교하여:\n[정확도]: 빈칸 기준 정답 비율\n[오류 목록]: 빈칸별 오답 (정답|학생답 형식)\n[유형 분석]: 철자 오류/활용형 오류/복수형·시제 오류/구두점 포함 여부\n[반복 훈련 포인트]: 가장 많이 틀린 유형과 교정 방법`;
+  const aiText = await callClaude(sys, `원문:\n${script}\n\n학생 빈칸 답안:\n${answerPayload}`, el);
   el.textContent = `${buildDictationLocalReview(dictTTSState.lines, answers)}\n\n${aiText}`;
 }
 function clearDictation() {
   stopDictationTTS({ preserveStatus: true });
-  dictTTSState.lines.forEach((_, index) => {
-    const input = document.getElementById(`dict-answer-${index}`);
-    if (input) input.value = '';
+  dictPracticeMeta.forEach((meta, index) => {
+    meta.blanks.forEach((_, blankIndex) => {
+      const input = document.getElementById(`dict-answer-${index}-${blankIndex}`);
+      if (input) input.value = '';
+    });
     const sheet = document.getElementById(`dict-answer-sheet-${index}`);
     if (sheet) sheet.hidden = true;
     const toggle = document.getElementById(`dict-answer-toggle-${index}`);
@@ -449,7 +707,7 @@ function clearDictation() {
     if (label) label.textContent = '정답 펼치기';
   });
   const fb = document.getElementById('dict-feedback');
-  fb.textContent = '스크립트를 생성하고 받아쓰기 후 채점을 실행하십시오.';
+  fb.textContent = '스크립트를 불러오고 받아쓰기 후 채점을 실행하십시오.';
   fb.classList.remove('has-content');
 }
 function dictCountUp() {
@@ -573,16 +831,25 @@ async function generateSentenceHint() {
 
 /* ── 면접 ── */
 const INT_TOPICS = [
-  {icon:'📚',key:'dream_book',title:'잠재력 그림책 소개'},
-  {icon:'⏰',key:'habit',title:'하루 5분의 습관'},
-  {icon:'♻️',key:'plastic',title:'플라스틱 대체 제품'},
-  {icon:'📣',key:'act_now',title:'ACT NOW 활동'},
-  {icon:'⚖️',key:'work_right',title:'일할 권리 연설'},
-  {icon:'🔍',key:'fake_news',title:'가짜뉴스 판별법'},
-  {icon:'💡',key:'innovation',title:'혁신 사례 담화'},
-  {icon:'🎨',key:'art_guide',title:'에릭 요한슨 오디오'},
+  {icon:'📚',key:'dream_book',title:'The Dot 그림책'},
+  {icon:'⏰',key:'habit',title:'5분 습관 루틴'},
+  {icon:'♻️',key:'plastic',title:'Ooho 현장 리포트'},
+  {icon:'📣',key:'act_now',title:'Act Now 캠페인'},
+  {icon:'⚖️',key:'privacy_right',title:'잊힐 권리 토론'},
+  {icon:'🔍',key:'fake_news',title:'가짜뉴스 판별'},
+  {icon:'💡',key:'innovation',title:'헬리콥터 혁신 사례'},
+  {icon:'🎨',key:'art_guide',title:'Erik Johansson'},
 ];
-const INT_TOPIC_MAP = {dream_book:'잠재력 그림책 소개 팟캐스트',habit:'하루 5분 습관 브이로그',plastic:'플라스틱병 대체 제품 현장 보도',act_now:'ACT NOW 홍보 영상',work_right:'일할 권리 연설',fake_news:'가짜뉴스 판별 정보성 영상',innovation:'혁신 사례 담화',art_guide:'에릭 요한슨 작품 오디오 가이드'};
+const INT_TOPIC_MAP = {
+  dream_book:'The Dot 그림책 소개',
+  habit:'하루 5분 습관 루틴',
+  plastic:'Ooho 친환경 리포트',
+  act_now:'Act Now 기후 행동 캠페인',
+  privacy_right:'잊힐 권리 토론',
+  fake_news:'가짜뉴스 판별 정보성 영상',
+  innovation:'헬리콥터 혁신 사례',
+  art_guide:'Erik Johansson 작품 오디오 가이드'
+};
 let selectedIntTopic = null;
 (function renderIntTopics() {
   const grid = document.getElementById('int-topic-grid');
