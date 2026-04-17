@@ -407,13 +407,16 @@ function renderDictationPracticeCards() {
           </div>
           <div class="dict-practice-actions">
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
-            <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" aria-expanded="false" onclick="toggleDictationAnswer(${index})">
-              <span class="dict-answer-toggle__arrow">▾</span>
-              <span id="dict-answer-toggle-label-${index}">정답 펼치기</span>
+            <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
+              <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
           </div>
         </div>
         <div class="dict-cloze-line">${meta.previewHtml}</div>
+        <div class="dict-answer-sheet dict-answer-sheet--inline" id="dict-answer-sheet-${index}" hidden>
+          <div class="dict-coach-tag">정답 스크립트</div>
+          <div class="dict-answer-text">${escapeHtml(`${index + 1}. ${line}`)}</div>
+        </div>
         ${meta.isStudyMode ? `
           <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
         ` : `
@@ -453,10 +456,6 @@ function renderDictationPracticeCards() {
             <div class="dict-coach-tag">1타 강사 핵심개념</div>
             <p>${escapeHtml(guide.c)}</p>
           </div>
-        </div>
-        <div class="dict-answer-sheet" id="dict-answer-sheet-${index}" hidden>
-          <div class="dict-coach-tag">정답 스크립트</div>
-          <div class="dict-answer-text">${escapeHtml(`${index + 1}. ${line}`)}</div>
         </div>
       </article>
     `;
@@ -644,15 +643,15 @@ function resumeDictationTTS() {
   );
 }
 
-function toggleDictationAnswer(index) {
+function revealDictationAnswer(index) {
   const sheet = document.getElementById(`dict-answer-sheet-${index}`);
   const toggle = document.getElementById(`dict-answer-toggle-${index}`);
   const label = document.getElementById(`dict-answer-toggle-label-${index}`);
   if (!sheet || !toggle || !label) return;
-  const expanded = toggle.getAttribute('aria-expanded') === 'true';
-  toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  label.textContent = expanded ? '정답 펼치기' : '정답 접기';
-  sheet.hidden = expanded;
+  sheet.hidden = false;
+  toggle.disabled = true;
+  toggle.classList.add('is-done');
+  label.textContent = '정답 표시됨';
 }
 
 function getDictationAnswerValues() {
@@ -702,9 +701,12 @@ function clearDictation() {
     const sheet = document.getElementById(`dict-answer-sheet-${index}`);
     if (sheet) sheet.hidden = true;
     const toggle = document.getElementById(`dict-answer-toggle-${index}`);
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    if (toggle) {
+      toggle.disabled = false;
+      toggle.classList.remove('is-done');
+    }
     const label = document.getElementById(`dict-answer-toggle-label-${index}`);
-    if (label) label.textContent = '정답 펼치기';
+    if (label) label.textContent = '정답 보기';
   });
   const fb = document.getElementById('dict-feedback');
   fb.textContent = '스크립트를 불러오고 받아쓰기 후 채점을 실행하십시오.';

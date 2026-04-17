@@ -544,8 +544,7 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-level-pill.active { border-color: rgba(56,189,248,0.24); background: rgba(56,189,248,0.12); color: #e0f2fe; }
 .dict-practice-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; }
 .dict-answer-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
-.dict-answer-toggle__arrow { display: inline-block; transition: transform 0.18s ease; }
-.dict-answer-toggle[aria-expanded="true"] .dict-answer-toggle__arrow { transform: rotate(180deg); }
+.dict-answer-toggle.is-done { opacity: 0.65; cursor: default; }
 .dict-answer-label { display: block; margin-bottom: 0.4rem; font-size: 0.78rem; font-weight: 700; color: #dbeafe; }
 .dict-cloze-line { margin-bottom: 0.7rem; padding: 0.72rem 0.82rem; border-radius: 12px; border: 1px solid rgba(56,189,248,0.18); background: rgba(56,189,248,0.08); font-size: 0.86rem; line-height: 1.85; color: #f8fafc; word-break: keep-all; }
 .dict-cloze-blank { display: inline-flex; align-items: center; justify-content: center; min-width: 4.2rem; margin: 0 0.12rem; padding: 0 0.18rem; border-bottom: 2px solid rgba(125,211,252,0.8); color: #7dd3fc; font-weight: 800; letter-spacing: 0.08em; }
@@ -563,6 +562,7 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-coach-tag { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: var(--eng-primary); margin-bottom: 0.4rem; }
 .dict-coach-block p { margin: 0; font-size: 0.8rem; line-height: 1.7; color: #e2e8f0; }
 .dict-answer-sheet { margin-top: 0.8rem; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; padding: 0.8rem 0.9rem; }
+.dict-answer-sheet--inline { margin: -0.1rem 0 0.9rem; }
 .dict-answer-text { font-size: 0.88rem; line-height: 1.75; color: #f8fafc; }
 @media(max-width:960px) {
   .eng-master-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
