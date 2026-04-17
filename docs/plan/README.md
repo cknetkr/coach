@@ -1,5 +1,5 @@
 # docs/plan/README.md — Test PLAN Hub
-> 최종 수정: 2026-04-17
+> 최종 수정: 2026-04-18
 > `test` 프로젝트의 PLAN 문서 허브다.
 
 ---
@@ -18,14 +18,14 @@
 | 파일 | featureId | 상태 | 의미 |
 |------|-----------|------|------|
 | `PLAN_test_bootstrap_v1.md` | `F-PROT-01` | `done` | `test` 프로젝트의 문서 운영 뼈대 생성 |
+| `PLAN_english_dictation_template_v1.md` | `F-ENG-01` | `in_progress` | 영어 받아쓰기 템플릿 정적화 + 로컬 채점/UX 보강 |
 
-현재 active PLAN: `없음`
+현재 active PLAN: `PLAN_english_dictation_template_v1.md`
 
 다음 생성 권장 PLAN:
 
-1. 영어 코치 현재 변경분을 묶는 첫 feature PLAN
-2. 공통/과목 전용 자산 경계 정리 PLAN
-3. `src/` 이식 골격 정리 PLAN
+1. 공통/과목 전용 자산 경계 정리 PLAN
+2. `src/` 이식 골격 정리 PLAN
 
 ---
 
