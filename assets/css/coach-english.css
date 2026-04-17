@@ -510,15 +510,12 @@
 .sim-label { flex: 1; font-size: 0.85rem; color: var(--text-secondary); }
 .sim-val { font-size: 1rem; font-weight: 700; min-width: 48px; text-align: right; color: var(--eng-primary); }
 input[type=range] { accent-color: var(--eng-primary); flex: 1; }
-.dict-tts-panel { margin-bottom: 0.9rem; padding: 0.82rem 0.9rem; border: 1px solid rgba(56,189,248,0.24); border-radius: var(--radius-sm); background: rgba(56,189,248,0.06); }
-.dict-tts-options, .dict-tts-line-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.dict-tts-options { margin-top: 0.55rem; align-items: center; }
-.dict-tts-option { display: flex; align-items: center; gap: 0.45rem; font-size: 0.74rem; color: var(--text-secondary); }
-.dict-tts-option strong { color: var(--eng-primary); min-width: 2.4rem; text-align: right; }
-.dict-tts-status { margin-top: 0.48rem; font-size: 0.73rem; color: #bae6fd; line-height: 1.4; }
+.dict-tts-toolbar { margin-bottom: 0.9rem; }
+.dict-tts-line-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.dict-tts-status { font-size: 0.73rem; color: #bae6fd; line-height: 1.4; }
 .dict-tts-status.warn { color: #fcd34d; }
 .dict-tts-status.active { color: #e0f2fe; }
-.dict-tts-line-buttons { margin-top: 0.7rem; }
+.dict-tts-line-buttons { margin-top: 0.55rem; }
 .dict-tts-line-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-secondary); border-radius: 999px; padding: 0.34rem 0.72rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
 .dict-tts-line-btn:hover { border-color: var(--eng-border); color: #fff; }
 .dict-tts-line-btn.active { background: var(--eng-bg); border-color: var(--eng-border); color: var(--eng-primary); }
@@ -543,6 +540,11 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-level-pill { min-width: 44px; padding: 0.22rem 0.5rem; border-radius: 999px; border: 1px solid rgba(148,163,184,0.14); background: rgba(255,255,255,0.03); color: #cbd5e1; font-size: 0.66rem; font-weight: 800; cursor: pointer; }
 .dict-level-pill.active { border-color: rgba(56,189,248,0.24); background: rgba(56,189,248,0.12); color: #e0f2fe; }
 .dict-practice-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+.dict-card-tts-controls { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.72rem; padding: 0.68rem 0.78rem; border: 1px solid rgba(148,163,184,0.12); border-radius: 12px; background: rgba(255,255,255,0.03); }
+.dict-card-tts-option { display: flex; align-items: center; gap: 0.45rem; min-width: 220px; font-size: 0.74rem; color: var(--text-secondary); }
+.dict-card-tts-option strong { color: var(--eng-primary); min-width: 2.4rem; text-align: right; }
+.dict-card-tts-option--voice { flex: 1 1 280px; }
+.dict-card-tts-option--voice .field-input { width: 100%; min-width: 180px; }
 .dict-answer-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
 .dict-answer-toggle.is-done { opacity: 0.65; cursor: default; }
 .dict-answer-label { display: block; margin-bottom: 0.4rem; font-size: 0.78rem; font-weight: 700; color: #dbeafe; }
@@ -589,22 +591,6 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   .sent-sample-grid,
   .sent-prep-grid { grid-template-columns: 1fr; }
   .dict-practice-shortcut { white-space: normal; }
-  .dict-tts-panel { padding: 0.68rem 0.72rem; }
-  .dict-tts-options { gap: 0.45rem; margin-top: 0.45rem; }
-  .dict-tts-option {
-    width: 100%;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-  }
-  .dict-tts-option span { min-width: 1.8rem; }
-  .dict-tts-option strong {
-    min-width: 2rem;
-    font-size: 0.7rem;
-  }
-  #dict-tts-voice {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
   .dict-tts-status {
     margin-top: 0.4rem;
     font-size: 0.68rem;
@@ -615,6 +601,10 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
     font-size: 0.68rem;
   }
   .dict-practice-card { padding: 0.9rem; }
+  .dict-card-tts-controls { padding: 0.62rem 0.68rem; gap: 0.5rem; }
+  .dict-card-tts-option { width: 100%; min-width: 0; gap: 0.35rem; font-size: 0.7rem; }
+  .dict-card-tts-option strong { min-width: 2rem; font-size: 0.7rem; }
+  .dict-card-tts-option--voice .field-input { min-width: 0 !important; width: 100% !important; }
   .dict-cloze-line { font-size: 0.88rem; line-height: 1.95; padding: 0.8rem 0.85rem; }
   .dict-cloze-answer-grid { grid-template-columns: 1fr; }
   .dict-coach-grid { grid-template-columns: 1fr; }

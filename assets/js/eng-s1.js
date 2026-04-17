@@ -19,20 +19,7 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
         </div>
         <div class="dict-practice-shortcut"><strong>Space</strong>로 다음 문장</div>
       </div>
-      <div class="dict-tts-panel">
-        <div class="dict-tts-options">
-          <label class="dict-tts-option">
-            <span>속도</span>
-            <input type="range" id="dict-tts-rate" min="0.7" max="1.2" step="0.1" value="0.9" oninput="updateDictationTTSRateLabel()">
-            <strong id="dict-tts-rate-label">0.9x</strong>
-          </label>
-          <label class="dict-tts-option">
-            <span>음성</span>
-            <select class="field-input" id="dict-tts-voice" style="width:auto;min-width:180px;resize:none;">
-              <option value="">기본 음성</option>
-            </select>
-          </label>
-        </div>
+      <div class="dict-tts-toolbar">
         <div class="dict-tts-status" id="dict-tts-status">스크립트 생성 후 듣기 가능</div>
         <div class="dict-tts-line-buttons" id="dict-tts-line-buttons"></div>
       </div>

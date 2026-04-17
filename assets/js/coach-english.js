@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-eng-dday="int"]').forEach((el) => {
     el.textContent = intText;
   });
-  updateDictationTTSRateLabel();
   populateDictationVoices();
   updateSim();
 });
@@ -42,6 +41,7 @@ const dictTTSState = {
 };
 let selectedDictLevel = 'normal';
 let dictLineLevels = [];
+let dictLineTTSSettings = [];
 let dictPracticeMeta = [];
 const DICT_LEVEL_LABELS = {
   easy: '쉬움',
@@ -306,28 +306,41 @@ function setDictationTTSStatus(message, tone = '') {
   el.className = `dict-tts-status${tone ? ` ${tone}` : ''}`;
 }
 
-function updateDictationTTSRateLabel() {
-  const slider = document.getElementById('dict-tts-rate');
-  const label = document.getElementById('dict-tts-rate-label');
-  if (!slider || !label) return;
-  label.textContent = `${Number(slider.value).toFixed(1)}x`;
+function getEnglishDictationVoices() {
+  if (!supportsDictationTTS()) return [];
+  return window.speechSynthesis.getVoices()
+    .filter((voice) => /^en(-|_)/i.test(voice.lang) || /English/i.test(voice.name));
+}
+
+function ensureDictationLineTTSSettings() {
+  dictLineTTSSettings = dictTTSState.lines.map((_, index) => ({
+    rate: Number(dictLineTTSSettings[index]?.rate) || 0.9,
+    voiceName: dictLineTTSSettings[index]?.voiceName || '',
+  }));
+}
+
+function getDictationLineTTSSetting(index) {
+  return dictLineTTSSettings[index] || { rate: 0.9, voiceName: '' };
 }
 
 function populateDictationVoices() {
-  const select = document.getElementById('dict-tts-voice');
-  if (!select) return;
   if (!supportsDictationTTS()) {
-    select.innerHTML = '<option value="">브라우저 TTS 미지원</option>';
     setDictationTTSStatus('이 브라우저는 TTS 미지원', 'warn');
     return;
   }
-  const voices = window.speechSynthesis.getVoices()
-    .filter((voice) => /^en(-|_)/i.test(voice.lang) || /English/i.test(voice.name));
-  const current = select.value;
-  select.innerHTML = '<option value="">기본 음성</option>' + voices.map((voice) => (
-    `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`
-  )).join('');
-  if (voices.some((voice) => voice.name === current)) select.value = current;
+  const voices = getEnglishDictationVoices();
+  document.querySelectorAll('.dict-line-voice-select').forEach((select) => {
+    const lineIndex = Number(select.dataset.lineIndex);
+    const current = dictLineTTSSettings[lineIndex]?.voiceName || '';
+    select.innerHTML = '<option value="">기본 음성</option>' + voices.map((voice) => (
+      `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`
+    )).join('');
+    if (voices.some((voice) => voice.name === current)) {
+      select.value = current;
+    } else {
+      select.value = '';
+    }
+  });
   if (!voices.length) {
     setDictationTTSStatus('영어 음성 로딩 중', 'warn');
   } else if (!dictTTSState.lines.length) {
@@ -339,11 +352,10 @@ if (supportsDictationTTS()) {
   window.speechSynthesis.onvoiceschanged = populateDictationVoices;
 }
 
-function getDictationVoice() {
+function getDictationVoice(voiceName = '') {
   if (!supportsDictationTTS()) return null;
-  const selectedName = document.getElementById('dict-tts-voice')?.value;
-  if (!selectedName) return null;
-  return window.speechSynthesis.getVoices().find((voice) => voice.name === selectedName) || null;
+  if (!voiceName) return null;
+  return window.speechSynthesis.getVoices().find((voice) => voice.name === voiceName) || null;
 }
 
 function parseDictationLines(text) {
@@ -364,6 +376,15 @@ function highlightDictationLineButton(index) {
   });
 }
 
+function focusDictationSentence(index, behavior = 'smooth') {
+  const card = document.getElementById(`dict-card-${index}`);
+  if (!card) return;
+  dictTTSState.currentIndex = index;
+  highlightDictationLineButton(index);
+  card.scrollIntoView({ behavior, block: 'start' });
+  setDictationTTSStatus(`문장 ${index + 1} 선택됨`, 'active');
+}
+
 function renderDictationLineButtons() {
   const container = document.getElementById('dict-tts-line-buttons');
   if (!container) return;
@@ -372,7 +393,7 @@ function renderDictationLineButtons() {
     return;
   }
   container.innerHTML = dictTTSState.lines.map((_, index) => (
-    `<button type="button" class="dict-tts-line-btn" onclick="playDictationSentence(${index})">문장 ${index + 1}</button>`
+    `<button type="button" class="dict-tts-line-btn" onclick="focusDictationSentence(${index})">문장 ${index + 1}</button>`
   )).join('');
   highlightDictationLineButton(dictTTSState.currentIndex);
 }
@@ -384,12 +405,13 @@ function renderDictationPracticeCards() {
     container.innerHTML = '';
     return;
   }
+  ensureDictationLineTTSSettings();
   dictPracticeMeta = dictTTSState.lines.map((line, index) => buildDictationPracticeMeta(line, dictLineLevels[index] || selectedDictLevel));
   container.innerHTML = dictPracticeMeta.map((meta, index) => {
     const line = meta.line;
     const guide = getDictationGuide(line);
-    const difficultyLabel = DICT_LEVEL_LABELS[meta.level] || '중';
     const blankCountLabel = meta.isStudyMode ? '전체 공개' : `빈칸 ${meta.blanks.length}개`;
+    const ttsSetting = getDictationLineTTSSetting(index);
     return `
       <article class="dict-practice-card" id="dict-card-${index}">
         <div class="dict-practice-head">
@@ -411,6 +433,19 @@ function renderDictationPracticeCards() {
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
           </div>
+        </div>
+        <div class="dict-card-tts-controls">
+          <label class="dict-card-tts-option">
+            <span>속도</span>
+            <input type="range" min="0.7" max="1.2" step="0.1" value="${ttsSetting.rate.toFixed(1)}" oninput="setDictationLineRate(${index}, this.value)">
+            <strong id="dict-line-rate-label-${index}">${ttsSetting.rate.toFixed(1)}x</strong>
+          </label>
+          <label class="dict-card-tts-option dict-card-tts-option--voice">
+            <span>음성</span>
+            <select class="field-input dict-line-voice-select" data-line-index="${index}" onchange="setDictationLineVoice(${index}, this.value)">
+              <option value="">기본 음성</option>
+            </select>
+          </label>
         </div>
         <div class="dict-cloze-line">${meta.previewHtml}</div>
         <div class="dict-answer-sheet dict-answer-sheet--inline" id="dict-answer-sheet-${index}" hidden>
@@ -460,6 +495,7 @@ function renderDictationPracticeCards() {
       </article>
     `;
   }).join('');
+  populateDictationVoices();
   highlightDictationLineButton(dictTTSState.currentIndex);
 }
 
@@ -469,6 +505,7 @@ function syncDictationTTSFromScript() {
   dictTTSState.currentIndex = -1;
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = dictTTSState.lines.length ? 0 : -1;
+  ensureDictationLineTTSSettings();
   renderDictationLineButtons();
   renderDictationPracticeCards();
   if (!supportsDictationTTS()) {
@@ -499,10 +536,10 @@ function stopDictationTTS(options = {}) {
 
 function createDictationUtterance(text, index) {
   const utterance = new SpeechSynthesisUtterance(text);
-  const slider = document.getElementById('dict-tts-rate');
-  const selectedVoice = getDictationVoice();
+  const setting = getDictationLineTTSSetting(index);
+  const selectedVoice = getDictationVoice(setting.voiceName);
   utterance.lang = selectedVoice?.lang || 'en-US';
-  utterance.rate = slider ? Number(slider.value) : 0.9;
+  utterance.rate = Number(setting.rate) || 0.9;
   utterance.pitch = 1;
   if (selectedVoice) utterance.voice = selectedVoice;
   utterance.onstart = () => {
@@ -530,6 +567,25 @@ function createDictationUtterance(text, index) {
     setDictationTTSStatus('TTS 오류 · 다시 시도', 'warn');
   };
   return utterance;
+}
+
+function setDictationLineRate(index, value) {
+  ensureDictationLineTTSSettings();
+  const rate = Number(value) || 0.9;
+  dictLineTTSSettings[index] = {
+    ...getDictationLineTTSSetting(index),
+    rate,
+  };
+  const label = document.getElementById(`dict-line-rate-label-${index}`);
+  if (label) label.textContent = `${rate.toFixed(1)}x`;
+}
+
+function setDictationLineVoice(index, value) {
+  ensureDictationLineTTSSettings();
+  dictLineTTSSettings[index] = {
+    ...getDictationLineTTSSetting(index),
+    voiceName: value || '',
+  };
 }
 
 (function renderDictTopics() {
