@@ -53,6 +53,7 @@ const DICT_LEVEL_LABELS = {
 const DICT_SENTENCE_GUIDES = [
   { s:'Every child has a unique talent that is waiting to be discovered.', t:'모든 아이는 아직 발견되기를 기다리는 고유한 재능을 가지고 있다.', p:'unique · talent · waiting · discovered', m:'unique 발음, waiting의 t, discovered의 -ed를 자주 놓칩니다.', c:'has + 명사 + that 관계절 구조입니다. talent 뒤 설명절을 한 덩어리로 듣는 게 핵심입니다.' },
   { s:'The picture book shows that potential grows when we believe in ourselves.', t:'그 그림책은 우리가 자신을 믿을 때 잠재력이 자란다는 것을 보여 준다.', p:'picture · potential · grows · ourselves', m:'potential 철자와 grows의 s, ourselves의 강세를 자주 틀립니다.', c:'shows that 절 + when 절 구조입니다. 핵심 메시지와 조건절을 나눠 듣는 연습이 중요합니다.' },
+  { s:"With witty and vivid illustrations, the writer emphasizes that there's a creative spirit in every one of us.", t:'재치 있고 생생한 그림으로, 작가는 우리 모두 안에 창의적인 힘이 있다고 강조한다.', p:'With witty and vivid illustrations / emphasizes / there’s a creative spirit', m:'문장 앞 설명구에 끌려 중심 동사 emphasizes를 놓치거나, 뒤 that절의 creative spirit를 통째로 못 잡는 경우가 많습니다.', c:'앞 분위기 설명 / 작가의 핵심 동사 / 진짜 메시지 세 덩어리로 나눠 듣는 문장입니다.' },
   { s:'She reminded her students that failure is just the first step toward success.', t:'그녀는 학생들에게 실패가 성공을 향한 첫걸음일 뿐이라고 상기시켰다.', p:'reminded · failure · toward · success', m:'reminded의 -ed, failure의 ai 소리, toward의 약한 발음을 놓치기 쉽습니다.', c:'remind + 사람 + that 절 구조입니다. 수행평가 서술형 문장에서도 자주 쓰입니다.' },
   { s:'Spending just five minutes a day on a new habit can change your life.', t:'하루에 단 5분만 새로운 습관에 써도 삶이 달라질 수 있다.', p:'spending · minutes · habit · change', m:'Spending을 spend로, minutes의 복수 -s, habit의 h 발음을 자주 놓칩니다.', c:'동명사 주어 + can + 동사원형 구조입니다. Spending ... habit 전체가 주어입니다.' },
   { s:'He started his morning routine by writing three things he was grateful for.', t:'그는 감사한 세 가지를 적으며 아침 루틴을 시작했다.', p:'routine · writing · grateful · for', m:'routine 철자, writing의 묵음 t, grateful 철자를 많이 헷갈립니다.', c:'by + ing는 방법을 나타냅니다. how를 묻는 수행평가 답변에서 매우 자주 쓰는 패턴입니다.' },
@@ -87,21 +88,54 @@ const DICT_SUFFIX_GUIDES = [
 const DICT_BLANK_EXPLANATIONS = {
   [normalizeDictationSentence("Today, I'd like to introduce The Dot by Peter Reynolds.")]: {
     "i'd": {
-      whyBlank: "`I'd like to ...`는 발표·소개 시작문에서 통째로 쓰는 핵심 입구 표현이라 자주 빈칸으로 나옵니다. 여기서 `I'd`를 맞혀야 뒤의 `like to introduce`까지 한 덩어리로 따라갈 수 있습니다.",
-      whyWrong: "`I'd`는 소리가 매우 짧게 붙어서 들립니다. 그래서 `I`, `I'll`, `I would`, `id`처럼 잘못 적기 쉽습니다. 특히 빠르게 들으면 d 소리가 약해서 그냥 `I`로 적는 실수가 많습니다.",
-      coach: "이 문장은 `Today` / `I'd like to introduce` / `The Dot by Peter Reynolds` 세 덩어리입니다. 여기서는 두 번째 덩어리의 출발점인 `I'd`를 먼저 잡아야 합니다.",
+      easy: "`I'd like to ...`는 한국어로 보면 '저는 ...를 소개하고 싶어요'처럼 말문을 여는 짧은 입구 표현입니다.",
+      role: "이 문장에서는 본론으로 들어가기 전에 분위기를 여는 짧은 시작 표현입니다. 뜻 하나보다 문장 리듬을 여는 역할이 더 큽니다.",
+      listen: "`Today / I'd like to introduce / The Dot by Peter Reynolds` 세 덩어리로 들으세요. 여기서는 두 번째 덩어리의 출발점인 `I'd`를 먼저 잡으면 됩니다.",
+      trap: "`I'd`는 소리가 매우 짧고 약하게 붙어서 `I`, `I'll`, `I would`처럼 흔들리기 쉽습니다. 빠르게 들리면 d 소리를 놓치고 그냥 `I`로 적는 경우가 많습니다.",
     },
     "peter": {
-      whyBlank: "`Peter Reynolds`는 책과 저자를 정확히 찍는 고유명사라 시험에서 빈칸 후보가 됩니다. 내용 이해보다 `누구 작품인지`를 정확히 들었는지를 보려는 자리입니다.",
-      whyWrong: "`Peter`는 익숙한 이름이지만 실제 듣기에서는 뒤의 `Reynolds`와 붙어서 빨리 지나갑니다. 그래서 `better`, `writer`, `peter` 철자 누락처럼 흔들리기 쉽습니다.",
-      coach: "문장 끝은 `The Dot` 다음에 `by + 저자 이름` 구조입니다. 즉 여기 빈칸은 설명이 아니라 저자 이름의 첫 덩어리를 듣는 자리입니다.",
+      easy: "`Peter Reynolds`는 한국어로 풀면 '피터 레이놀즈'처럼 저자 이름을 찍는 부분입니다. 내용이 아니라 이름표라고 생각하면 쉽습니다.",
+      role: "문장 끝 `by + 이름` 구조에서 첫 번째 이름 덩어리입니다. 설명이 아니라 저자 정보를 정확히 받아 적는 자리입니다.",
+      listen: "`The Dot by Peter Reynolds`를 한 세트로 들으세요. `by`가 나오면 뒤에는 설명이 아니라 사람 이름이 온다고 먼저 예상하면 훨씬 잘 들립니다.",
+      trap: "`Peter`는 익숙한 이름 같아도 실제 듣기에서는 뒤 `Reynolds`와 붙어 빨리 지나갑니다. 그래서 `better`처럼 다른 소리로 착각하거나 철자를 덜 적는 실수가 많습니다.",
     },
     "reynolds": {
-      whyBlank: "`Reynolds`는 낯선 고유명사라서 교과서 원문을 정확히 들었는지 확인하기 좋은 자리입니다. 특히 `Peter Reynolds`를 한 세트로 기억했는지 보려는 빈칸입니다.",
-      whyWrong: "익숙하지 않은 이름이라 음절을 놓치기 쉽고, `Reynolds`를 `Raynolds`, `Reynold`, `Reynolds.`처럼 틀리기 쉽습니다. 마지막 `-lds` 자음군도 자주 빠집니다.",
-      coach: "문장 끝은 `by Peter Reynolds`로 끝납니다. `by` 뒤에는 설명이 아니라 사람 이름이 온다고 먼저 예상하면 훨씬 잘 들립니다.",
+      easy: "`Reynolds`는 한국어로 보면 저자 성을 마무리하는 부분입니다. 결국 `Peter Reynolds`를 한 이름으로 듣느냐를 보는 자리입니다.",
+      role: "문장 끝 이름 정보의 마지막 조각입니다. 앞의 `Peter`와 붙여서 하나의 사람 이름으로 완성해야 합니다.",
+      listen: "`by Peter Reynolds`를 통째로 잡으세요. 특히 뒤쪽 `Reynolds`는 이름 마무리라고 생각하고 끝 자음까지 같이 들어야 합니다.",
+      trap: "익숙하지 않은 이름이라 음절을 놓치기 쉽고, `Raynolds`, `Reynold`처럼 적는 실수가 많습니다. 마지막 `-lds` 자음군이 특히 자주 빠집니다.",
     },
   },
+};
+
+const DICT_KOREAN_GLOSSARY = {
+  vivid: '그림이나 표현이 확 살아 있는 느낌',
+  emphasizes: '중요하다고 힘줘 말하는 느낌',
+  emphasize: '중요하다고 힘줘 말하는 것',
+  creative: '새롭고 기발하게 만들어 내는 느낌',
+  spirit: '마음속에 있는 힘이나 기운',
+  unique: '딱 그 사람만 가진 특별한 느낌',
+  talent: '타고난 재능',
+  potential: '아직 안 터졌지만 안에 있는 가능성',
+  grateful: '고맙게 느끼는 마음',
+  powerful: '힘이 큰',
+  biodegradable: '자연에서 썩는',
+  alternative: '대신 쓸 수 있는 다른 선택지',
+  campaign: '사람들에게 같이하자고 움직이는 활동',
+  encourages: '해보자고 등을 떠미는 느낌',
+  dignity: '사람답게 존중받는 가치',
+  misinformation: '틀린 정보가 사실처럼 퍼진 것',
+  innovation: '새로운 방식으로 문제를 푸는 변화',
+  transformed: '완전히 바꿔 놓은',
+  groundbreaking: '판을 바꿀 만큼 새롭고 센',
+  illustrations: '글을 살려 주는 그림',
+  discovered: '찾아낸',
+  environment: '주변 환경',
+  protect: '지켜 내다',
+  writer: '글쓴이',
+  routine: '매일 굴러가는 습관 흐름',
+  success: '성공',
+  failure: '실패',
 };
 
 function getDictationWordCount(sentence) {
@@ -168,7 +202,7 @@ function indexIsBlankable(index, length) {
   return index > 0 && index < length - 1;
 }
 
-function buildDictationPracticeMeta(line, level) {
+function buildDictationPracticeMeta(line, level, lineIndex) {
   const tokens = String(line || '').split(/\s+/).map(splitDictationToken);
   const blankIndices = selectDictationBlankIndices(tokens, level);
   const blanks = [];
@@ -184,7 +218,8 @@ function buildDictationPracticeMeta(line, level) {
       display: `${token.prefix}${token.core}${token.suffix}`,
       explanation: getDictationBlankExplanation(line, token.core, tokenIndex, tokens),
     });
-    return `${escapeHtml(token.prefix)}<span class="dict-cloze-blank" data-blank-index="${blankId}"><span class="dict-cloze-blank__text">${'_'.repeat(Math.max(token.core.length, 4))}</span></span>${escapeHtml(token.suffix)}`;
+    const inputWidth = Math.max(token.core.length, 4);
+    return `${escapeHtml(token.prefix)}<span class="dict-cloze-blank" data-blank-index="${blankId}"><input class="field-input dict-cloze-input" id="dict-answer-${lineIndex}-${blankId}" type="text" size="${inputWidth}" aria-label="문장 ${lineIndex + 1} 빈칸 ${blankId + 1}" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleDictationInlineInput(${lineIndex}, ${blankId})"><span class="dict-answer-word" id="dict-answer-word-${lineIndex}-${blankId}" hidden>${escapeHtml(token.core)}</span></span>${escapeHtml(token.suffix)}`;
   }).join(' ');
 
   return {
@@ -196,56 +231,132 @@ function buildDictationPracticeMeta(line, level) {
   };
 }
 
+function getDictationBlankProfile(answer, tokenIndex, tokens) {
+  const lower = String(answer || '').toLowerCase();
+  const prevCore = tokens[tokenIndex - 1]?.core || '';
+  const prevLower = prevCore.toLowerCase();
+  const prev2Core = tokens[tokenIndex - 2]?.core || '';
+  const prev2Lower = prev2Core.toLowerCase();
+  const nextCore = tokens[tokenIndex + 1]?.core || '';
+  const nextLower = nextCore.toLowerCase();
+  const startsWithUpper = /^[A-Z]/.test(String(answer || ''));
+  const endsWithEd = /ed$/i.test(lower);
+  const endsWithIng = /ing$/i.test(lower);
+  const isContraction = /'/.test(String(answer || ''));
+
+  const determiners = new Set(['a', 'an', 'the', 'this', 'that', 'these', 'those', 'my', 'your', 'our', 'their', 'his', 'her', 'its']);
+  const clauseStarters = new Set(['that', 'if', 'when', 'where', 'why', 'how', 'whether', 'because']);
+  const helperWords = new Set(['and', 'or', 'but', 'by', 'to', 'of', 'for', 'with', 'in', 'on']);
+
+  const looksVerb = endsWithEd || endsWithIng || clauseStarters.has(nextLower) || ['writer', 'she', 'he', 'it', 'they', 'we', 'people', 'campaign', 'company'].includes(prevLower);
+  const looksAdjective = !!nextCore && !clauseStarters.has(nextLower) && (
+    determiners.has(prevLower) || prevLower === 'and' || determiners.has(prev2Lower)
+  );
+  const looksNoun = !looksVerb && !looksAdjective && (determiners.has(prevLower) || helperWords.has(prevLower));
+
+  return {
+    lower,
+    prevCore,
+    prevLower,
+    prev2Core,
+    prev2Lower,
+    nextCore,
+    nextLower,
+    startsWithUpper,
+    endsWithEd,
+    endsWithIng,
+    isContraction,
+    looksVerb,
+    looksAdjective,
+    looksNoun,
+  };
+}
+
+function getDictationListeningChunk(answer, profile) {
+  if (profile.isContraction) {
+    return [profile.prevCore, answer, profile.nextCore].filter(Boolean).join(' ');
+  }
+  if (profile.startsWithUpper) {
+    return [profile.prevLower === 'by' ? profile.prevCore : '', answer, profile.nextCore].filter(Boolean).join(' ');
+  }
+  if (profile.looksAdjective) {
+    return [profile.prevLower === 'and' ? profile.prev2Core : '', profile.prevCore, answer, profile.nextCore].filter(Boolean).join(' ');
+  }
+  return [profile.prevCore, answer, profile.nextCore].filter(Boolean).join(' ');
+}
+
+function getDictationEasyMeaning(answer, profile) {
+  const glossary = DICT_KOREAN_GLOSSARY[profile.lower];
+  if (glossary) return `쉽게 말하면 '${glossary}' 쪽 느낌입니다.`;
+  if (profile.isContraction) return '쉽게 말하면 뜻보다 문장 리듬을 여는 짧은 입구 표현입니다.';
+  if (profile.startsWithUpper) return '쉽게 말하면 내용 설명이 아니라 이름표를 찍는 자리입니다.';
+  if (profile.looksAdjective) return `쉽게 말하면 뒤에 오는 ${profile.nextCore || '말'} 느낌을 살려 주는 꾸밈말입니다.`;
+  if (profile.looksVerb) return "쉽게 말하면 이 문장에서 진짜 하고 싶은 말을 끌고 가는 '~한다' 자리입니다.";
+  if (profile.looksNoun) return '쉽게 말하면 이 문장이 말하고 싶은 핵심 소재를 찍는 말입니다.';
+  return '쉽게 말하면 이 문장 중심을 잡아 주는 핵심 단어입니다.';
+}
+
+function getDictationRoleMeaning(answer, profile) {
+  if (profile.isContraction) return '문장을 여는 짧은 시작 표현';
+  if (profile.startsWithUpper) return '사람·책·작품 이름 같은 정보';
+  if (profile.looksAdjective) return '뒤 명사를 꾸며 주는 말';
+  if (profile.looksVerb) return '주어 다음 핵심 동사';
+  if (profile.looksNoun) return '문장 핵심 소재를 찍는 명사';
+  return '문장 중심을 잡는 핵심 단어';
+}
+
 function getDictationBlankExplanation(line, answer, tokenIndex, tokens) {
   const normalizedSentence = normalizeDictationSentence(line);
   const normalizedAnswer = normalizeDictationBlank(answer);
   const manual = DICT_BLANK_EXPLANATIONS[normalizedSentence]?.[normalizedAnswer];
   if (manual) return manual;
 
-  const lower = String(answer || '').toLowerCase();
-  const prevCore = tokens[tokenIndex - 1]?.core || '';
-  const nextCore = tokens[tokenIndex + 1]?.core || '';
-  const startsWithUpper = /^[A-Z]/.test(String(answer || ''));
-  const endsWithEd = /ed$/i.test(lower);
-  const endsWithIng = /ing$/i.test(lower);
-  const isContraction = /'/.test(String(answer || ''));
+  const profile = getDictationBlankProfile(answer, tokenIndex, tokens);
+  const chunk = getDictationListeningChunk(answer, profile);
 
-  if (isContraction) {
+  if (profile.isContraction) {
     return {
-      whyBlank: `\`${answer}\`는 문장 리듬을 결정하는 축약형이라 시험에서 잘 뚫립니다. 축약형을 맞혀야 뒤에 붙는 핵심 동작까지 자연스럽게 이어집니다.`,
-      whyWrong: `축약형은 소리가 짧고 약하게 지나가서 그냥 다른 단어로 듣거나 아예 놓치기 쉽습니다. 특히 apostrophe가 빠지거나 원형으로 잘못 적는 실수가 많습니다.`,
-      coach: `이 자리는 문장 뼈대를 여는 짧은 기능어입니다. 앞뒤 단어를 따로 듣기보다 \`${answer}\`를 한 덩어리 리듬으로 외우는 것이 빠릅니다.`,
+      easy: getDictationEasyMeaning(answer, profile),
+      role: "소개나 의견을 시작할 때 말문을 여는 짧은 표현입니다. 단어 하나보다 리듬으로 익히는 쪽이 더 중요합니다.",
+      listen: `\`${chunk}\`를 통째로 들으세요. 앞뒤를 끊지 말고 한 덩어리로 잡아야 자연스럽게 따라갑니다.`,
+      trap: '소리가 짧고 약하게 지나가서 다른 단어로 착각하거나 apostrophe를 빼먹기 쉽습니다.',
     };
   }
 
-  if (startsWithUpper) {
+  if (profile.startsWithUpper) {
     return {
-      whyBlank: `\`${answer}\`는 고유명사라 내용 이해보다 정확한 청취를 확인하기 좋은 자리입니다. 책 제목, 인물 이름, 지명 같은 정보는 시험에서 자주 빈칸으로 나옵니다.`,
-      whyWrong: `익숙하지 않은 이름은 소리만 듣고 철자를 추측하게 되므로 오탈자가 자주 납니다. 특히 첫 음절만 듣고 비슷한 철자로 적거나 끝 자음을 빼먹기 쉽습니다.`,
-      coach: `이 위치는 설명 문장이 아니라 이름 정보가 들어가는 자리입니다. 앞뒤에 붙은 단서를 보고 \`${prevCore} + ${answer} + ${nextCore}\` 같은 이름 덩어리로 먼저 예상하세요.`,
+      easy: getDictationEasyMeaning(answer, profile),
+      role: `${getDictationRoleMeaning(answer, profile)}를 정확히 받아 적는 자리입니다. 내용 이해보다 '누구/무엇 이름인지'를 찍는 문제가 됩니다.`,
+      listen: `\`${chunk}\`를 이름 한 세트로 들으세요. 특히 앞의 단서가 \`${profile.prevCore || '앞말'}\`이면 그 뒤에는 이름 정보가 온다고 먼저 예상하면 쉽습니다.`,
+      trap: '익숙하지 않은 이름은 소리만 듣고 철자를 추측하게 되어 첫 음절만 적거나 끝 자음을 빼먹는 실수가 많습니다.',
     };
   }
 
-  if (endsWithEd) {
+  if (profile.endsWithEd || profile.looksVerb) {
     return {
-      whyBlank: `\`${answer}\`는 동사의 완료형·과거형 흔적이 살아 있는 자리라 문장 핵심 동작을 제대로 들었는지 보기 좋습니다.`,
-      whyWrong: `-ed는 실제 발음이 약해지기 쉬워서 기본형으로 적거나 끝소리를 빼먹는 실수가 많습니다. 듣기에서는 핵심 동사 자체보다 어미가 더 잘 날아갑니다.`,
-      coach: `이 자리는 문장의 행동을 말하는 핵심 동사입니다. 주어 다음에 어떤 일이 일어났는지 잡는 자리라고 생각하면 더 잘 들립니다.`,
+      easy: getDictationEasyMeaning(answer, profile),
+      role: `${getDictationRoleMeaning(answer, profile)}입니다. 한국어로는 결국 '~한다 / ~라고 말한다'처럼 문장 중심을 끌고 가는 자리입니다.`,
+      listen: `주어 다음에 오는 \`${answer}\`를 먼저 잡고, 필요하면 \`${chunk}\`처럼 앞뒤까지 같이 들으세요.`,
+      trap: profile.endsWithEd
+        ? '-ed 끝소리가 약하게 들려 기본형으로 적거나 끝소리를 빼먹는 경우가 많습니다.'
+        : '뒤 설명절이나 다음 명사에 끌려 핵심 동사를 흘려듣기 쉽습니다. 중심 동사인데도 그냥 지나가기 쉬운 자리입니다.',
     };
   }
 
-  if (endsWithIng) {
+  if (profile.endsWithIng) {
     return {
-      whyBlank: `\`${answer}\`는 진행·동명사 느낌을 가진 단어라 문장 구조를 이해했는지 확인하기 좋은 자리입니다.`,
-      whyWrong: `-ing는 코로 울리듯 지나가서 g를 놓치거나 기본형으로 적는 경우가 많습니다. 특히 앞단어와 이어 들리면 단어 경계가 흐려집니다.`,
-      coach: `이 단어는 문장을 설명하는 움직임 덩어리입니다. 앞뒤를 끊지 말고 \`${prevCore} ${answer} ${nextCore}\` 리듬으로 같이 잡으세요.`,
+      easy: getDictationEasyMeaning(answer, profile),
+      role: "'~하는 것 / ~하면서'처럼 움직임을 이어 주는 말입니다. 문장에 동작 느낌을 붙이는 자리라고 보면 됩니다.",
+      listen: `\`${chunk}\`처럼 앞뒤를 같이 들으세요. 특히 -ing는 뒤로 흘러가듯 들려서 단어 경계가 쉽게 무너집니다.`,
+      trap: '-ing의 g 소리를 빼먹거나 기본형으로 적는 경우가 많습니다. 앞단어와 붙어 들리면 경계를 놓치기 쉽습니다.',
     };
   }
 
   return {
-    whyBlank: `\`${answer}\`는 이 문장에서 의미를 실제로 끌고 가는 핵심 단어라 빈칸으로 뚫기 좋습니다. 앞뒤가 다 보여도 이 단어를 못 들으면 문장 중심이 무너집니다.`,
-    whyWrong: `이 자리는 소리만 듣고 얼핏 넘어가면 비슷한 단어로 착각하기 쉽습니다. 특히 철자 하나 차이, 복수형, 시제 흔적을 같이 놓치는 경우가 많습니다.`,
-    coach: `문장을 통째로 외우려 하지 말고 \`${prevCore || '앞'} → ${answer} → ${nextCore || '뒤'}\` 흐름으로 잡으세요. 이 빈칸은 그중 가운데 핵심 덩어리입니다.`,
+    easy: getDictationEasyMeaning(answer, profile),
+    role: `${getDictationRoleMeaning(answer, profile)}입니다. 이 단어를 놓치면 문장 중심이 흐려집니다.`,
+    listen: `문장을 통째로 외우려 하지 말고 \`${chunk}\` 같은 작은 덩어리로 잡으세요. 이 빈칸은 그 덩어리 한가운데 있습니다.`,
+    trap: '소리만 얼핏 듣고 넘어가면 비슷한 단어로 착각하기 쉽습니다. 철자 하나 차이, 복수형, 시제 흔적을 같이 놓치는 경우가 많습니다.',
   };
 }
 
@@ -281,10 +392,10 @@ function getDictationGuide(sentence) {
   const baseGuide = DICT_SENTENCE_GUIDES.find((guide) => normalizeDictationSentence(guide.s) === normalizeDictationSentence(base));
   if (!baseGuide) {
     return {
-      t: '문장 전체 의미를 먼저 잡고, 핵심 동사와 연결 표현을 분리해서 들으세요.',
-      p: '핵심 동사 · 복수형 -s · 전치사 묶음 · 관계절 시작어',
-      m: '긴 문장은 복수형 -s, 관계절, 전치사 덩어리를 자주 놓칩니다.',
-      c: '주어, 핵심 동사, 보충 설명절을 세 덩어리로 나눠 듣는 것이 핵심입니다.',
+      t: '문장 뜻을 먼저 크게 잡고, 앞 꾸밈말과 중심 동사, 뒤 핵심 메시지를 따로 떼어 들으세요.',
+      p: '귀에 먼저 걸어둘 핵심 말 2~3개만 정해 두고 듣기',
+      m: '앞 설명에 끌려 중심 동사를 놓치거나, 뒤 메시지를 통째로 못 잡는 경우가 많습니다.',
+      c: '앞 설명 / 중심 동사 / 뒤 메시지처럼 역할별로 세 덩어리로 쪼개 듣는 것이 핵심입니다.',
     };
   }
   return {
@@ -406,7 +517,7 @@ function renderDictationPracticeCards() {
     return;
   }
   ensureDictationLineTTSSettings();
-  dictPracticeMeta = dictTTSState.lines.map((line, index) => buildDictationPracticeMeta(line, dictLineLevels[index] || selectedDictLevel));
+  dictPracticeMeta = dictTTSState.lines.map((line, index) => buildDictationPracticeMeta(line, dictLineLevels[index] || selectedDictLevel, index));
   container.innerHTML = dictPracticeMeta.map((meta, index) => {
     const line = meta.line;
     const guide = getDictationGuide(line);
@@ -428,67 +539,56 @@ function renderDictationPracticeCards() {
             <div class="dict-practice-sub">한 번 듣고 빈칸만 채우기. 필요하면 같은 문장을 다시 듣고 정답을 확인하세요.</div>
           </div>
           <div class="dict-practice-actions">
+            <div class="dict-card-tts-controls">
+              <label class="dict-card-tts-option">
+                <span>속도</span>
+                <input type="range" min="0.7" max="1.2" step="0.1" value="${ttsSetting.rate.toFixed(1)}" oninput="setDictationLineRate(${index}, this.value)">
+                <strong id="dict-line-rate-label-${index}">${ttsSetting.rate.toFixed(1)}x</strong>
+              </label>
+              <label class="dict-card-tts-option dict-card-tts-option--voice">
+                <span>음성</span>
+                <select class="field-input dict-line-voice-select" data-line-index="${index}" onchange="setDictationLineVoice(${index}, this.value)">
+                  <option value="">기본 음성</option>
+                </select>
+              </label>
+            </div>
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
             <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
           </div>
         </div>
-        <div class="dict-card-tts-controls">
-          <label class="dict-card-tts-option">
-            <span>속도</span>
-            <input type="range" min="0.7" max="1.2" step="0.1" value="${ttsSetting.rate.toFixed(1)}" oninput="setDictationLineRate(${index}, this.value)">
-            <strong id="dict-line-rate-label-${index}">${ttsSetting.rate.toFixed(1)}x</strong>
-          </label>
-          <label class="dict-card-tts-option dict-card-tts-option--voice">
-            <span>음성</span>
-            <select class="field-input dict-line-voice-select" data-line-index="${index}" onchange="setDictationLineVoice(${index}, this.value)">
-              <option value="">기본 음성</option>
-            </select>
-          </label>
-        </div>
         <div class="dict-cloze-line">${meta.previewHtml}</div>
-        <div class="dict-answer-sheet dict-answer-sheet--inline" id="dict-answer-sheet-${index}" hidden>
-          <div class="dict-coach-tag">정답 스크립트</div>
-          <div class="dict-answer-text">${escapeHtml(`${index + 1}. ${line}`)}</div>
-        </div>
         ${meta.isStudyMode ? `
           <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
         ` : `
-          <div class="dict-cloze-answer-grid">
-            ${meta.blanks.map((blank, blankIndex) => `
-              <label class="dict-answer-field" for="dict-answer-${index}-${blankIndex}">
-                <span class="dict-answer-label">빈칸 ${blankIndex + 1}</span>
-                <input class="field-input dict-answer-inline" id="dict-answer-${index}-${blankIndex}" type="text" placeholder="정답 입력">
-              </label>
-            `).join('')}
-          </div>
           <div class="dict-blank-guide-list">
             ${meta.blanks.map((blank, blankIndex) => `
               <div class="dict-blank-guide-card">
                 <div class="dict-coach-tag">빈칸 ${blankIndex + 1} — ${escapeHtml(blank.answer)}</div>
-                <p><strong>왜 여기 뚫렸나:</strong> ${escapeHtml(blank.explanation.whyBlank)}</p>
-                <p><strong>왜 자주 틀리나:</strong> ${escapeHtml(blank.explanation.whyWrong)}</p>
-                <p><strong>1타 해설:</strong> ${escapeHtml(blank.explanation.coach)}</p>
+                <p><strong>한글로 풀면:</strong> ${escapeHtml(blank.explanation.easy)}</p>
+                <p><strong>문장 속 역할:</strong> ${escapeHtml(blank.explanation.role)}</p>
+                <p><strong>들을 때 포인트:</strong> ${escapeHtml(blank.explanation.listen)}</p>
+                <p><strong>자주 틀리는 이유:</strong> ${escapeHtml(blank.explanation.trap)}</p>
               </div>
             `).join('')}
           </div>
         `}
         <div class="dict-coach-grid">
           <div class="dict-coach-block">
-            <div class="dict-coach-tag">전체 해석</div>
+            <div class="dict-coach-tag">문장 전체 해석</div>
             <p>${escapeHtml(guide.t)}</p>
           </div>
           <div class="dict-coach-block">
-            <div class="dict-coach-tag">발음 주의</div>
+            <div class="dict-coach-tag">귀에 걸어둘 소리</div>
             <p>${escapeHtml(guide.p)}</p>
           </div>
           <div class="dict-coach-block">
-            <div class="dict-coach-tag">많이 놓치는 포인트</div>
+            <div class="dict-coach-tag">시험 함정</div>
             <p>${escapeHtml(guide.m)}</p>
           </div>
           <div class="dict-coach-block">
-            <div class="dict-coach-tag">1타 강사 핵심개념</div>
+            <div class="dict-coach-tag">문장 쪼개기</div>
             <p>${escapeHtml(guide.c)}</p>
           </div>
         </div>
@@ -700,14 +800,43 @@ function resumeDictationTTS() {
 }
 
 function revealDictationAnswer(index) {
-  const sheet = document.getElementById(`dict-answer-sheet-${index}`);
   const toggle = document.getElementById(`dict-answer-toggle-${index}`);
   const label = document.getElementById(`dict-answer-toggle-label-${index}`);
-  if (!sheet || !toggle || !label) return;
-  sheet.hidden = false;
-  toggle.disabled = true;
-  toggle.classList.add('is-done');
-  label.textContent = '정답 표시됨';
+  const meta = dictPracticeMeta[index];
+  if (!toggle || !label || !meta) return;
+  const willShow = label.textContent === '정답 보기';
+  setDictationAnswerRevealState(index, willShow);
+  toggle.classList.toggle('is-done', willShow);
+  label.textContent = willShow ? '정답 숨기기' : '정답 보기';
+}
+
+function setDictationAnswerRevealState(lineIndex, visible) {
+  const meta = dictPracticeMeta[lineIndex];
+  if (!meta || meta.isStudyMode) return;
+  meta.blanks.forEach((blank, blankIndex) => {
+    const answerWord = document.getElementById(`dict-answer-word-${lineIndex}-${blankIndex}`);
+    const input = document.getElementById(`dict-answer-${lineIndex}-${blankIndex}`);
+    if (answerWord) answerWord.hidden = !visible;
+    if (!input) return;
+    input.classList.remove('is-correct', 'is-wrong');
+    if (!visible) return;
+    const studentAnswer = normalizeDictationBlank(input.value.trim());
+    const isCorrect = studentAnswer === blank.normalizedAnswer;
+    input.classList.add(isCorrect ? 'is-correct' : 'is-wrong');
+  });
+}
+
+function handleDictationInlineInput(lineIndex, blankIndex) {
+  const toggleLabel = document.getElementById(`dict-answer-toggle-label-${lineIndex}`);
+  if (!toggleLabel || toggleLabel.textContent !== '정답 숨기기') return;
+  const meta = dictPracticeMeta[lineIndex];
+  const input = document.getElementById(`dict-answer-${lineIndex}-${blankIndex}`);
+  if (!meta || !input) return;
+  const blank = meta.blanks[blankIndex];
+  if (!blank) return;
+  input.classList.remove('is-correct', 'is-wrong');
+  const studentAnswer = normalizeDictationBlank(input.value.trim());
+  input.classList.add(studentAnswer === blank.normalizedAnswer ? 'is-correct' : 'is-wrong');
 }
 
 function getDictationAnswerValues() {
@@ -752,13 +881,15 @@ function clearDictation() {
   dictPracticeMeta.forEach((meta, index) => {
     meta.blanks.forEach((_, blankIndex) => {
       const input = document.getElementById(`dict-answer-${index}-${blankIndex}`);
-      if (input) input.value = '';
+      if (input) {
+        input.value = '';
+        input.classList.remove('is-correct', 'is-wrong');
+      }
+      const answerWord = document.getElementById(`dict-answer-word-${index}-${blankIndex}`);
+      if (answerWord) answerWord.hidden = true;
     });
-    const sheet = document.getElementById(`dict-answer-sheet-${index}`);
-    if (sheet) sheet.hidden = true;
     const toggle = document.getElementById(`dict-answer-toggle-${index}`);
     if (toggle) {
-      toggle.disabled = false;
       toggle.classList.remove('is-done');
     }
     const label = document.getElementById(`dict-answer-toggle-label-${index}`);
