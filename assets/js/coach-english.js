@@ -749,6 +749,7 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
   ].filter(Boolean);
 
   const selfChecks = (Array.isArray(commentary?.selfCheck) ? commentary.selfCheck : []).slice(0, 3);
+  const pronunciationGap = Array.isArray(commentary?.pronunciationGap) ? commentary.pronunciationGap : [];
 
   return `
     <div class="dict-commentary-panel">
@@ -756,6 +757,43 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
         <div class="dict-coach-tag">학습 목표</div>
         <p>${escapeHtml(commentary?.learningGoal || guide.t)}</p>
       </div>
+      ${pronunciationGap.length ? `
+        <div class="dict-commentary-section">
+          <div class="dict-coach-tag">발음 갭</div>
+          <div class="dict-pron-gap-list">
+            ${pronunciationGap.map((item) => `
+              <div class="dict-pron-gap-card">
+                <div class="dict-pron-gap-head">
+                  <strong>${escapeHtml(item.word || '')}</strong>
+                  ${item.pos ? `<span>${escapeHtml(item.pos)}</span>` : ''}
+                </div>
+                <div class="dict-pron-gap-row">
+                  <label>외운 소리</label>
+                  <div>
+                    <div class="dict-pron-syllables">
+                      ${(Array.isArray(item.known?.syllables) ? item.known.syllables : []).map((syllable) => `
+                        <span class="dict-pron-syllable is-${escapeHtml(syllable.type || 'normal')}">${escapeHtml(syllable.text || '')}</span>
+                      `).join('')}
+                    </div>
+                    ${item.known?.desc ? `<p>${escapeHtml(item.known.desc)}</p>` : ''}
+                  </div>
+                </div>
+                <div class="dict-pron-gap-row">
+                  <label>실제 소리</label>
+                  <div>
+                    <div class="dict-pron-syllables">
+                      ${(Array.isArray(item.actual?.syllables) ? item.actual.syllables : []).map((syllable) => `
+                        <span class="dict-pron-syllable is-${escapeHtml(syllable.type || 'normal')}">${escapeHtml(syllable.text || '')}</span>
+                      `).join('')}
+                    </div>
+                    ${item.actual?.hearPoint ? `<p class="dict-pron-hear-point">${escapeHtml(item.actual.hearPoint)}</p>` : ''}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
       <div class="dict-commentary-section">
         <div class="dict-coach-tag">발음 포인트</div>
         <div class="dict-commentary-list">
@@ -786,16 +824,36 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
         <div class="dict-coach-tag">자기 점검</div>
         <div class="dict-self-check-list">
           ${selfChecks.map((item, itemIndex) => `
-            <label class="dict-self-check-item" for="dict-self-check-${lineIndex}-${itemIndex}">
-              <input class="dict-self-check-input" id="dict-self-check-${lineIndex}-${itemIndex}" type="checkbox">
-              <span class="dict-self-check-box"></span>
-              <span>${escapeHtml(item)}</span>
-            </label>
+            <div class="dict-self-check-card">
+              <label class="dict-self-check-item" for="dict-self-check-${lineIndex}-${itemIndex}">
+                <input class="dict-self-check-input" id="dict-self-check-${lineIndex}-${itemIndex}" type="checkbox">
+                <span class="dict-self-check-box"></span>
+                <span>${escapeHtml(typeof item === 'string' ? item : item?.question || '')}</span>
+              </label>
+              ${Array.isArray(item?.solutions) && item.solutions.length ? `
+                <button type="button" class="dict-self-check-toggle" onclick="toggleDictationSelfCheckSolution(${lineIndex}, ${itemIndex})">해결 단계 보기</button>
+                <div class="dict-self-check-solution" id="dict-self-check-solution-${lineIndex}-${itemIndex}" hidden>
+                  ${item.solutions.map((solution) => `
+                    <div class="dict-self-check-step">
+                      <strong>${escapeHtml(String(solution.step || ''))}</strong>
+                      <span>${escapeHtml(solution.desc || '')}</span>
+                    </div>
+                  `).join('')}
+                  ${item.goalTip ? `<div class="dict-self-check-goal">${escapeHtml(item.goalTip)}</div>` : ''}
+                </div>
+              ` : ''}
+            </div>
           `).join('')}
         </div>
       </div>
     </div>
   `;
+}
+
+function toggleDictationSelfCheckSolution(lineIndex, itemIndex) {
+  const el = document.getElementById(`dict-self-check-solution-${lineIndex}-${itemIndex}`);
+  if (!el) return;
+  el.hidden = !el.hidden;
 }
 
 function supportsDictationTTS() {

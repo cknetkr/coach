@@ -47,15 +47,92 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
           weakForm: "`by`는 문장 끝에서 짧게 스쳐 가서 빠뜨리기 쉽습니다.",
           stress: "`introduce`, `Dot`, `Reynolds` 쪽에 강세가 모입니다.",
         },
+        pronunciationGap: [
+          {
+            word: "I'd like to",
+            pos: '축약형 + 연음 덩어리',
+            known: {
+              syllables: [
+                { text: '아이드', type: 'stress' },
+                { text: '라이크', type: 'normal' },
+                { text: '투', type: 'normal' },
+              ],
+              desc: '"아이드 라이크 투"처럼 또박또박 따로 외운 소리',
+            },
+            actual: {
+              syllables: [
+                { text: '아이들라이크터', type: 'merge' },
+              ],
+              hearPoint: '`d`가 뒤로 붙고 `to`는 약해져 거의 "터"처럼 들립니다.',
+            },
+          },
+          {
+            word: 'introduce',
+            pos: '동사 — 내용어',
+            known: {
+              syllables: [
+                { text: '인', type: 'normal' },
+                { text: '트로', type: 'normal' },
+                { text: '듀스', type: 'stress' },
+              ],
+              desc: '앞 음절을 또렷하게 나눠 외운 형태',
+            },
+            actual: {
+              syllables: [
+                { text: '인트러', type: 'weak' },
+                { text: '듀스', type: 'stress' },
+              ],
+              hearPoint: '앞부분은 약해지고 끝 강세 음절 `듀스`만 또렷하게 남습니다.',
+            },
+          },
+          {
+            word: 'by',
+            pos: '전치사 — 기능어',
+            known: {
+              syllables: [
+                { text: '바이', type: 'stress' },
+              ],
+              desc: '단독 단어처럼 강하게 들릴 것이라 예상하는 소리',
+            },
+            actual: {
+              syllables: [
+                { text: '바이', type: 'ghost' },
+                { text: '비/브', type: 'weak' },
+              ],
+              hearPoint: '문장 속에서는 거의 안 들릴 정도로 약해져 저자명 앞에서 스쳐 갑니다.',
+            },
+          },
+        ],
         wrongReasons: [
           "`I'd`의 apostrophe를 빼고 `Id`로 적는 경우가 많습니다.",
           "`by`를 못 듣고 저자명만 받아적는 실수가 자주 나옵니다.",
         ],
         shadowingTip: "`Today I'd like to introduce`를 한 덩어리로 여러 번 붙여 읽은 뒤 뒤 절을 이어 붙입니다.",
         selfCheck: [
-          "`I'd`를 `I would`의 축약형이라고 설명할 수 있나요?",
-          "`by + 저자` 구조를 듣고 바로 떠올릴 수 있나요?",
-          "`introduce` 철자를 보지 않고 적을 수 있나요?",
+          {
+            question: "`I'd`를 `I would`의 축약형이라고 설명할 수 있나요?",
+            solutions: [
+              { step: 1, desc: '`I would like to`와 `I\'d like to`를 번갈아 3번씩 소리 내어 읽습니다.' },
+              { step: 2, desc: '공책에 `I would / I\'d / I\'ll / I\'ve`를 나란히 적고 각각 뜻을 연결합니다.' },
+            ],
+            goalTip: '`I\'d`를 보는 즉시 `I would`로 풀어 말할 수 있을 때까지 반복합니다.',
+          },
+          {
+            question: "`by + 저자` 구조를 듣고 바로 떠올릴 수 있나요?",
+            solutions: [
+              { step: 1, desc: '`The Dot by Peter Reynolds` 구간만 5회 천천히 읽으며 `by`를 강하게 표시합니다.' },
+              { step: 2, desc: '`a book by ~`, `a poem by ~`처럼 `by + 사람` 예문을 3개 더 만들어 읽습니다.' },
+            ],
+            goalTip: '이름 앞에 아주 약한 전치사가 들리면 `by`부터 먼저 적을 수 있을 때까지 연습합니다.',
+          },
+          {
+            question: "`introduce` 철자를 보지 않고 적을 수 있나요?",
+            solutions: [
+              { step: 1, desc: '`introduce`를 5번 손으로 적고, 매번 `intro-duce`로 끊어 발음합니다.' },
+              { step: 2, desc: '`I\'d like to introduce` 전체를 3번 듣고 마지막 동사만 받아적습니다.' },
+            ],
+            goalTip: '발표 도입에서 `introduce`가 나오면 망설이지 않고 바로 쓸 수 있을 때까지 반복합니다.',
+          },
         ],
       },
       fullMeaning: {
