@@ -8,6 +8,38 @@ const previewV2State = {
   currentUtterance: null,
 };
 
+function pv2Params() {
+  return new URLSearchParams(window.location.search);
+}
+
+function pv2SelectedSentenceId() {
+  return pv2Params().get('sentenceId') || '';
+}
+
+function pv2FindSentenceFromOverrides(sentenceId) {
+  const overrides = window.ENG_DICTATION_TOPIC_OVERRIDES || {};
+  for (const items of Object.values(overrides)) {
+    if (!Array.isArray(items)) continue;
+    const matched = items.find((item) => item?.id === sentenceId);
+    if (matched) return matched;
+  }
+  return null;
+}
+
+function pv2Head(sentence) {
+  const title = document.querySelector('.preview-title');
+  const desc = document.querySelector('.preview-desc');
+  if (title) {
+    title.textContent = sentence?.subject && sentence?.title
+      ? `${sentence.subject} · ${sentence.title}`
+      : '영어 받아쓰기 개념확장';
+  }
+  if (desc) {
+    const sentenceLabel = sentence?.tts?.label || sentence?.id || '선택한 문장';
+    desc.textContent = `${sentenceLabel} 데이터를 기준으로 LitCoach, 토익, Speaking, 어휘 확장 화면을 확인합니다.`;
+  }
+}
+
 function pv2Escape(value) {
   return String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -733,12 +765,17 @@ function pv2MarkDone(button) {
 
 async function pv2Init() {
   try {
-    pv2Status('JSON 로딩 중...');
-    const response = await fetch(JSON_SAMPLE_PATH_V2);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    previewV2State.sentence = await response.json();
+    pv2Status('문장 데이터 로딩 중...');
+    const sentenceId = pv2SelectedSentenceId();
+    previewV2State.sentence = sentenceId ? pv2FindSentenceFromOverrides(sentenceId) : null;
+    if (!previewV2State.sentence) {
+      const response = await fetch(JSON_SAMPLE_PATH_V2);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      previewV2State.sentence = await response.json();
+    }
+    pv2Head(previewV2State.sentence);
     pv2Render();
-    pv2Status(pv2Voices().length ? `JSON 로딩 완료 · 영어 음성 ${pv2Voices().length}개 감지` : 'JSON 로딩 완료 · 영어 음성 로딩 중');
+    pv2Status(pv2Voices().length ? `문장 데이터 로딩 완료 · 영어 음성 ${pv2Voices().length}개 감지` : '문장 데이터 로딩 완료 · 영어 음성 로딩 중');
   } catch (error) {
     console.error(error);
     pv2Status(`로딩 실패: ${error.message}`);
@@ -777,7 +814,7 @@ document.addEventListener('click', (event) => {
 document.addEventListener('DOMContentLoaded', pv2Init);
 if (pv2SupportsTTS()) {
   window.speechSynthesis.onvoiceschanged = () => {
-    pv2Status(pv2Voices().length ? `JSON 로딩 완료 · 영어 음성 ${pv2Voices().length}개 감지` : 'JSON 로딩 완료 · 영어 음성 로딩 중');
+    pv2Status(pv2Voices().length ? `문장 데이터 로딩 완료 · 영어 음성 ${pv2Voices().length}개 감지` : '문장 데이터 로딩 완료 · 영어 음성 로딩 중');
   };
 }
 window.addEventListener('beforeunload', pv2StopTTS);

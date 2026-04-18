@@ -1051,9 +1051,11 @@ function renderDictationLineButtons() {
 }
 
 function getDictationPreviewHref(sentenceEntry, index) {
-  if (sentenceEntry?.id === 'dot-s01') return 'coach-english-json-preview-v2.html';
-  if (selectedDictTopic?.num === '1과 P.13' && index === 0) return 'coach-english-json-preview-v2.html';
-  return '';
+  if (!sentenceEntry?.id) return '';
+  const params = new URLSearchParams({
+    sentenceId: sentenceEntry.id,
+  });
+  return `coach-english-json-preview-v2.html?${params.toString()}`;
 }
 
 function renderDictationPracticeCards() {
