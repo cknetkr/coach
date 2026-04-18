@@ -23,6 +23,7 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
         <div class="dict-tts-status" id="dict-tts-status">스크립트 생성 후 듣기 가능</div>
         <div class="dict-tts-line-buttons" id="dict-tts-line-buttons"></div>
       </div>
+      <div class="dict-preview-toolbar" id="dict-preview-toolbar" hidden></div>
       <div class="dict-practice-list" id="dict-practice-list"></div>
       <div class="dict-script-source" id="dict-script" hidden></div>
       <div class="btn-row">

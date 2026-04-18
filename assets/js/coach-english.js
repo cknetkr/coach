@@ -959,11 +959,31 @@ function renderDictationLineButtons() {
   highlightDictationLineButton(dictTTSState.currentIndex);
 }
 
+function getDictationPreviewHref(sentenceEntry, index) {
+  if (sentenceEntry?.id === 'dot-s01') return 'coach-english-json-preview-v2.html';
+  if (selectedDictTopic?.num === '1과 P.13' && index === 0) return 'coach-english-json-preview-v2.html';
+  return '';
+}
+
+function renderDictationPreviewToolbar() {
+  const container = document.getElementById('dict-preview-toolbar');
+  if (!container) return;
+  const previewHref = getDictationPreviewHref(dictSentenceEntries[0], 0);
+  if (!previewHref) {
+    container.hidden = true;
+    container.innerHTML = '';
+    return;
+  }
+  container.hidden = false;
+  container.innerHTML = `<a class="btn-secondary dict-preview-link dict-preview-link--toolbar" href="${previewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 보기</a>`;
+}
+
 function renderDictationPracticeCards() {
   const container = document.getElementById('dict-practice-list');
   if (!container) return;
   if (!dictSentenceEntries.length) {
     container.innerHTML = '';
+    renderDictationPreviewToolbar();
     return;
   }
   ensureDictationLineTTSSettings();
@@ -972,9 +992,7 @@ function renderDictationPracticeCards() {
     const guide = getDictationGuide(dictSentenceEntries[index]);
     const blankCountLabel = meta.isStudyMode ? '전체 공개' : `빈칸 ${meta.blanks.length}개`;
     const ttsSetting = getDictationLineTTSSetting(index);
-    const jsonPreviewHref = (dictSentenceEntries[index]?.id === 'dot-s01' || (selectedDictTopic?.num === '1과 P.13' && index === 0))
-      ? 'coach-english-json-preview-v2.html'
-      : '';
+    const jsonPreviewHref = getDictationPreviewHref(dictSentenceEntries[index], index);
     return `
       <article class="dict-practice-card" id="dict-card-${index}">
         <div class="dict-practice-head">
@@ -1005,7 +1023,7 @@ function renderDictationPracticeCards() {
               </label>
             </div>
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
-            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 미리보기</a>` : ''}
+            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 보기</a>` : ''}
             <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
@@ -1023,6 +1041,7 @@ function renderDictationPracticeCards() {
       </article>
     `;
   }).join('');
+  renderDictationPreviewToolbar();
   populateDictationVoices();
   highlightDictationLineButton(dictTTSState.currentIndex);
 }
