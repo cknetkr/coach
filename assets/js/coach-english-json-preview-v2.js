@@ -176,10 +176,164 @@ function pv2SelfCheck(items) {
   `).join('');
 }
 
+function pv2PriorityFocus(sentence) {
+  const primary = sentence.guide?.m
+    || sentence.commentary?.wrongReasons?.[0]
+    || sentence.commentary?.learningGoal
+    || '';
+  if (!primary) return '';
+  return `
+    <div class="focus-card">
+      <div class="focus-label">핵심 1개</div>
+      <div class="focus-text">${pv2Escape(primary)}</div>
+    </div>
+  `;
+}
+
+function pv2CoachBrief(sentence) {
+  const guide = sentence.guide || {};
+  const items = [
+    { label: '상황', value: guide.t },
+    { label: '끊어 듣기', value: guide.p },
+    { label: '놓치기 쉬운 점', value: guide.m },
+    { label: '듣는 요령', value: guide.c },
+  ].filter((item) => item.value);
+  if (!items.length) return '';
+  return `
+    <div class="sec">
+      <div class="sl">1타 해설 요약</div>
+      <div class="coach-brief-grid">
+        ${items.map((item) => `
+          <div class="coach-brief-item">
+            <div class="coach-brief-label">${pv2Escape(item.label)}</div>
+            <div class="coach-brief-value">${pv2Escape(item.value)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function pv2PronSummary(sentence) {
+  const pronunciation = sentence.commentary?.pronunciation || {};
+  const items = [
+    { label: '연음', value: pronunciation.linking },
+    { label: '약형', value: pronunciation.weakForm },
+    { label: '강세', value: pronunciation.stress },
+  ].filter((item) => item.value);
+  if (!items.length) return '';
+  return `
+    <div class="sec">
+      <div class="sl">발음 3포인트</div>
+      <div class="pron-summary-grid">
+        ${items.map((item) => `
+          <div class="pron-summary-card">
+            <div class="pron-summary-tag">${pv2Escape(item.label)}</div>
+            <div class="pron-summary-text">${pv2Escape(item.value)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function pv2ExamFocus(kind, label, title, desc) {
+  if (!title && !desc) return '';
+  return `
+    <div class="exam-focus-card ${pv2Escape(kind)}">
+      <div class="exam-focus-label">${pv2Escape(label || '핵심')}</div>
+      ${title ? `<div class="exam-focus-title">${pv2Escape(title)}</div>` : ''}
+      ${desc ? `<div class="exam-focus-desc">${pv2Escape(desc)}</div>` : ''}
+    </div>
+  `;
+}
+
+function pv2ToeicQuickChecks(items) {
+  if (!Array.isArray(items) || !items.length) return '';
+  return `
+    <div class="sec">
+      <div class="sl">실전 3초 판별</div>
+      <div class="toeic-question-list">
+        ${items.map((item, index) => `
+          <div class="toeic-question-card">
+            <div class="toeic-question-top">
+              <span class="toeic-question-badge">${pv2Escape(item.type || `Part 5 체크 ${index + 1}`)}</span>
+              ${item.skill ? `<span class="ptag">${pv2Escape(item.skill)}</span>` : ''}
+            </div>
+            <div class="toeic-question-stem">${pv2Escape(item.stem || '')}</div>
+            <div class="toeic-choice-list">
+              ${(item.choices || []).map((choice) => `
+                <div class="toeic-choice${choice.isAnswer ? ' is-answer' : ''}">
+                  ${pv2Escape(choice.label || '')}. ${pv2Escape(choice.text || '')}
+                </div>
+              `).join('')}
+            </div>
+            <div class="toeic-solution">
+              <strong>정답 근거</strong>
+              <p>${pv2Escape(item.rationale || '')}</p>
+              ${item.trap ? `<div class="toeic-trap">함정: ${pv2Escape(item.trap)}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function pv2OpicPatternList(items) {
+  if (!Array.isArray(items) || !items.length) return '';
+  return `
+    <div class="pattern-list">
+      ${items.map((pattern) => `
+        <div class="pattern-item">
+          <strong>${pv2Escape(pattern.template || '')}</strong>
+          <div>${pv2Escape(pattern.desc || '')}</div>
+          ${(pattern.examples || []).length ? `<div style="margin-top:8px">${pattern.examples.map((item) => pv2Escape(item)).join('<br>')}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function pv2OpicLineList(items) {
+  if (!Array.isArray(items) || !items.length) return '';
+  return `
+    <div class="opic-line-list">
+      ${items.map((item) => `
+        <div class="opic-line-item">
+          <strong>${pv2Escape(item.label || '')}</strong>
+          <div>${pv2Escape(item.text || '')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function pv2OpicAnswerGrid(answers) {
+  if (!Array.isArray(answers) || !answers.length) return '';
+  return `
+    <div class="sec">
+      <div class="sl">등급별 모범 답변</div>
+      <div class="opic-answer-grid">
+        ${answers.map((answer) => `
+          <div class="opic-answer-box">
+            <span class="opic-answer-label">${pv2Escape(answer.label || '')}</span>
+            <p>${pv2Escape(answer.text || '')}</p>
+            ${answer.coaching ? `<div class="toeic-trap">코칭: ${pv2Escape(answer.coaching)}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 function pv2LitTab(sentence) {
   return `
     <div class="panel${previewV2State.activeTab === 'lit' ? ' active' : ''}" id="p-lit">
       <div class="sent">${pv2Sentence(sentence)}</div>
+      ${pv2PriorityFocus(sentence)}
+      ${pv2CoachBrief(sentence)}
+      ${pv2PronSummary(sentence)}
       <div class="sec">
         <div class="sl">학습 목표</div>
         <div class="goal">${pv2Escape(sentence.commentary?.learningGoal || '')}</div>
@@ -229,10 +383,12 @@ function pv2ToeicTab(sentence) {
   return `
     <div class="panel${previewV2State.activeTab === 'toeic' ? ' active' : ''}" id="p-toeic">
       <div class="sent">${pv2Sentence(sentence)}</div>
+      ${pv2ExamFocus('toeic', '토익 1타 포인트', toeic.fastRule, toeic.coachLine)}
       <div class="sec">
         <div class="sl">학습 목표</div>
         <div class="goal">${pv2Escape(toeic.learningGoal || '')}</div>
       </div>
+      ${pv2ToeicQuickChecks(toeic.quickChecks)}
       ${(toeic.grammarPoints || []).map((point) => `
         <div class="sec">
           <div class="sl">토익 포인트</div>
@@ -264,22 +420,39 @@ function pv2OpicTab(sentence) {
   return `
     <div class="panel${previewV2State.activeTab === 'opic' ? ' active' : ''}" id="p-opic">
       <div class="sent">${pv2Sentence(sentence)}</div>
+      ${pv2ExamFocus('opic', '오픽 1타 포인트', opic.fastRule, opic.coachLine)}
       <div class="sec">
         <div class="sl">학습 목표</div>
         <div class="goal">${pv2Escape(opic.learningGoal || '')}${opic.targetGrade ? ` (${pv2Escape(opic.targetGrade)})` : ''}</div>
       </div>
       <div class="sec">
         <div class="sl">오픽 활용 패턴</div>
-        <div style="background:#EEEDFE;border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:#3C3489;line-height:1.9;margin-bottom:8px">
-          ${(opic.speakingPatterns || []).map((pattern) => `
-            <div style="margin-bottom:6px">
-              <strong style="font-weight:600">${pv2Escape(pattern.template || '')}</strong><br>
-              ${pv2Escape(pattern.desc || '')}
-              ${(pattern.examples || []).length ? `<div style="margin-top:4px;color:#4c438f">${pattern.examples.map((item) => pv2Escape(item)).join('<br>')}</div>` : ''}
-            </div>
-          `).join('')}
-        </div>
+        ${pv2OpicPatternList(opic.speakingPatterns)}
         <div class="tip" style="border-color:#7F77DD">${pv2Escape(opic.shadowingTip || '')}</div>
+      </div>
+      ${pv2OpicAnswerGrid(opic.sampleAnswers)}
+      <div class="sec">
+        <div class="sl">답변 프레임</div>
+        ${pv2OpicLineList(opic.answerFlow)}
+      </div>
+      <div class="sec">
+        <div class="sl">꼬리 질문 · 복구 문장</div>
+        <div class="opic-card-grid">
+          <div class="opic-card">
+            <div class="toeic-question-top">
+              <span class="opic-card-badge">Follow-up</span>
+            </div>
+            ${pv2OpicLineList(opic.followUps)}
+          </div>
+          <div class="opic-card">
+            <div class="toeic-question-top">
+              <span class="opic-card-badge">Recovery</span>
+            </div>
+            <div class="opic-sub-list">
+              ${(opic.recoveryLines || []).map((item) => `<div class="opic-sub-item">${pv2Escape(item)}</div>`).join('')}
+            </div>
+          </div>
+        </div>
       </div>
       <div class="sec">
         <div class="sl">스피킹 발음 포인트</div>
@@ -303,6 +476,31 @@ function pv2VocabularyCard(item) {
       <div class="vpron">${pv2Escape(item.pronunciation || '')} — ${pv2Escape(item.pos || '')}</div>
       <div class="vmeaning">${(item.meanings || []).map((meaning, index) => `${index === 0 ? '①' : '②'} ${pv2Escape(meaning)}`).join(' &nbsp; ')}</div>
       <div class="vex">${pv2Escape(item.exampleSentence || '')} — ${pv2Escape(item.exampleContext || '')}</div>
+      ${item.collocations?.length || item.derivatives?.length ? `
+        <div class="vocab-chip-grid" style="margin-top:10px">
+          ${item.collocations?.length ? `
+            <div class="vocab-chip-card">
+              <strong>콜로케이션</strong>
+              <div class="vocab-chip-list">
+                ${item.collocations.map((term) => `<span class="vocab-chip">${pv2Escape(term)}</span>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+          ${item.derivatives?.length ? `
+            <div class="vocab-chip-card">
+              <strong>파생/변형</strong>
+              <div class="vocab-chip-list">
+                ${item.derivatives.map((term) => `<span class="vocab-chip">${pv2Escape(term)}</span>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      ` : ''}
+      ${(item.confusables || []).length ? `
+        <div class="confusable-list">
+          ${(item.confusables || []).map((entry) => `<div class="confusable-item"><strong>${pv2Escape(entry.word || '')}</strong> — ${pv2Escape(entry.desc || '')}</div>`).join('')}
+        </div>
+      ` : ''}
       ${(item.synonyms || []).length ? `<div class="vsyn">유의어 ${(item.synonyms || []).map((synonym) => `<span>${pv2Escape(synonym)}</span>`).join('')}</div>` : ''}
       ${item.toeicNote ? `<div class="vtoeic">토익: ${pv2Escape(item.toeicNote)}</div>` : ''}
       ${item.opicNote ? `<div class="vopic">오픽: ${pv2Escape(item.opicNote)}</div>` : ''}
@@ -314,16 +512,36 @@ function pv2VocabularyCard(item) {
 }
 
 function pv2VocabularyTab(sentence) {
+  const voca = sentence.examModes?.voca || {};
   return `
     <div class="panel${previewV2State.activeTab === 'voca' ? ' active' : ''}" id="p-voca">
-      <div class="sent" style="font-size:14px;color:var(--color-text-secondary)">
-        Today, I'd like to <strong style="font-weight:500;color:var(--color-text-primary)">introduce</strong> The Dot <strong style="font-weight:500;color:var(--color-text-primary)">by</strong> Peter Reynolds.
-      </div>
-      <div style="display:inline-block;font-size:12px;padding:3px 10px;border-radius:20px;background:#FAECE7;color:#993C1D;font-weight:500;margin-bottom:14px">이 문장의 필수 어휘 ${(sentence.vocabulary || []).length}개</div>
+      <div class="sent">${pv2Sentence(sentence)}</div>
+      ${pv2ExamFocus('voca', '어휘 1타 포인트', voca.fastRule, voca.coachLine)}
+      <div style="display:inline-block;font-size:12px;padding:3px 10px;border-radius:20px;background:rgba(249,115,22,.16);color:#fdba74;font-weight:700;margin-bottom:14px">이 문장의 필수 어휘 ${(sentence.vocabulary || []).length}개</div>
       ${(sentence.vocabulary || []).map(pv2VocabularyCard).join('')}
+      ${(voca.quickChecks || []).length ? `
+        <div class="sec">
+          <div class="sl">즉답 체크</div>
+          <div class="vocab-quiz-list">
+            ${(voca.quickChecks || []).map((item, index) => `
+              <div class="vocab-quiz-card">
+                <div class="vocab-quiz-top">
+                  <span class="vocab-quiz-badge">Quick Check ${index + 1}</span>
+                </div>
+                <div class="vocab-quiz-question">${pv2Escape(item.question || '')}</div>
+                <div class="vocab-support-box">
+                  <strong>정답</strong>
+                  <p>${pv2Escape(item.answer || '')}</p>
+                  ${item.coaching ? `<div class="toeic-trap">코칭: ${pv2Escape(item.coaching)}</div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
       <div class="sec">
         <div class="sl">자기평가</div>
-        ${pv2SelfCheck([
+        ${pv2SelfCheck(voca.selfCheck || [
           { question: '핵심 단어의 의미를 두 가지 이상 말할 수 있나요?', solutions: [
             { step: 1, desc: '각 단어 의미를 읽고 다른 예문을 소리 내어 만들어보세요.' },
             { step: 2, desc: '유의어 중 하나를 골라 이 문장의 단어를 교체해 말해보세요.' },

@@ -43,6 +43,58 @@
     .sec{border-top:.5px solid var(--color-border-tertiary);padding:12px 0}
     .sl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:8px}
     .goal{background:var(--color-background-info);border:1px solid rgba(56,189,248,.16);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:var(--color-text-info);line-height:1.6}
+    .focus-card{margin-bottom:14px;padding:14px 16px;border-radius:18px;border:1px solid rgba(125,211,252,.18);background:linear-gradient(135deg,rgba(8,47,73,.48),rgba(15,23,42,.9));box-shadow:inset 0 0 0 1px rgba(56,189,248,.06)}
+    .focus-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7dd3fc}
+    .focus-text{margin-top:8px;font-size:16px;line-height:1.75;color:#f8fafc;font-weight:700}
+    .coach-brief-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .coach-brief-item{padding:12px 13px;border-radius:14px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.56)}
+    .coach-brief-label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7dd3fc;margin-bottom:7px}
+    .coach-brief-value{font-size:13px;line-height:1.7;color:#dbeafe}
+    .pron-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .pron-summary-card{padding:12px 13px;border-radius:14px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.56)}
+    .pron-summary-tag{display:inline-flex;align-items:center;min-height:1.5rem;padding:0 9px;border-radius:999px;background:rgba(56,189,248,.12);border:1px solid rgba(125,211,252,.18);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#bae6fd}
+    .pron-summary-card:nth-child(2) .pron-summary-tag{background:rgba(129,140,248,.16);border-color:rgba(165,180,252,.2);color:#ddd6fe}
+    .pron-summary-card:nth-child(3) .pron-summary-tag{background:rgba(249,115,22,.16);border-color:rgba(251,146,60,.2);color:#fdba74}
+    .pron-summary-text{margin-top:8px;font-size:13px;line-height:1.68;color:#dbeafe}
+    .exam-focus-card{margin-bottom:14px;padding:14px 16px;border-radius:18px;border:1px solid rgba(148,163,184,.14);background:linear-gradient(135deg,rgba(15,23,42,.92),rgba(30,41,59,.74))}
+    .exam-focus-label{display:inline-flex;align-items:center;min-height:1.5rem;padding:0 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+    .exam-focus-card.toeic .exam-focus-label{background:rgba(56,189,248,.14);color:#bae6fd;border:1px solid rgba(125,211,252,.18)}
+    .exam-focus-card.opic .exam-focus-label{background:rgba(129,140,248,.18);color:#ddd6fe;border:1px solid rgba(165,180,252,.2)}
+    .exam-focus-card.voca .exam-focus-label{background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(251,146,60,.18)}
+    .exam-focus-title{margin-top:10px;font-size:16px;font-weight:700;line-height:1.65;color:#f8fafc}
+    .exam-focus-desc{margin-top:8px;font-size:13px;line-height:1.7;color:#dbeafe}
+    .toeic-question-list,.opic-card-grid,.vocab-quiz-list{display:grid;gap:12px}
+    .toeic-question-card,.opic-card,.vocab-quiz-card{padding:14px 15px;border-radius:16px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.6)}
+    .toeic-question-top,.vocab-quiz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .toeic-question-badge,.opic-card-badge,.vocab-quiz-badge{display:inline-flex;align-items:center;min-height:1.45rem;padding:0 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+    .toeic-question-badge{background:rgba(56,189,248,.14);color:#bae6fd}
+    .opic-card-badge{background:rgba(129,140,248,.18);color:#ddd6fe}
+    .vocab-quiz-badge{background:rgba(249,115,22,.16);color:#fdba74}
+    .toeic-question-stem,.opic-card-title,.vocab-quiz-question{font-size:15px;font-weight:700;line-height:1.65;color:#f8fafc}
+    .toeic-choice-list{display:grid;gap:8px;margin-top:12px}
+    .toeic-choice{padding:10px 12px;border-radius:12px;border:1px solid rgba(148,163,184,.14);background:rgba(30,41,59,.7);font-size:13px;line-height:1.65;color:#dbeafe}
+    .toeic-choice.is-answer{border-color:rgba(74,222,128,.26);background:rgba(22,101,52,.28);color:#dcfce7}
+    .toeic-solution,.opic-answer-box,.vocab-support-box{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(8,47,73,.26);border:1px solid rgba(56,189,248,.14)}
+    .toeic-solution strong,.opic-answer-box strong,.vocab-support-box strong{color:#f8fafc}
+    .toeic-solution p,.opic-answer-box p,.vocab-support-box p{margin-top:6px;font-size:13px;line-height:1.7;color:#dbeafe}
+    .toeic-trap{margin-top:8px;color:#fdba74;font-size:12px;line-height:1.6}
+    .pattern-list,.opic-line-list,.vocab-chip-grid{display:grid;gap:10px}
+    .pattern-item,.opic-line-item{padding:12px 13px;border-radius:14px;border:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.54)}
+    .pattern-item strong,.opic-line-item strong{display:block;margin-bottom:6px;font-size:14px;line-height:1.6;color:#f8fafc}
+    .pattern-item div,.opic-line-item div{font-size:13px;line-height:1.7;color:#dbeafe}
+    .opic-answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .opic-answer-box{margin-top:0}
+    .opic-answer-label{display:inline-flex;align-items:center;min-height:1.45rem;padding:0 9px;border-radius:999px;background:rgba(129,140,248,.18);color:#ddd6fe;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+    .opic-sub-list{display:grid;gap:8px;margin-top:10px}
+    .opic-sub-item{padding:10px 12px;border-radius:12px;background:rgba(30,41,59,.68);font-size:13px;line-height:1.68;color:#dbeafe}
+    .vocab-chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .vocab-chip-card{padding:11px 12px;border-radius:14px;border:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.54)}
+    .vocab-chip-card strong{display:block;margin-bottom:7px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#fdba74}
+    .vocab-chip-list{display:flex;flex-wrap:wrap;gap:6px}
+    .vocab-chip{display:inline-flex;align-items:center;min-height:1.7rem;padding:0 9px;border-radius:999px;background:rgba(30,41,59,.76);border:1px solid rgba(148,163,184,.14);font-size:12px;color:#e2e8f0}
+    .confusable-list{display:grid;gap:8px;margin-top:10px}
+    .confusable-item{padding:10px 12px;border-radius:12px;background:rgba(30,41,59,.68);font-size:13px;line-height:1.68;color:#dbeafe}
+    .confusable-item strong{color:#f8fafc}
     .prow-basic{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:13px;color:var(--color-text-secondary)}
     .ptag{font-size:11px;padding:2px 7px;border-radius:20px;background:var(--color-background-secondary);color:var(--color-text-secondary);white-space:nowrap;margin-top:1px;flex-shrink:0}
     .witem{display:flex;align-items:flex-start;gap:6px;font-size:13px;margin-bottom:5px;color:var(--color-text-secondary)}
@@ -117,7 +169,7 @@
     .vsyn span{display:inline-block;background:var(--color-background-secondary);border-radius:20px;padding:2px 8px;margin-right:4px;font-size:11px;color:var(--color-text-secondary)}
     .vtoeic{font-size:11px;margin-top:6px;padding:5px 10px;background:rgba(8,47,73,.36);border-radius:var(--border-radius-md);color:var(--color-text-info)}
     .vopic{font-size:11px;margin-top:6px;padding:5px 10px;background:rgba(129,140,248,.18);border-radius:var(--border-radius-md);color:#ddd6fe}
-    @media (max-width:760px){.preview-title{font-size:1.55rem}.preview-surface{padding:16px 14px 6px}.sc-top{flex-direction:column}.sc-btns{width:100%}.mrow{flex-direction:column;gap:2px}.mlabel{min-width:0}}
+    @media (max-width:760px){.preview-title{font-size:1.55rem}.preview-surface{padding:16px 14px 6px}.coach-brief-grid,.pron-summary-grid,.opic-answer-grid,.vocab-chip-grid{grid-template-columns:1fr}.sc-top{flex-direction:column}.sc-btns{width:100%}.mrow{flex-direction:column;gap:2px}.mlabel{min-width:0}}
   </style>
 </head>
 <body>

@@ -160,6 +160,36 @@
   "examModes": {
     "toeic": {
       "learningGoal": "`would like to + 동사원형`과 `by + 사람` 전치사 구분을 토익식으로 빠르게 판별하는 연습입니다.",
+      "coachLine": "토익에서는 이 문장을 통째로 외우기보다 `would like to`, `by + 사람`처럼 바로 점수로 이어지는 문법 신호를 먼저 잡아야 합니다.",
+      "fastRule": "`would like to`가 보이면 `to` 뒤 동사원형, 이름 앞에서는 `by`를 먼저 의심하세요.",
+      "quickChecks": [
+        {
+          "type": "Part 5",
+          "skill": "어형",
+          "stem": "I'd like to (        ) The Dot by Peter Reynolds.",
+          "choices": [
+            { "label": "A", "text": "introduce", "isAnswer": true },
+            { "label": "B", "text": "introducing" },
+            { "label": "C", "text": "introduced" },
+            { "label": "D", "text": "introduction" }
+          ],
+          "rationale": "`would like to + 동사원형` 패턴이므로 `introduce`가 정답입니다.",
+          "trap": "`to` 뒤에 자연스럽게 보인다고 해서 `introducing`을 고르면 바로 틀립니다."
+        },
+        {
+          "type": "Part 5",
+          "skill": "전치사",
+          "stem": "The Dot (        ) Peter Reynolds",
+          "choices": [
+            { "label": "A", "text": "of" },
+            { "label": "B", "text": "with" },
+            { "label": "C", "text": "by", "isAnswer": true },
+            { "label": "D", "text": "from" }
+          ],
+          "rationale": "저자, 작성자, 제작자를 표시할 때는 `by + 사람`이 기본 패턴입니다.",
+          "trap": "책 제목이 나오면 소유 느낌 때문에 `of`로 끌리는 경우가 많습니다."
+        }
+      ],
       "grammarPoints": [
         {
           "label": "would like to + 동사원형",
@@ -216,6 +246,8 @@
     "opic": {
       "learningGoal": "오픽 소개/발표 답변에서 바로 꺼내 쓸 수 있는 오프닝 패턴을 익히는 것이 목표입니다.",
       "targetGrade": "IM~IH",
+      "coachLine": "오픽에서는 완벽한 해석보다 2초 안에 입이 열리는 오프닝과, 그 뒤에 이어 붙일 안전한 확장 문장이 더 중요합니다.",
+      "fastRule": "`Today, I'd like to introduce ...`로 시작하고, 바로 `because ...` 한 줄만 붙여도 답변이 안정됩니다.",
       "speakingPatterns": [
         {
           "template": "Today, I'd like to introduce [book / place / person].",
@@ -235,6 +267,47 @@
             "I'd like to talk about art because it helps me relax."
           ]
         }
+      ],
+      "answerFlow": [
+        {
+          "label": "2초 오프닝",
+          "text": "Today, I'd like to introduce my favorite book, The Dot by Peter Reynolds."
+        },
+        {
+          "label": "한 줄 이유",
+          "text": "I like this book because it gives me confidence and inspires me to be creative."
+        },
+        {
+          "label": "마무리",
+          "text": "That is why this book is meaningful to me."
+        }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "IM용",
+          "text": "Today, I'd like to introduce my favorite book, The Dot. I like this book because it is simple but inspiring. It teaches me that everyone has creative potential.",
+          "coaching": "짧게 3문장으로 끊고, 쉬운 단어를 안정적으로 말하는 구성이 좋습니다."
+        },
+        {
+          "label": "IH용",
+          "text": "Today, I'd like to introduce The Dot by Peter Reynolds. This picture book may look simple, but it delivers a strong message about creativity and self-confidence. That is why I think it is both meaningful and memorable.",
+          "coaching": "대조 표현 `may look simple, but ...`를 넣으면 IH 톤이 바로 납니다."
+        }
+      ],
+      "followUps": [
+        {
+          "label": "꼬리 질문 1",
+          "text": "Why do you personally like this book so much? → Because it reminds me not to be afraid of making mistakes."
+        },
+        {
+          "label": "꼬리 질문 2",
+          "text": "Would you recommend it to your friends? → Yes, because the message is simple, clear, and motivating."
+        }
+      ],
+      "recoveryLines": [
+        "Let me say that again in a simpler way.",
+        "What I mean is that this book gave me confidence.",
+        "In short, the message is very inspiring."
       ],
       "pronunciationTips": [
         { "tag": "연음", "desc": "`I'd like to`를 세 단어로 끊지 말고 한 덩어리로 말해야 자연스럽습니다." },
@@ -269,6 +342,49 @@
         }
       ]
     }
+    ,
+    "voca": {
+      "coachLine": "어휘는 뜻만 외우면 바로 무너집니다. 이 문장에서는 `introduce`, `by`, `I'd like to`를 시험별 쓰임과 묶음 표현까지 같이 기억해야 오래 갑니다.",
+      "fastRule": "단어 하나당 `뜻 + 같이 붙는 표현 + 시험에서 쓰이는 자리`까지 한 세트로 외우세요.",
+      "quickChecks": [
+        {
+          "question": "`introduce` 뒤에 자연스럽게 붙는 말은?",
+          "answer": "`introduce + 사람/책/주제`처럼 목적어가 바로 옵니다.",
+          "coaching": "`introduce about`처럼 전치사를 덧붙이는 실수를 줄여야 합니다."
+        },
+        {
+          "question": "`by`를 보면 가장 먼저 떠올려야 하는 시험 포인트는?",
+          "answer": "저자, 작성자, 제작자를 표시하는 `by + 사람` 구조입니다.",
+          "coaching": "`of / with / from`과 헷갈리지 않도록 사람 이름 앞 패턴으로 통째로 기억하세요."
+        }
+      ],
+      "selfCheck": [
+        {
+          "question": "핵심 단어를 뜻만 말하는 게 아니라 실제 문장까지 붙여 말할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "각 단어로 새 예문을 한 문장씩 직접 만들어 보세요." },
+            { "step": 2, "desc": "만든 예문을 소리 내어 3번 반복하세요." }
+          ],
+          "goalTip": "단어를 보는 즉시 예문이 하나 따라 나올 때까지 반복합니다."
+        },
+        {
+          "question": "콜로케이션까지 함께 기억하고 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`introduce a book`, `written by an author`처럼 묶음 표현으로 외웁니다." },
+            { "step": 2, "desc": "단어 하나만 보지 말고 항상 2~3단어 덩어리로 다시 읽습니다." }
+          ],
+          "goalTip": "단어 단독 암기에서 표현 단위 암기로 넘어가세요."
+        },
+        {
+          "question": "토익과 오픽에서 각각 어떻게 쓰이는지 구분할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "토익에서는 품사/전치사 포인트, 오픽에서는 말문 열기 표현으로 나눠 적습니다." },
+            { "step": 2, "desc": "같은 단어를 시험별로 한 줄씩 설명해 보세요." }
+          ],
+          "goalTip": "시험이 달라도 단어 활용 위치가 바로 떠오를 때까지 연습합니다."
+        }
+      ]
+    }
   },
   "vocabulary": [
     {
@@ -280,6 +396,11 @@
       "exampleSentence": "Let me introduce my favorite author.",
       "exampleContext": "발표, 자기소개, 책 소개를 시작할 때 자주 쓰입니다.",
       "synonyms": ["present", "bring in"],
+      "collocations": ["introduce a book", "introduce a speaker", "introduce yourself"],
+      "derivatives": ["introduction", "introductory"],
+      "confusables": [
+        { "word": "explain", "desc": "설명하다에 가깝고, 처음 꺼내 보이는 `introduce`와는 역할이 다릅니다." }
+      ],
       "toeicNote": "비즈니스 이메일/공지에서 `introduce a product / policy / speaker` 형태로 자주 출제됩니다.",
       "opicNote": "오프닝 문장에서 바로 활용 가능한 핵심 동사입니다.",
       "ttsText": "introduce"
@@ -293,6 +414,11 @@
       "exampleSentence": "The novel was written by my favorite author.",
       "exampleContext": "저자, 작성자, 만든 사람을 표시할 때 쓰입니다.",
       "synonyms": ["through"],
+      "collocations": ["written by", "created by", "a book by ~"],
+      "derivatives": [],
+      "confusables": [
+        { "word": "of", "desc": "소유나 관계를 나타낼 때 쓰며, 저자 표시의 기본 전치사는 아닙니다." }
+      ],
       "toeicNote": "`by / with / from / of` 전치사 구별 문제의 대표 유형입니다.",
       "opicNote": "`written by`, `made by`, `recommended by` 같은 표현으로 응용할 수 있습니다.",
       "ttsText": "by"
@@ -306,6 +432,11 @@
       "exampleSentence": "I'd like to share an interesting story.",
       "exampleContext": "발표, 소개, 정중한 말하기 시작 문장에 쓰입니다.",
       "synonyms": ["I want to", "I would love to"],
+      "collocations": ["I'd like to introduce", "I'd like to talk about", "I'd like to share"],
+      "derivatives": ["would like to"],
+      "confusables": [
+        { "word": "I want to", "desc": "뜻은 비슷하지만 `I'd like to`가 더 부드럽고 발표/면접 톤에 잘 맞습니다." }
+      ],
       "toeicNote": "`would like to + 동사원형`은 Part 5 품사/어형 문제의 핵심 패턴입니다.",
       "opicNote": "답변 시작용 만능 오프닝이라 반드시 입에 붙여 두는 게 좋습니다.",
       "ttsText": "I'd like to"
