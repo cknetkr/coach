@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영어 JSON 샘플 미리보기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/coach-shared.css">
+  <style>
+    .preview-wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    .preview-head { margin-bottom: 1.2rem; }
+    .preview-kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08rem; text-transform: uppercase; color: #7dd3fc; }
+    .preview-title { margin-top: 0.4rem; font-size: 2rem; font-weight: 800; color: #fff; }
+    .preview-desc { margin-top: 0.65rem; font-size: 0.92rem; color: rgba(226,232,240,0.78); line-height: 1.75; }
+    .preview-status { margin-top: 0.9rem; padding: 0.7rem 0.85rem; border-radius: 12px; border: 1px solid rgba(56,189,248,0.18); background: rgba(8,47,73,0.22); color: #bae6fd; font-size: 0.82rem; }
+    .preview-card { margin-top: 1rem; padding: 1rem 1.05rem; border-radius: 18px; border: 1px solid rgba(148,163,184,0.12); background: rgba(15,23,42,0.72); }
+    .preview-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08rem; text-transform: uppercase; color: #7dd3fc; margin-bottom: 0.5rem; }
+    .preview-sentence { font-size: 1.05rem; line-height: 2; color: #f8fafc; }
+    .preview-blank { display: inline-flex; align-items: center; justify-content: center; min-width: 3.8rem; padding: 0 0.5rem; border-bottom: 2px solid #38bdf8; color: #7dd3fc; font-weight: 800; }
+    .tts-buttons, .preview-chip-list { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .tts-btn { padding: 0.48rem 0.78rem; border-radius: 999px; border: 1px solid rgba(56,189,248,0.22); background: rgba(56,189,248,0.08); color: #e0f2fe; font-size: 0.76rem; font-weight: 700; cursor: pointer; }
+    .tts-btn:hover { background: rgba(56,189,248,0.16); }
+    .tts-btn.is-playing { background: rgba(14,165,233,0.26); border-color: rgba(125,211,252,0.48); color: #fff; }
+    .preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
+    .preview-row { display: grid; gap: 0.6rem; }
+    .preview-meta { display: grid; gap: 0.45rem; font-size: 0.84rem; color: #dbeafe; line-height: 1.7; }
+    .preview-meta strong { color: #fff; }
+    .preview-tabs { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .preview-tab { padding: 0.62rem 0.95rem; border-radius: 999px; border: 1px solid rgba(148,163,184,0.18); background: rgba(30,41,59,0.78); color: #cbd5e1; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.02em; cursor: pointer; }
+    .preview-tab.is-active { background: rgba(56,189,248,0.14); border-color: rgba(125,211,252,0.42); color: #f0f9ff; box-shadow: 0 0 0 1px rgba(56,189,248,0.18) inset; }
+    .preview-tab-panel { display: grid; gap: 1rem; }
+    .preview-empty { font-size: 0.84rem; color: #cbd5e1; line-height: 1.7; }
+    .chunk-meaning-list { display: grid; gap: 0.5rem; }
+    .chunk-meaning-item { display: grid; gap: 0.22rem; padding: 0.75rem 0.82rem; border-radius: 12px; background: rgba(8,47,73,0.18); border: 1px solid rgba(56,189,248,0.16); }
+    .chunk-meaning-item strong { color: #f8fafc; font-size: 0.84rem; line-height: 1.55; }
+    .chunk-meaning-item span { color: #bae6fd; font-size: 0.8rem; line-height: 1.68; }
+    .mini-chip { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0.12rem 0.55rem; border-radius: 999px; background: rgba(14,165,233,0.12); border: 1px solid rgba(125,211,252,0.18); color: #e0f2fe; font-size: 0.72rem; font-weight: 700; }
+    .mini-label { margin-top: 0.65rem; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08rem; text-transform: uppercase; color: #7dd3fc; }
+    .mode-card { border: 1px solid rgba(148,163,184,0.14); border-radius: 14px; padding: 0.95rem 1rem; background: rgba(15,23,42,0.76); }
+    .mode-card h4 { margin-bottom: 0.5rem; color: #fff; font-size: 0.92rem; }
+    .mode-card p { font-size: 0.8rem; line-height: 1.7; color: #dbeafe; }
+    .wrong-option-list, .example-list { display: grid; gap: 0.45rem; margin-top: 0.55rem; }
+    .wrong-option, .example-item { display: grid; gap: 0.2rem; padding: 0.65rem 0.7rem; border-radius: 12px; background: rgba(30,41,59,0.82); }
+    .wrong-option strong { color: #fda4af; font-size: 0.78rem; }
+    .wrong-option span, .example-item { color: #dbeafe; font-size: 0.78rem; line-height: 1.65; }
+    .mini-tip-card { display: grid; gap: 0.3rem; padding: 0.8rem 0.85rem; border-radius: 12px; border: 1px solid rgba(148,163,184,0.14); background: rgba(2,6,23,0.42); }
+    .mini-tip-card strong { color: #7dd3fc; font-size: 0.74rem; letter-spacing: 0.06rem; text-transform: uppercase; }
+    .mini-tip-card span { color: #dbeafe; font-size: 0.8rem; line-height: 1.65; }
+    .pron-card { border: 1px solid rgba(148,163,184,0.14); border-radius: 14px; overflow: hidden; background: rgba(2,6,23,0.36); }
+    .pron-head { display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; padding: 0.75rem 0.85rem; background: rgba(15,23,42,0.82); }
+    .pron-head strong { color: #fff; font-size: 0.9rem; }
+    .pron-head span { color: #cbd5e1; font-size: 0.72rem; }
+    .pron-body { display: grid; gap: 0.8rem; padding: 0.8rem 0.85rem; }
+    .pron-row { display: grid; gap: 0.45rem; }
+    .pron-row label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08rem; color: #7dd3fc; }
+    .syllables { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .syl { display: inline-flex; align-items: center; justify-content: center; min-height: 1.8rem; padding: 0.18rem 0.55rem; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: 1px solid rgba(148,163,184,0.16); }
+    .is-stress { background: rgba(59,130,246,0.18); border-color: rgba(96,165,250,0.34); color: #dbeafe; }
+    .is-normal { background: rgba(51,65,85,0.55); color: #e2e8f0; }
+    .is-weak { background: rgba(148,163,184,0.14); color: #cbd5e1; }
+    .is-merge { background: rgba(249,115,22,0.16); border-color: rgba(251,146,60,0.34); color: #fdba74; }
+    .is-ghost { background: rgba(15,23,42,0.55); color: #94a3b8; border-style: dashed; text-decoration: line-through; }
+    .pron-desc { font-size: 0.78rem; line-height: 1.65; color: #cbd5e1; }
+    .pron-hear { font-size: 0.78rem; line-height: 1.65; color: #fdba74; }
+    .blank-card { border: 1px solid rgba(56,189,248,0.18); border-radius: 14px; padding: 0.85rem 0.9rem; background: rgba(8,47,73,0.18); }
+    .blank-card h4 { color: #fff; font-size: 0.9rem; margin-bottom: 0.45rem; }
+    .blank-card p { margin-top: 0.36rem; font-size: 0.8rem; line-height: 1.68; color: #dbeafe; }
+    .vocab-card { border: 1px solid rgba(56,189,248,0.18); border-radius: 14px; padding: 0.95rem 1rem; background: rgba(8,47,73,0.18); }
+    .vocab-head { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; margin-bottom: 0.35rem; }
+    .vocab-head strong { color: #fff; font-size: 0.96rem; }
+    .vocab-head span { margin-left: 0.5rem; color: #cbd5e1; font-size: 0.74rem; }
+    .must-chip { display: inline-flex; align-items: center; min-height: 1.45rem; padding: 0 0.55rem; border-radius: 999px; background: rgba(34,197,94,0.16); color: #bbf7d0; font-size: 0.68rem; font-style: normal; font-weight: 800; }
+    .vocab-meta { margin-bottom: 0.55rem; color: #93c5fd; font-size: 0.76rem; }
+    .vocab-line { margin-top: 0.45rem; color: #dbeafe; font-size: 0.8rem; line-height: 1.68; }
+    .solution-card { border: 1px solid rgba(148,163,184,0.12); border-radius: 14px; padding: 0.85rem 0.9rem; background: rgba(30,41,59,0.7); }
+    .solution-card h4 { color: #fff; font-size: 0.88rem; line-height: 1.55; }
+    .solution-step { display: grid; grid-template-columns: 20px 1fr; gap: 0.55rem; margin-top: 0.5rem; font-size: 0.78rem; line-height: 1.62; color: #dbeafe; }
+    .solution-step strong { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 999px; background: rgba(249,115,22,0.18); color: #fdba74; font-size: 0.68rem; }
+    .goal-tip { margin-top: 0.65rem; padding: 0.55rem 0.65rem; border-radius: 10px; background: rgba(34,197,94,0.12); color: #bbf7d0; font-size: 0.76rem; line-height: 1.58; }
+    @media (max-width: 760px) {
+      .preview-grid { grid-template-columns: 1fr; }
+      .preview-title { font-size: 1.55rem; }
+      .preview-sentence { font-size: 0.96rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <header class="page-header">
+    <a href="../index.html" class="brand">코치<span>.</span></a>
+    <nav class="nav-tabs">
+      <a href="../index.html" class="nav-tab">🏠 홈</a>
+      <a href="coach-english.html" class="nav-tab eng">🎧 영어</a>
+    </nav>
+  </header>
+
+  <main class="preview-wrap">
+    <section class="preview-head">
+      <div class="preview-kicker">JSON Preview</div>
+      <h1 class="preview-title">영어 받아쓰기 JSON 샘플 테스트</h1>
+      <p class="preview-desc">
+        `s01.json`을 직접 읽어 LitCoach, TOEIC, OPIC, Vocabulary 탭 구조와 전체 문장 TTS를 함께 확인하는 페이지입니다.
+        지금은 구조 검증용 1문장 샘플만 연결했습니다.
+      </p>
+      <div class="preview-status" id="json-preview-status">JSON 로딩 대기 중</div>
+    </section>
+
+    <div id="json-preview-root"></div>
+  </main>
+
+  <script src="../assets/js/coach-english-json-preview.js"></script>
+</body>
+</html>

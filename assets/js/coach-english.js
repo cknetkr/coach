@@ -972,6 +972,9 @@ function renderDictationPracticeCards() {
     const guide = getDictationGuide(dictSentenceEntries[index]);
     const blankCountLabel = meta.isStudyMode ? '전체 공개' : `빈칸 ${meta.blanks.length}개`;
     const ttsSetting = getDictationLineTTSSetting(index);
+    const jsonPreviewHref = (dictSentenceEntries[index]?.id === 'dot-s01' || (selectedDictTopic?.num === '1과 P.13' && index === 0))
+      ? 'coach-english-json-preview-v2.html'
+      : '';
     return `
       <article class="dict-practice-card" id="dict-card-${index}">
         <div class="dict-practice-head">
@@ -1002,6 +1005,7 @@ function renderDictationPracticeCards() {
               </label>
             </div>
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
+            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 미리보기</a>` : ''}
             <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
