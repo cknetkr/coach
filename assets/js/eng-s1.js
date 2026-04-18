@@ -18,7 +18,10 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
         <div class="dict-practice-shortcut"><strong>Space</strong>로 다음 문장</div>
       </div>
       <div class="dict-tts-toolbar">
-        <div class="dict-tts-status" id="dict-tts-status">스크립트 생성 후 듣기 가능</div>
+        <div class="dict-tts-toolbar-head">
+          <div class="dict-tts-status" id="dict-tts-status">스크립트 생성 후 듣기 가능</div>
+          <button type="button" class="btn-secondary dict-sentence-modal-trigger" id="dict-open-sentence-modal" onclick="openDictationSentenceModal()" disabled>전체 문장</button>
+        </div>
         <div class="dict-tts-line-buttons" id="dict-tts-line-buttons"></div>
       </div>
       <div class="dict-practice-list" id="dict-practice-list"></div>
@@ -27,6 +30,20 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
         <button class="btn-primary eng" onclick="gradeDictation()">📊 자동 채점</button>
         <button class="btn-secondary" onclick="dictCountUp()">✓ 1회 완료 (<span id="dict-count-display">0</span>회)</button>
         <button class="btn-secondary" onclick="clearDictation()">초기화</button>
+      </div>
+    </div>
+    <div class="dict-sentence-modal" id="dict-sentence-modal" hidden>
+      <button type="button" class="dict-sentence-modal__backdrop" aria-label="전체 문장 모달 닫기" onclick="closeDictationSentenceModal()"></button>
+      <div class="dict-sentence-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="dict-sentence-modal-title">
+        <div class="dict-sentence-modal__head">
+          <div>
+            <div class="dict-sentence-modal__eyebrow">전체 문장</div>
+            <strong class="dict-sentence-modal__title" id="dict-sentence-modal-title">문장 듣기</strong>
+            <div class="dict-sentence-modal__caption">문장별 듣기만 진행합니다. 필요한 문장만 바로 다시 들어보세요.</div>
+          </div>
+          <button type="button" class="btn-secondary dict-sentence-modal__close" onclick="closeDictationSentenceModal()">닫기</button>
+        </div>
+        <div class="dict-sentence-modal__list" id="dict-sentence-modal-list"></div>
       </div>
     </div>
     <div class="mc">

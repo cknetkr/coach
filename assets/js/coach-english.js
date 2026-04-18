@@ -39,6 +39,10 @@ const dictTTSState = {
   playingAll: false,
   pendingNextIndex: -1
 };
+const dictSentenceModalState = {
+  open: false,
+  activeIndex: -1,
+};
 let selectedDictLevel = 'normal';
 let dictLineLevels = [];
 let dictLineTTSSettings = [];
@@ -813,14 +817,6 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
         <p>${escapeHtml(commentary?.shadowingTip || guide.c)}</p>
       </div>
       <div class="dict-commentary-section">
-        <div class="dict-coach-tag">문장 전체 의미</div>
-        <div class="dict-commentary-list">
-          ${fullMeaning?.literal ? `<div class="dict-commentary-row"><strong>직역</strong><span>${escapeHtml(fullMeaning.literal)}</span></div>` : ''}
-          ${fullMeaning?.natural ? `<div class="dict-commentary-row"><strong>자연번역</strong><span>${escapeHtml(fullMeaning.natural)}</span></div>` : ''}
-          ${fullMeaning?.context ? `<div class="dict-commentary-row"><strong>상황</strong><span>${escapeHtml(fullMeaning.context)}</span></div>` : ''}
-        </div>
-      </div>
-      <div class="dict-commentary-section">
         <div class="dict-coach-tag">자기 점검</div>
         <div class="dict-self-check-list">
           ${selfChecks.map((item, itemIndex) => `
@@ -845,6 +841,21 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
             </div>
           `).join('')}
         </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildDictationFullMeaningHtml(sentenceEntry) {
+  const fullMeaning = sentenceEntry?.fullMeaning;
+  if (!fullMeaning?.literal && !fullMeaning?.natural && !fullMeaning?.context) return '';
+  return `
+    <div class="dict-commentary-section dict-commentary-section--summary">
+      <div class="dict-coach-tag">문장 전체 의미</div>
+      <div class="dict-commentary-list">
+        ${fullMeaning?.literal ? `<div class="dict-commentary-row"><strong>직역</strong><span>${escapeHtml(fullMeaning.literal)}</span></div>` : ''}
+        ${fullMeaning?.natural ? `<div class="dict-commentary-row"><strong>자연번역</strong><span>${escapeHtml(fullMeaning.natural)}</span></div>` : ''}
+        ${fullMeaning?.context ? `<div class="dict-commentary-row"><strong>상황</strong><span>${escapeHtml(fullMeaning.context)}</span></div>` : ''}
       </div>
     </div>
   `;
@@ -937,13 +948,85 @@ function highlightDictationLineButton(index) {
   });
 }
 
+function getStickyViewportOffset() {
+  return ['.page-header', '.sub-tabbar'].reduce((maxOffset, selector) => {
+    const element = document.querySelector(selector);
+    if (!(element instanceof HTMLElement)) return maxOffset;
+    const style = window.getComputedStyle(element);
+    if ((style.position !== 'sticky' && style.position !== 'fixed') || style.display === 'none' || style.visibility === 'hidden') {
+      return maxOffset;
+    }
+    const rect = element.getBoundingClientRect();
+    if (rect.height <= 0 || rect.bottom <= 0) return maxOffset;
+    return Math.max(maxOffset, rect.bottom);
+  }, 0);
+}
+
 function focusDictationSentence(index, behavior = 'smooth') {
   const card = document.getElementById(`dict-card-${index}`);
   if (!card) return;
   dictTTSState.currentIndex = index;
   highlightDictationLineButton(index);
-  card.scrollIntoView({ behavior, block: 'start' });
+  const stickyOffset = getStickyViewportOffset();
+  const cardTop = window.scrollY + card.getBoundingClientRect().top;
+  const targetTop = Math.max(0, cardTop - stickyOffset - 16);
+  window.scrollTo({ top: targetTop, behavior });
   setDictationTTSStatus(`문장 ${index + 1} 선택됨`, 'active');
+}
+
+function updateDictationSentenceModalTrigger() {
+  const button = document.getElementById('dict-open-sentence-modal');
+  if (!button) return;
+  button.disabled = !dictTTSState.lines.length;
+}
+
+function renderDictationSentenceModalList() {
+  const container = document.getElementById('dict-sentence-modal-list');
+  if (!container) return;
+  if (!dictTTSState.lines.length) {
+    container.innerHTML = '<div class="dict-sentence-modal__empty">문장을 불러오면 여기서 전체 문장 듣기를 할 수 있습니다.</div>';
+    return;
+  }
+  container.innerHTML = dictTTSState.lines.map((line, index) => `
+    <article class="dict-sentence-modal__item" id="dict-sentence-modal-item-${index}">
+      <div class="dict-sentence-modal__item-head">
+        <div class="dict-sentence-modal__item-meta">문장 ${index + 1}</div>
+        <button type="button" class="btn-secondary dict-sentence-modal__play" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
+      </div>
+      <div class="dict-sentence-modal__text" id="dict-sentence-modal-text-${index}">${escapeHtml(line)}</div>
+    </article>
+  `).join('');
+}
+
+function setActiveDictationSentenceModalItem(index = -1) {
+  dictSentenceModalState.activeIndex = -1;
+  document.querySelectorAll('#dict-sentence-modal-list .dict-sentence-modal__item').forEach((item) => {
+    const isActive = Number(item.id.replace('dict-sentence-modal-item-', '')) === index;
+    item.classList.toggle('is-playing', isActive);
+  });
+  dictSentenceModalState.activeIndex = index;
+}
+
+function openDictationSentenceModal() {
+  if (!dictTTSState.lines.length) {
+    showToast('먼저 받아쓰기 스크립트를 불러오십시오');
+    return;
+  }
+  const modal = document.getElementById('dict-sentence-modal');
+  if (!modal) return;
+  dictSentenceModalState.open = true;
+  renderDictationSentenceModalList();
+  modal.hidden = false;
+}
+
+function closeDictationSentenceModal(options = {}) {
+  const { stopAudio = true } = options;
+  const modal = document.getElementById('dict-sentence-modal');
+  if (!modal) return;
+  dictSentenceModalState.open = false;
+  modal.hidden = true;
+  setActiveDictationSentenceModalItem(-1);
+  if (stopAudio) stopDictationTTS({ preserveStatus: true });
 }
 
 function renderDictationLineButtons() {
@@ -1016,6 +1099,7 @@ function renderDictationPracticeCards() {
           </div>
         </div>
         <div class="dict-cloze-line">${meta.previewHtml}</div>
+        ${buildDictationFullMeaningHtml(dictSentenceEntries[index])}
         ${meta.isStudyMode ? `
           <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
         ` : `
@@ -1039,8 +1123,11 @@ function syncDictationTTSFromScript() {
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = dictTTSState.lines.length ? 0 : -1;
   ensureDictationLineTTSSettings();
+  updateDictationSentenceModalTrigger();
   renderDictationLineButtons();
+  renderDictationSentenceModalList();
   renderDictationPracticeCards();
+  closeDictationSentenceModal({ stopAudio: false });
   if (!supportsDictationTTS()) {
     setDictationTTSStatus('이 브라우저는 TTS 미지원', 'warn');
     return;
@@ -1056,10 +1143,12 @@ function stopDictationTTS(options = {}) {
   if (!supportsDictationTTS()) return;
   const { preserveStatus = false } = options;
   window.speechSynthesis.cancel();
+  window.speechSynthesis.onvoiceschanged = null;
   dictTTSState.currentIndex = -1;
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = dictTTSState.lines.length ? 0 : -1;
   highlightDictationLineButton(-1);
+  setActiveDictationSentenceModalItem(-1);
   if (!preserveStatus) {
     setDictationTTSStatus(
       dictTTSState.lines.length ? '정지됨 · 문장 선택 가능' : '스크립트 생성 후 듣기 가능'
@@ -1079,6 +1168,7 @@ function createDictationUtterance(text, index) {
     dictTTSState.currentIndex = index;
     highlightDictationLineButton(index);
     setDictationTTSStatus(`문장 ${index + 1} 재생 중`, 'active');
+    if (dictSentenceModalState.open) setActiveDictationSentenceModalItem(index);
   };
   utterance.onend = () => {
     dictTTSState.currentIndex = index;
@@ -1091,6 +1181,7 @@ function createDictationUtterance(text, index) {
         : `마지막 문장 완료`,
       'active'
     );
+    setActiveDictationSentenceModalItem(-1);
   };
   utterance.onerror = () => {
     dictTTSState.currentIndex = -1;
@@ -1098,8 +1189,28 @@ function createDictationUtterance(text, index) {
     dictTTSState.pendingNextIndex = index < dictTTSState.lines.length - 1 ? index + 1 : -1;
     highlightDictationLineButton(-1);
     setDictationTTSStatus('TTS 오류 · 다시 시도', 'warn');
+    setActiveDictationSentenceModalItem(-1);
   };
   return utterance;
+}
+
+function speakDictationText(text, index) {
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  const doSpeak = () => {
+    window.speechSynthesis.onvoiceschanged = null;
+    window.speechSynthesis.speak(createDictationUtterance(text, index));
+  };
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    doSpeak();
+    return;
+  }
+  window.speechSynthesis.onvoiceschanged = () => {
+    doSpeak();
+  };
+  window.setTimeout(() => {
+    if (!window.speechSynthesis.speaking) doSpeak();
+  }, 180);
 }
 
 function setDictationLineRate(index, value) {
@@ -1198,7 +1309,7 @@ function playDictationAll() {
   stopDictationTTS({ preserveStatus: true });
   dictTTSState.playingAll = true;
   dictTTSState.pendingNextIndex = 0;
-  window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[0], 0));
+  speakDictationText(dictTTSState.lines[0], 0);
 }
 
 function playDictationSentence(index) {
@@ -1207,7 +1318,7 @@ function playDictationSentence(index) {
   stopDictationTTS({ preserveStatus: true });
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = index < dictTTSState.lines.length - 1 ? index + 1 : -1;
-  window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[index], index));
+  speakDictationText(dictTTSState.lines[index], index);
 }
 
 function playNextDictationSentence() {
@@ -1219,7 +1330,7 @@ function playNextDictationSentence() {
   stopDictationTTS({ preserveStatus: true });
   dictTTSState.playingAll = true;
   dictTTSState.pendingNextIndex = nextIndex;
-  window.speechSynthesis.speak(createDictationUtterance(dictTTSState.lines[nextIndex], nextIndex));
+  speakDictationText(dictTTSState.lines[nextIndex], nextIndex);
 }
 
 function pauseDictationTTS() {
@@ -1338,6 +1449,7 @@ async function gradeDictation() {
 }
 function clearDictation() {
   stopDictationTTS({ preserveStatus: true });
+  closeDictationSentenceModal({ stopAudio: false });
   dictPracticeMeta.forEach((meta, index) => {
     meta.blanks.forEach((_, blankIndex) => {
       const input = document.getElementById(`dict-answer-${index}-${blankIndex}`);
@@ -1596,6 +1708,11 @@ window.addEventListener('beforeunload', () => {
 });
 
 document.addEventListener('keydown', (event) => {
+  if (event.code === 'Escape' && dictSentenceModalState.open) {
+    event.preventDefault();
+    closeDictationSentenceModal();
+    return;
+  }
   if (event.code !== 'Space' || event.repeat) return;
   const target = event.target;
   const isTypingTarget = target instanceof HTMLElement && (
@@ -1604,6 +1721,7 @@ document.addEventListener('keydown', (event) => {
     target.isContentEditable
   );
   if (isTypingTarget) return;
+  if (dictSentenceModalState.open) return;
   const panel = document.getElementById('eng-s1');
   if (!panel || panel.style.display === 'none') return;
   if (!dictTTSState.lines.length) return;
