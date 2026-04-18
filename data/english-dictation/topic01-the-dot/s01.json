@@ -243,6 +243,75 @@
         }
       ]
     },
+    "schoolInterview": {
+      "learningGoal": "3차 수행 영어면접에서 짧고 안정적으로 자기 의견을 말하는 기본 답변 패턴을 익히는 것이 목표입니다.",
+      "coachLine": "학교 영어면접은 길게 말하는 시험이 아니라, 질문에 바로 반응하고 핵심을 3문장 안에 정리하는 시험에 가깝습니다.",
+      "fastRule": "오프닝 1문장 + 이유 1문장 + 마무리 1문장만 안정적으로 말해도 훨씬 좋아 보입니다.",
+      "answerFlow": [
+        {
+          "label": "시작",
+          "text": "Today, I'd like to introduce The Dot by Peter Reynolds."
+        },
+        {
+          "label": "핵심 이유",
+          "text": "I like this book because it teaches me that everyone has creative potential."
+        },
+        {
+          "label": "마무리",
+          "text": "So I think this book is meaningful and inspiring."
+        }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "기본형",
+          "text": "Today, I'd like to introduce The Dot by Peter Reynolds. I like this book because it shows the importance of confidence and creativity. So I think it is a very meaningful book.",
+          "coaching": "학교 수행은 너무 길지 않게, 3문장 구조로 안정감 있게 말하는 편이 좋습니다."
+        },
+        {
+          "label": "확장형",
+          "text": "Today, I'd like to introduce The Dot by Peter Reynolds. This book may seem simple, but it gives an inspiring message about creativity and self-confidence. That is why I would recommend it to many students.",
+          "coaching": "한 문장만 조금 고급스럽게 바꿔 주면 발표 느낌이 살아납니다."
+        }
+      ],
+      "followUps": [
+        {
+          "label": "예상 질문 1",
+          "text": "Why did you choose this book? → Because its message is simple but powerful."
+        },
+        {
+          "label": "예상 질문 2",
+          "text": "What did you learn from it? → I learned that mistakes can lead to creativity."
+        }
+      ],
+      "recoveryLines": [
+        "Let me explain that in a simpler way.",
+        "What I want to say is that this book gave me confidence.",
+        "In short, the message is very meaningful to me."
+      ],
+      "pronunciationTips": [
+        { "tag": "시작 리듬", "desc": "첫 문장은 속도보다 안정적인 리듬으로 또박또박 시작하는 것이 중요합니다." },
+        { "tag": "핵심 동사", "desc": "`introduce`는 끝 `-duce`에 힘을 주면 발표 톤이 살아납니다." },
+        { "tag": "문장 길이", "desc": "학교 면접은 짧은 문장을 또렷하게 말하는 편이 훨씬 유리합니다." }
+      ],
+      "selfCheck": [
+        {
+          "question": "질문을 듣고 2초 안에 첫 문장을 시작할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`Today, I'd like to introduce ...`를 5번 연속 시작해 보세요." },
+            { "step": 2, "desc": "책 이름만 바꿔 가며 같은 패턴을 다시 말해 보세요." }
+          ],
+          "goalTip": "첫 문장을 머뭇거리지 않고 바로 시작할 수 있을 때까지 반복합니다."
+        },
+        {
+          "question": "이유 문장을 너무 길지 않게 한 줄로 말할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`because ...` 뒤를 7~10단어 안으로 줄여 보세요." },
+            { "step": 2, "desc": "핵심 이유 하나만 남기고 소리 내어 읽어 보세요." }
+          ],
+          "goalTip": "짧고 분명한 이유 한 문장을 바로 만들 수 있어야 합니다."
+        }
+      ]
+    },
     "opic": {
       "learningGoal": "오픽 소개/발표 답변에서 바로 꺼내 쓸 수 있는 오프닝 패턴을 익히는 것이 목표입니다.",
       "targetGrade": "IM~IH",
@@ -341,8 +410,95 @@
           "goalTip": "같은 패턴을 3개 주제에 자연스럽게 확장할 수 있을 때까지 연습합니다."
         }
       ]
-    }
-    ,
+    },
+    "toeicSpeaking": {
+      "learningGoal": "토익스피킹 답변에서 시간 안에 구조를 세우고, 채점 포인트가 보이는 문장으로 답하는 연습이 목표입니다.",
+      "targetScore": "Level 6~7",
+      "coachLine": "토익스피킹은 멋진 문장보다 구조가 먼저입니다. 시작, 이유, 예시, 마무리를 시간 안에 찍어 내야 점수가 납니다.",
+      "fastRule": "질문을 듣고 `opinion → reason → example → closing` 4칸으로 바로 나누어 생각하세요.",
+      "questionTypes": [
+        {
+          "label": "Q5 의견 제시",
+          "desc": "짧은 의견 제시형에서는 찬반보다 이유 1개와 예시 1개가 더 중요합니다."
+        },
+        {
+          "label": "Q6 해결책/설명",
+          "desc": "설명형 문제에서는 먼저 핵심 해결책을 말하고, 뒤에 근거를 붙이는 구조가 안전합니다."
+        }
+      ],
+      "responseFrames": [
+        {
+          "label": "오프닝",
+          "text": "I think this book is meaningful for students."
+        },
+        {
+          "label": "이유",
+          "text": "The main reason is that it teaches confidence and creativity."
+        },
+        {
+          "label": "예시",
+          "text": "For example, the main character learns not to fear mistakes."
+        },
+        {
+          "label": "마무리",
+          "text": "So I believe it is a good book for many young learners."
+        }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "토스형 답변",
+          "text": "I think The Dot is a meaningful book for students. The main reason is that it teaches confidence and creativity. For example, the main character grows after making a simple mistake. So I believe this book can encourage many students.",
+          "coaching": "의견 → 이유 → 예시 → 마무리 4단 구조가 가장 안전합니다."
+        },
+        {
+          "label": "짧은 고득점형",
+          "text": "In my opinion, The Dot is worth reading. It sends a clear message about self-confidence, and that message is especially helpful for students. For that reason, I would strongly recommend this book.",
+          "coaching": "길게 늘이지 않고 연결어를 정확히 쓰는 편이 점수에 유리합니다."
+        }
+      ],
+      "scoringPoints": [
+        {
+          "label": "구성",
+          "text": "답변이 서론-이유-예시-마무리 흐름으로 들리면 점수 안정감이 생깁니다."
+        },
+        {
+          "label": "전달력",
+          "text": "문장을 짧게 끊어 말하고, 핵심 명사와 동사에 힘을 주는 것이 중요합니다."
+        },
+        {
+          "label": "연결어",
+          "text": "`The main reason is`, `For example`, `So I believe` 같은 연결어를 챙기세요."
+        }
+      ],
+      "recoveryLines": [
+        "Let me rephrase that more clearly.",
+        "What I mean is that this book builds confidence.",
+        "To put it simply, the message is very inspiring."
+      ],
+      "pronunciationTips": [
+        { "tag": "속도", "desc": "토익스피킹은 빨리 말하는 것보다 끊어 말하며 전달하는 편이 안전합니다." },
+        { "tag": "연결어", "desc": "답변 구조를 보여 주는 연결어를 또렷하게 말해야 채점자에게 구조가 들립니다." },
+        { "tag": "강세", "desc": "`reason`, `example`, `confidence` 같은 핵심 단어에 힘을 주세요." }
+      ],
+      "selfCheck": [
+        {
+          "question": "답변을 4칸 구조로 바로 나눌 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "종이에 `opinion / reason / example / closing` 네 칸을 그리세요." },
+            { "step": 2, "desc": "각 칸에 한 문장씩만 넣어 30초 안에 말해 보세요." }
+          ],
+          "goalTip": "생각보다 구조가 먼저 나올 때까지 반복합니다."
+        },
+        {
+          "question": "연결어를 자동으로 붙일 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`The main reason is`, `For example`, `So I believe`를 5번씩 읽습니다." },
+            { "step": 2, "desc": "같은 답변에 연결어만 바꿔 가며 다시 말합니다." }
+          ],
+          "goalTip": "질문이 바뀌어도 연결어가 입에 붙어 나와야 합니다."
+        }
+      ]
+    },
     "voca": {
       "coachLine": "어휘는 뜻만 외우면 바로 무너집니다. 이 문장에서는 `introduce`, `by`, `I'd like to`를 시험별 쓰임과 묶음 표현까지 같이 기억해야 오래 갑니다.",
       "fastRule": "단어 하나당 `뜻 + 같이 붙는 표현 + 시험에서 쓰이는 자리`까지 한 세트로 외우세요.",

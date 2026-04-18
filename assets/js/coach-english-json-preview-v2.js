@@ -3,6 +3,7 @@ const JSON_SAMPLE_PATH_V2 = '../data/english-dictation/topic01-the-dot/s01.json'
 const previewV2State = {
   sentence: null,
   activeTab: 'lit',
+  activeSpeakingMode: 'school',
   currentButton: null,
   currentUtterance: null,
 };
@@ -415,53 +416,173 @@ function pv2ToeicTab(sentence) {
   `;
 }
 
-function pv2OpicTab(sentence) {
+function pv2SpeakingModeTabs() {
+  const modes = [
+    { key: 'school', label: '학교 영어면접', badge: '3차 수행' },
+    { key: 'opic', label: '오픽', badge: 'IM~IH' },
+    { key: 'toeics', label: '토익스피킹', badge: 'Lv.6+' },
+  ];
+  return `
+    <div class="speaking-mode-tabs">
+      ${modes.map((mode) => `
+        <button class="speaking-mode-tab${previewV2State.activeSpeakingMode === mode.key ? ' active' : ''} js-pv2-speaking-mode" type="button" data-speaking-mode="${mode.key}">
+          ${pv2Escape(mode.label)}
+          <span class="speaking-mode-badge">${pv2Escape(mode.badge)}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function pv2SpeakingRecoveryCard(title, lines) {
+  return `
+    <div class="opic-card">
+      <div class="toeic-question-top">
+        <span class="opic-card-badge">${pv2Escape(title)}</span>
+      </div>
+      <div class="opic-sub-list">
+        ${(lines || []).map((item) => `<div class="opic-sub-item">${pv2Escape(item)}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function pv2SpeakingPronunciationSection(items) {
+  if (!Array.isArray(items) || !items.length) return '';
+  return `
+    <div class="sec">
+      <div class="sl">스피킹 발음 포인트</div>
+      ${items.map((tip) => `<div class="prow-basic"><span class="ptag">${pv2Escape(tip.tag || '')}</span><span>${pv2Escape(tip.desc || '')}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+function pv2SchoolSpeakingMode(sentence) {
+  const school = sentence.examModes?.schoolInterview || {};
+  return `
+    ${pv2ExamFocus('opic', '영어면접 1타 포인트', school.fastRule, school.coachLine)}
+    <div class="sec">
+      <div class="sl">학습 목표</div>
+      <div class="goal">${pv2Escape(school.learningGoal || '')}</div>
+    </div>
+    <div class="sec">
+      <div class="sl">답변 프레임</div>
+      ${pv2OpicLineList(school.answerFlow)}
+    </div>
+    ${pv2OpicAnswerGrid(school.sampleAnswers)}
+    <div class="sec">
+      <div class="sl">꼬리 질문 · 복구 문장</div>
+      <div class="opic-card-grid">
+        <div class="opic-card">
+          <div class="toeic-question-top">
+            <span class="opic-card-badge">Follow-up</span>
+          </div>
+          ${pv2OpicLineList(school.followUps)}
+        </div>
+        ${pv2SpeakingRecoveryCard('Recovery', school.recoveryLines)}
+      </div>
+    </div>
+    ${pv2SpeakingPronunciationSection(school.pronunciationTips)}
+    <div class="sec">
+      <div class="sl">자기평가</div>
+      ${pv2SelfCheck(school.selfCheck || [])}
+    </div>
+  `;
+}
+
+function pv2OpicSpeakingMode(sentence) {
   const opic = sentence.examModes?.opic || {};
   return `
-    <div class="panel${previewV2State.activeTab === 'opic' ? ' active' : ''}" id="p-opic">
-      <div class="sent">${pv2Sentence(sentence)}</div>
-      ${pv2ExamFocus('opic', '오픽 1타 포인트', opic.fastRule, opic.coachLine)}
-      <div class="sec">
-        <div class="sl">학습 목표</div>
-        <div class="goal">${pv2Escape(opic.learningGoal || '')}${opic.targetGrade ? ` (${pv2Escape(opic.targetGrade)})` : ''}</div>
-      </div>
-      <div class="sec">
-        <div class="sl">오픽 활용 패턴</div>
-        ${pv2OpicPatternList(opic.speakingPatterns)}
-        <div class="tip" style="border-color:#7F77DD">${pv2Escape(opic.shadowingTip || '')}</div>
-      </div>
-      ${pv2OpicAnswerGrid(opic.sampleAnswers)}
-      <div class="sec">
-        <div class="sl">답변 프레임</div>
-        ${pv2OpicLineList(opic.answerFlow)}
-      </div>
-      <div class="sec">
-        <div class="sl">꼬리 질문 · 복구 문장</div>
-        <div class="opic-card-grid">
-          <div class="opic-card">
-            <div class="toeic-question-top">
-              <span class="opic-card-badge">Follow-up</span>
-            </div>
-            ${pv2OpicLineList(opic.followUps)}
+    ${pv2ExamFocus('opic', '오픽 1타 포인트', opic.fastRule, opic.coachLine)}
+    <div class="sec">
+      <div class="sl">학습 목표</div>
+      <div class="goal">${pv2Escape(opic.learningGoal || '')}${opic.targetGrade ? ` (${pv2Escape(opic.targetGrade)})` : ''}</div>
+    </div>
+    <div class="sec">
+      <div class="sl">오픽 활용 패턴</div>
+      ${pv2OpicPatternList(opic.speakingPatterns)}
+      <div class="tip" style="border-color:#7F77DD">${pv2Escape(opic.shadowingTip || '')}</div>
+    </div>
+    ${pv2OpicAnswerGrid(opic.sampleAnswers)}
+    <div class="sec">
+      <div class="sl">답변 프레임</div>
+      ${pv2OpicLineList(opic.answerFlow)}
+    </div>
+    <div class="sec">
+      <div class="sl">꼬리 질문 · 복구 문장</div>
+      <div class="opic-card-grid">
+        <div class="opic-card">
+          <div class="toeic-question-top">
+            <span class="opic-card-badge">Follow-up</span>
           </div>
+          ${pv2OpicLineList(opic.followUps)}
+        </div>
+        ${pv2SpeakingRecoveryCard('Recovery', opic.recoveryLines)}
+      </div>
+    </div>
+    ${pv2SpeakingPronunciationSection(opic.pronunciationTips)}
+    <div class="sec">
+      <div class="sl">자기평가</div>
+      ${pv2SelfCheck(opic.selfCheck || [])}
+    </div>
+  `;
+}
+
+function pv2ToeicSpeakingMode(sentence) {
+  const toeics = sentence.examModes?.toeicSpeaking || {};
+  return `
+    ${pv2ExamFocus('opic', '토익스피킹 1타 포인트', toeics.fastRule, toeics.coachLine)}
+    <div class="sec">
+      <div class="sl">학습 목표</div>
+      <div class="goal">${pv2Escape(toeics.learningGoal || '')}${toeics.targetScore ? ` (${pv2Escape(toeics.targetScore)})` : ''}</div>
+    </div>
+    <div class="sec">
+      <div class="sl">유형별 답변 프레임</div>
+      <div class="opic-card-grid">
+        ${(toeics.questionTypes || []).map((type) => `
           <div class="opic-card">
             <div class="toeic-question-top">
-              <span class="opic-card-badge">Recovery</span>
+              <span class="opic-card-badge">${pv2Escape(type.label || '')}</span>
             </div>
             <div class="opic-sub-list">
-              ${(opic.recoveryLines || []).map((item) => `<div class="opic-sub-item">${pv2Escape(item)}</div>`).join('')}
+              <div class="opic-sub-item">${pv2Escape(type.desc || '')}</div>
             </div>
           </div>
-        </div>
+        `).join('')}
       </div>
-      <div class="sec">
-        <div class="sl">스피킹 발음 포인트</div>
-        ${(opic.pronunciationTips || []).map((tip) => `<div class="prow-basic"><span class="ptag">${pv2Escape(tip.tag || '')}</span><span>${pv2Escape(tip.desc || '')}</span></div>`).join('')}
+      ${pv2OpicLineList(toeics.responseFrames)}
+    </div>
+    ${pv2OpicAnswerGrid(toeics.sampleAnswers)}
+    <div class="sec">
+      <div class="sl">채점 포인트</div>
+      ${pv2OpicLineList(toeics.scoringPoints)}
+    </div>
+    <div class="sec">
+      <div class="sl">복구 문장</div>
+      <div class="opic-card-grid">
+        ${pv2SpeakingRecoveryCard('Recovery', toeics.recoveryLines)}
       </div>
-      <div class="sec">
-        <div class="sl">자기평가</div>
-        ${pv2SelfCheck(opic.selfCheck || [])}
-      </div>
+    </div>
+    ${pv2SpeakingPronunciationSection(toeics.pronunciationTips)}
+    <div class="sec">
+      <div class="sl">자기평가</div>
+      ${pv2SelfCheck(toeics.selfCheck || [])}
+    </div>
+  `;
+}
+
+function pv2SpeakingTab(sentence) {
+  const mode = previewV2State.activeSpeakingMode;
+  const content = mode === 'opic'
+    ? pv2OpicSpeakingMode(sentence)
+    : mode === 'toeics'
+      ? pv2ToeicSpeakingMode(sentence)
+      : pv2SchoolSpeakingMode(sentence);
+  return `
+    <div class="panel${previewV2State.activeTab === 'speaking' ? ' active' : ''}" id="p-speaking">
+      <div class="sent">${pv2Sentence(sentence)}</div>
+      ${pv2SpeakingModeTabs()}
+      ${content}
     </div>
   `;
 }
@@ -570,12 +691,12 @@ function pv2Render() {
       <div class="tabs">
         <button class="tab${previewV2State.activeTab === 'lit' ? ' active' : ''}" type="button" data-tab="lit">LitCoach <span class="badge blit">쉐도잉</span></button>
         <button class="tab${previewV2State.activeTab === 'toeic' ? ' active' : ''}" type="button" data-tab="toeic">토익 <span class="badge btoeic">Part 5</span></button>
-        <button class="tab${previewV2State.activeTab === 'opic' ? ' active' : ''}" type="button" data-tab="opic">오픽 <span class="badge bopic">Speaking</span></button>
+        <button class="tab${previewV2State.activeTab === 'speaking' ? ' active' : ''}" type="button" data-tab="speaking">Speaking <span class="badge bopic">면접 · 오픽 · 토스</span></button>
         <button class="tab${previewV2State.activeTab === 'voca' ? ' active' : ''}" type="button" data-tab="voca">어휘 <span class="badge bvoca">필수</span></button>
       </div>
       ${pv2LitTab(sentence)}
       ${pv2ToeicTab(sentence)}
-      ${pv2OpicTab(sentence)}
+      ${pv2SpeakingTab(sentence)}
       ${pv2VocabularyTab(sentence)}
     </div>
   `;
@@ -628,6 +749,12 @@ document.addEventListener('click', (event) => {
   const tab = event.target.closest('.tab');
   if (tab) {
     previewV2State.activeTab = tab.dataset.tab || 'lit';
+    pv2Render();
+    return;
+  }
+  const speakingMode = event.target.closest('.js-pv2-speaking-mode');
+  if (speakingMode) {
+    previewV2State.activeSpeakingMode = speakingMode.dataset.speakingMode || 'school';
     pv2Render();
     return;
   }
