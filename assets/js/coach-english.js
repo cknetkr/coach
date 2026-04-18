@@ -757,10 +757,6 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
 
   return `
     <div class="dict-commentary-panel">
-      <div class="dict-commentary-section dict-commentary-section--goal">
-        <div class="dict-coach-tag">학습 목표</div>
-        <p>${escapeHtml(commentary?.learningGoal || guide.t)}</p>
-      </div>
       ${pronunciationGap.length ? `
         <div class="dict-commentary-section">
           <div class="dict-coach-tag">발음 갭</div>
@@ -842,6 +838,18 @@ function buildDictationCommentaryHtml(sentenceEntry, guide, lineIndex) {
           `).join('')}
         </div>
       </div>
+    </div>
+  `;
+}
+
+function buildDictationLearningGoalHtml(sentenceEntry, guide) {
+  const commentary = sentenceEntry?.commentary;
+  const learningGoal = commentary?.learningGoal || guide?.t;
+  if (!learningGoal) return '';
+  return `
+    <div class="dict-commentary-section dict-commentary-section--goal dict-commentary-section--prelude">
+      <div class="dict-coach-tag">학습 목표</div>
+      <p>${escapeHtml(learningGoal)}</p>
     </div>
   `;
 }
@@ -1098,6 +1106,7 @@ function renderDictationPracticeCards() {
             </button>
           </div>
         </div>
+        ${buildDictationLearningGoalHtml(dictSentenceEntries[index], guide)}
         <div class="dict-cloze-line">${meta.previewHtml}</div>
         ${buildDictationFullMeaningHtml(dictSentenceEntries[index])}
         ${meta.isStudyMode ? `
