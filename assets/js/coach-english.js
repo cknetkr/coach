@@ -965,25 +965,11 @@ function getDictationPreviewHref(sentenceEntry, index) {
   return '';
 }
 
-function renderDictationPreviewToolbar() {
-  const container = document.getElementById('dict-preview-toolbar');
-  if (!container) return;
-  const previewHref = getDictationPreviewHref(dictSentenceEntries[0], 0);
-  if (!previewHref) {
-    container.hidden = true;
-    container.innerHTML = '';
-    return;
-  }
-  container.hidden = false;
-  container.innerHTML = `<a class="btn-secondary dict-preview-link dict-preview-link--toolbar" href="${previewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 보기</a>`;
-}
-
 function renderDictationPracticeCards() {
   const container = document.getElementById('dict-practice-list');
   if (!container) return;
   if (!dictSentenceEntries.length) {
     container.innerHTML = '';
-    renderDictationPreviewToolbar();
     return;
   }
   ensureDictationLineTTSSettings();
@@ -1023,7 +1009,7 @@ function renderDictationPracticeCards() {
               </label>
             </div>
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
-            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 JSON 보기</a>` : ''}
+            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 개념확장</a>` : ''}
             <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
@@ -1041,7 +1027,6 @@ function renderDictationPracticeCards() {
       </article>
     `;
   }).join('');
-  renderDictationPreviewToolbar();
   populateDictationVoices();
   highlightDictationLineButton(dictTTSState.currentIndex);
 }
@@ -1139,18 +1124,20 @@ function setDictationLineVoice(index, value) {
 (function renderDictTopics() {
   const grid = document.getElementById('topic-grid');
   if (!grid) return;
-  grid.innerHTML = DICT_TOPICS.map((t,i) => `
-    <div class="topic-card" id="dtc-${i}" onclick="selectDictTopic(${i})">
-      <div class="topic-icon">${t.icon}</div>
-      <div class="topic-num">${t.num}</div>
-      <div class="topic-title">${t.title}</div>
-      <div class="topic-desc">${t.desc}</div>
-    </div>
+  grid.innerHTML = DICT_TOPICS.map((t, i) => `
+    <button type="button" class="topic-card topic-card--inline" id="dtc-${i}" onclick="selectDictTopic(${i})">
+      <span class="topic-num">${t.num}</span>
+      <span class="topic-title">${t.title}</span>
+    </button>
   `).join('');
+  if (!selectedDictTopic && DICT_TOPICS.length) selectDictTopic(0);
 })();
 function selectDictTopic(idx) {
-  document.querySelectorAll('#topic-grid .topic-card').forEach((c,i) => c.classList.toggle('selected', i===idx));
-  selectedDictTopic = DICT_TOPICS[idx];
+  const topicIndex = Number(idx);
+  selectedDictTopic = DICT_TOPICS[topicIndex];
+  document.querySelectorAll('#topic-grid .topic-card').forEach((card, index) => {
+    card.classList.toggle('selected', index === topicIndex);
+  });
   refreshDictationView();
 }
 
@@ -1165,13 +1152,16 @@ function refreshDictationView() {
   if (!selectedDictTopic) return;
   const el = document.getElementById('dict-script');
   const box = document.getElementById('dict-script-box');
+  const topicLabel = document.getElementById('dict-current-topic');
   if (!el || !box) return;
   stopDictationTTS({ preserveStatus: true });
   dictSentenceEntries = getDictationSentenceEntries(selectedDictTopic);
   const sourceLines = dictSentenceEntries.map((entry) => entry.text);
   dictLineLevels = sourceLines.map((_, index) => dictLineLevels[index] || selectedDictLevel);
   el.textContent = sourceLines.map((line, index) => `${index + 1}. ${line}`).join('\n');
-  box.style.display = sourceLines.length ? 'block' : 'none';
+  if (topicLabel) {
+    topicLabel.textContent = `${selectedDictTopic.num} · ${selectedDictTopic.title} · ${selectedDictTopic.desc}`;
+  }
   syncDictationTTSFromScript();
   resetDictationFeedback();
 }

@@ -1,21 +1,19 @@
 window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:none;">
-    <h2 class="panel-title">🎧 받아쓰기 (Dictation) 훈련</h2>
-    <p class="panel-desc"><code>docs/영어_수행.pdf</code> 원문 8개 주제 중 선택하여 받아쓰기 스크립트를 불러오고 자가 채점하십시오.</p>
-
-    <div class="alert-box alert-amber">
-      <strong>📌 고득점 전략:</strong> 스크립트를 <strong>숨긴 채</strong> 듣고 받아쓰기 → 채점 → 오류 유형 확인 → 3회 반복. 단순히 보고 베끼면 효과 없음.
+    <div class="dict-step-inline">
+      <strong>STEP 1 · 받아쓰기</strong>
+      <span>숨기고 듣기 → 채점</span>
     </div>
-
-    <div class="mc">
-      <div class="mc-title">주제 선택</div>
-      <div class="topic-grid" id="topic-grid"></div>
-      <div class="dict-config-note">주제를 누르면 해당 문장들이 바로 열리고, 각 문장 카드 안에서 난이도를 즉시 바꿀 수 있습니다.</div>
+    <div class="dict-topic-strip">
+      <div class="dict-topic-line">
+        <div class="dict-topic-label">주제</div>
+        <div class="topic-grid topic-grid--inline" id="topic-grid"></div>
+      </div>
     </div>
-    <div class="mc" id="dict-script-box" style="display:none;">
+    <div class="mc" id="dict-script-box">
       <div class="dict-practice-intro">
         <div>
           <div class="ai-label" style="color:var(--eng-primary);">문장별 받아쓰기 훈련</div>
-          <div class="dict-practice-caption">한 문장씩 듣고, 보이는 문장에서 가려진 부분만 채우세요. 각 문장마다 난이도를 따로 바꿀 수 있습니다.</div>
+          <div class="dict-practice-caption" id="dict-current-topic">주제를 고르면 해당 문장과 메뉴가 바로 아래에 열립니다.</div>
         </div>
         <div class="dict-practice-shortcut"><strong>Space</strong>로 다음 문장</div>
       </div>
@@ -23,7 +21,6 @@ window.ENG_S1 = String.raw`<div id="eng-s1" class="inner-panel" style="display:n
         <div class="dict-tts-status" id="dict-tts-status">스크립트 생성 후 듣기 가능</div>
         <div class="dict-tts-line-buttons" id="dict-tts-line-buttons"></div>
       </div>
-      <div class="dict-preview-toolbar" id="dict-preview-toolbar" hidden></div>
       <div class="dict-practice-list" id="dict-practice-list"></div>
       <div class="dict-script-source" id="dict-script" hidden></div>
       <div class="btn-row">

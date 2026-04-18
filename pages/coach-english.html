@@ -13,8 +13,28 @@
 <div class="noise-overlay"></div>
 
 <!-- ══ 헤더 ══ -->
-<header class="page-header">
+<header class="page-header page-header--eng">
   <a href="../index.html" class="brand">코치<span>.</span></a>
+  <nav class="header-step-tabs" aria-label="영어 단계 메뉴">
+    <button class="sub-tab eng active" data-stab="eng-s0" onclick="switchSubTab('eng','s0')">
+      <span class="step-label">STEP 0</span><span>평가 개요</span>
+    </button>
+    <button class="sub-tab eng" data-stab="eng-s1" onclick="switchSubTab('eng','s1')">
+      <span class="step-label">STEP 1</span><span>받아쓰기</span>
+    </button>
+    <button class="sub-tab eng" data-stab="eng-s2" onclick="switchSubTab('eng','s2')">
+      <span class="step-label">STEP 2</span><span>문장완성</span>
+    </button>
+    <button class="sub-tab eng" data-stab="eng-s3" onclick="switchSubTab('eng','s3')">
+      <span class="step-label">STEP 3</span><span>영어면접</span>
+    </button>
+    <button class="sub-tab eng" data-stab="eng-s4" onclick="switchSubTab('eng','s4')">
+      <span class="step-label">STEP 4</span><span>점수시뮬레이터</span>
+    </button>
+    <button class="sub-tab eng" data-stab="eng-s5" onclick="switchSubTab('eng','s5')">
+      <span class="step-label">표현</span><span>핵심 암기</span>
+    </button>
+  </nav>
   <nav class="nav-tabs">
     <a href="coach-korean.html" class="nav-tab">📚 국어</a>
     <a href="coach-math.html" class="nav-tab">📐 수학</a>
@@ -22,7 +42,6 @@
   </nav>
 </header>
 
-<!-- ══ 서브탭 ══ -->
 <div id="eng-app"></div>
 
 <script src="../assets/js/eng-s0.js"></script>
