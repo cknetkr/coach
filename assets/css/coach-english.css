@@ -530,12 +530,22 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-tts-toolbar { margin-bottom: 0.9rem; }
 .dict-tts-toolbar-head { display: flex; justify-content: space-between; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
 .dict-tts-line-buttons { display: grid; gap: 0.6rem; }
-.dict-line-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.85rem; align-items: end; }
+.dict-line-row { display: grid; gap: 0.65rem; align-items: center; }
+.dict-line-row--sentence { grid-template-columns: minmax(0, 1fr) auto; }
+.dict-line-row--controls { grid-template-columns: minmax(0, 1fr); margin-top: 0.15rem; }
 .dict-line-group { display: grid; gap: 0.38rem; min-width: 0; }
-.dict-line-group--meta { display: flex; gap: 0.38rem; flex-wrap: wrap; align-items: center; }
+.dict-line-group--sentence { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 0.7rem; }
+.dict-line-group--sentence .dict-line-group-label { white-space: nowrap; }
+.dict-line-group--meta { display: flex; gap: 0.38rem; flex-wrap: nowrap; align-items: center; min-width: 0; }
 .dict-line-group-label { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: var(--text-dim); }
-.dict-line-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.dict-line-toolbar { display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: flex-end; justify-content: flex-end; margin-top: 0; padding-top: 0.1rem; }
+.dict-line-tabs { display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center; overflow-x: auto; padding-bottom: 0.1rem; }
+.dict-line-toolbar { display: flex; gap: 0.85rem; align-items: center; margin-top: 0; padding-top: 0.1rem; min-width: 0; }
+.dict-line-toolbar--sentence { justify-content: flex-end; }
+.dict-line-toolbar--controls { gap: 0.7rem; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding-bottom: 0.1rem; }
+.dict-line-toolbar .dict-sentence-modal-trigger { align-self: center; }
+.dict-exam-inline-chip { display: inline-flex; align-items: center; min-height: 34px; padding: 0.34rem 0.72rem; border-radius: 999px; border: 1px solid rgba(56,189,248,0.2); background: rgba(56,189,248,0.1); color: #dbeafe; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+.dict-top-tts-controls { display: inline-flex; gap: 0.45rem; flex-wrap: wrap; align-items: center; width: fit-content; margin-top: 0.15rem; padding: 0.42rem 0.55rem; border: 1px solid rgba(148,163,184,0.12); border-radius: 12px; background: rgba(255,255,255,0.03); }
+.dict-top-tts-controls--inline { flex-wrap: nowrap; gap: 0.4rem; margin-top: 0; padding: 0.34rem 0.48rem; }
 .dict-tts-status { font-size: 0.73rem; color: #bae6fd; line-height: 1.4; }
 .dict-tts-status.warn { color: #fcd34d; }
 .dict-tts-status.active { color: #e0f2fe; }
@@ -548,22 +558,83 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-practice-caption { margin-top: 0.28rem; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.65; }
 .dict-practice-shortcut { font-size: 0.72rem; color: #bae6fd; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 999px; padding: 0.28rem 0.65rem; white-space: nowrap; }
 .dict-practice-shortcut strong { color: #fff; }
+.dict-exam-shell { width: min(1280px, calc(100vw - 1.5rem)); margin: 1rem auto 1.4rem; display: grid; gap: 0.9rem; }
+.dict-exam-topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.85rem; flex-wrap: wrap; padding: 0.95rem 1rem; border: 1px solid rgba(56,189,248,0.14); border-radius: 20px; background: linear-gradient(180deg, rgba(15,23,42,0.68), rgba(2,6,23,0.72)); }
+.dict-exam-kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7dd3fc; }
+.dict-exam-title { margin-top: 0.18rem; font-size: 1.35rem; color: #f8fafc; }
+.dict-exam-desc { margin-top: 0.22rem; font-size: 0.82rem; color: var(--text-secondary); }
+.dict-exam-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.dict-exam-part-picker { display: inline-flex; align-items: center; gap: 0.45rem; min-width: 0; }
+.dict-exam-part-picker span { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #7dd3fc; white-space: nowrap; }
+.dict-exam-part-picker .field-input { width: 180px; min-width: 180px; }
+.dict-exam-theme-toggle { white-space: nowrap; }
+body[data-eng-page="dictation-exam"] { overflow-x: hidden; }
+body[data-eng-page="dictation-exam"] .dict-exam-shell { width: 100%; margin: 0; gap: 0; }
+body[data-eng-page="dictation-exam"] #dict-script-box.mc { margin-bottom: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
 .dict-sentence-modal[hidden] { display: none; }
 .dict-sentence-modal { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
 .dict-sentence-modal__backdrop { position: absolute; inset: 0; border: 0; background: rgba(2,6,23,0.78); cursor: pointer; }
-.dict-sentence-modal__dialog { position: relative; width: min(920px, calc(100vw - 2rem)); max-height: min(84vh, 900px); overflow: hidden; border-radius: 24px; border: 1px solid rgba(56,189,248,0.2); background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,23,0.96)); box-shadow: 0 24px 70px rgba(2,6,23,0.45); }
-.dict-sentence-modal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.15rem 1.2rem 1rem; border-bottom: 1px solid rgba(148,163,184,0.14); }
-.dict-sentence-modal__eyebrow { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7dd3fc; }
-.dict-sentence-modal__title { display: block; margin-top: 0.22rem; font-size: 1.12rem; color: #f8fafc; }
-.dict-sentence-modal__caption { margin-top: 0.26rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+.dict-sentence-modal--page { position: static; inset: auto; z-index: auto; padding: 0; display: block; }
+.dict-sentence-modal--page .dict-sentence-modal__dialog { width: 100%; max-height: none; box-shadow: none; }
+.dict-sentence-modal--page .dict-sentence-modal__list { max-height: none; overflow: visible; }
+.dict-sentence-modal__dialog { --dict-modal-text-size: 1rem; --dict-modal-cloze-size: 1rem; --dict-modal-line-height: 1.98; --dict-modal-input-size: 0.88rem; --dict-modal-input-height: 2.15rem; --dict-modal-input-min-width: 4.2rem; --dict-modal-answer-size: 0.68rem; position: relative; width: min(1100px, calc(100vw - 1rem)); max-height: min(92vh, 980px); overflow: hidden; border-radius: 24px; border: 1px solid rgba(56,189,248,0.2); background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,23,0.96)); box-shadow: 0 24px 70px rgba(2,6,23,0.45); }
+body[data-eng-page="dictation-exam"] .dict-sentence-modal--page .dict-sentence-modal__dialog { min-height: calc(100dvh - 76px); border-radius: 0; border-left: 0; border-right: 0; border-bottom: 0; background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(2,6,23,0.98)); }
+body[data-eng-page="dictation-exam"] .dict-sentence-modal--page .dict-sentence-modal__head { position: sticky; top: 0; z-index: 20; background: rgba(8,15,32,0.96); backdrop-filter: blur(10px); }
+body[data-eng-page="dictation-exam"] .dict-sentence-modal--page .dict-sentence-modal__list { padding: 0.5rem 1rem 1rem; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .noise-overlay { opacity: 0.35; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal--page .dict-sentence-modal__dialog { background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(241,245,249,0.98)); border-top: 1px solid rgba(56,189,248,0.18); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal--page .dict-sentence-modal__head { background: rgba(255,255,255,0.95); border-bottom-color: rgba(148,163,184,0.22); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal__title { color: #0f172a; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal__eyebrow { color: #0284c7; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-line-group-label,
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-exam-part-picker span { color: #0369a1; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal__summary { border-bottom-color: rgba(148,163,184,0.2); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal__summary-config { background: rgba(255,255,255,0.84); border-color: rgba(148,163,184,0.18); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal__sheet { background: rgba(14,165,233,0.04); border-color: rgba(14,165,233,0.14); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-cloze-line { background: rgba(255,255,255,0.74); border-color: rgba(56,189,248,0.22); color: #0f172a; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-cloze-input { background: #ffffff; color: #0f172a; border-color: rgba(14,165,233,0.28); box-shadow: inset 0 -2px 0 rgba(56,189,248,0.55); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-level-pill { background: rgba(255,255,255,0.92); color: #334155; border-color: rgba(148,163,184,0.24); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-level-pill.active { color: #0369a1; background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.22); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-difficulty-chip.subtle { background: rgba(226,232,240,0.55); border-color: rgba(148,163,184,0.18); color: #334155; }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-top-tts-controls,
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-top-tts-controls--inline,
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal .dict-top-tts-controls--modal { background: rgba(255,255,255,0.88); border-color: rgba(148,163,184,0.18); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn { background: rgba(255,255,255,0.9); color: #475569; border-color: rgba(148,163,184,0.2); }
+body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.active { color: #0369a1; background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.2); }
+.dict-sentence-modal__head { display: flex; justify-content: space-between; align-items: center; gap: 0.85rem; padding: 0.8rem 1rem 0.72rem; border-bottom: 1px solid rgba(148,163,184,0.14); }
+.dict-sentence-modal__head-main { display: flex; align-items: center; gap: 0.55rem; min-width: 0; flex: 1 1 auto; }
+.dict-sentence-modal__eyebrow { flex: 0 0 auto; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7dd3fc; }
+.dict-sentence-modal__title { display: block; flex: 0 0 auto; font-size: 1rem; color: #f8fafc; }
+.dict-sentence-modal__caption { min-width: 0; font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dict-sentence-modal__head-actions { display: flex; align-items: center; gap: 0.45rem; flex: 0 0 auto; }
+.dict-sentence-modal__font-controls { display: inline-flex; align-items: center; gap: 0.32rem; }
+.dict-sentence-modal__font-btn { min-width: 0; padding: 0.34rem 0.58rem; font-size: 0.7rem; }
+.dict-sentence-modal__font-btn:disabled { opacity: 0.4; cursor: default; }
 .dict-sentence-modal__close { white-space: nowrap; }
-.dict-sentence-modal__list { max-height: calc(84vh - 112px); overflow: auto; padding: 1rem 1.2rem 1.2rem; display: grid; gap: 0.75rem; }
+.dict-sentence-modal__list { max-height: calc(92vh - 74px); overflow: auto; padding: 0.75rem 1rem 0.9rem; display: grid; gap: 0.65rem; }
 .dict-sentence-modal__empty { padding: 1rem; border: 1px dashed rgba(148,163,184,0.18); border-radius: 16px; color: var(--text-secondary); text-align: center; }
-.dict-sentence-modal__item { padding: 0.95rem 1rem; border-radius: 18px; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.52); transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s; }
-.dict-sentence-modal__item.is-playing { border-color: rgba(56,189,248,0.42); box-shadow: 0 0 0 1px rgba(56,189,248,0.12), 0 16px 30px rgba(2,8,23,0.22); transform: translateY(-1px); }
-.dict-sentence-modal__item-head { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.72rem; }
-.dict-sentence-modal__item-meta { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #7dd3fc; }
-.dict-sentence-modal__text { font-size: 1rem; line-height: 2; color: #e2e8f0; white-space: pre-wrap; word-break: keep-all; }
+.dict-sentence-modal__summary { display: grid; gap: 0.6rem; margin-bottom: 0.25rem; padding: 0.1rem 0.1rem 0.05rem; border-bottom: 1px solid rgba(148,163,184,0.12); }
+.dict-sentence-modal__summary-config { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 0.95rem; padding: 0.58rem 0.7rem; border: 1px solid rgba(148,163,184,0.12); border-radius: 14px; background: rgba(255,255,255,0.02); }
+.dict-sentence-modal__summary-config .dict-line-group--meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.38rem 0.55rem; min-width: 0; }
+.dict-sentence-modal__summary-config .dict-line-group-label { min-width: 48px; padding-top: 0; }
+.dict-sentence-modal__summary-config .dict-level-switch { flex-wrap: wrap; }
+.dict-sentence-modal__summary-config .dict-difficulty-chip.subtle { min-height: 28px; }
+.dict-sentence-modal__summary-copy { display: grid; gap: 0.28rem; }
+.dict-sentence-modal__summary-copy strong { font-size: 0.96rem; color: #f8fafc; }
+.dict-sentence-modal__summary-copy span { font-size: 0.8rem; line-height: 1.65; color: var(--text-secondary); }
+.dict-sentence-modal__summary-meta { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.dict-sentence-modal__summary-control-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.65rem; }
+.dict-sentence-modal__summary-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dict-sentence-modal__summary-actions .btn-secondary { min-width: 124px; justify-content: center; }
+.dict-sentence-modal .dict-top-tts-controls--modal { width: 100%; padding: 0.46rem 0.58rem; border-radius: 14px; background: rgba(255,255,255,0.02); }
+.dict-sentence-modal .dict-top-tts-controls--modal .dict-card-tts-option { min-height: 38px; }
+.dict-sentence-modal .dict-difficulty-chip.subtle { min-height: 30px; }
+.dict-sentence-modal__sheet { display: grid; gap: 0; padding: 0.7rem 0.82rem; border-radius: 18px; border: 1px solid rgba(56,189,248,0.16); background: rgba(56,189,248,0.05); }
+.dict-sentence-modal__entry { transition: color 0.18s, opacity 0.18s; }
+.dict-sentence-modal__entry + .dict-sentence-modal__entry { margin-top: 0.24rem; }
+.dict-sentence-modal__entry.is-playing { color: #f8fafc; }
+.dict-sentence-modal__text { font-size: var(--dict-modal-text-size); line-height: var(--dict-modal-line-height); color: #e2e8f0; white-space: pre-wrap; word-break: keep-all; }
+.dict-sentence-modal__entry .dict-sentence-modal__cloze { margin: 0; padding: 0; border: 0; background: transparent; font-size: var(--dict-modal-cloze-size); line-height: var(--dict-modal-line-height); border-radius: 0; }
 .dict-practice-list { display: grid; gap: 0.95rem; margin-top: 1rem; }
 .dict-practice-card { background: rgba(15,23,42,0.52); border: 1px solid rgba(129,140,248,0.14); border-radius: 16px; padding: 1rem 1.05rem 1.05rem; transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s; }
 .dict-practice-card.active { border-color: rgba(56,189,248,0.52); box-shadow: 0 0 0 1px rgba(56,189,248,0.14), 0 16px 30px rgba(2,8,23,0.26); }
@@ -577,7 +648,7 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-difficulty-chip.level-normal { background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.24); color: #fde68a; }
 .dict-difficulty-chip.level-hard { background: rgba(251,113,133,0.12); border-color: rgba(251,113,133,0.24); color: #fecdd3; }
 .dict-practice-sub { margin-top: 0.28rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
-.dict-level-switch { display: flex; gap: 0.28rem; flex-wrap: wrap; align-items: center; }
+.dict-level-switch { display: flex; gap: 0.28rem; flex-wrap: nowrap; align-items: center; }
 .dict-level-pill { min-width: 44px; padding: 0.22rem 0.5rem; border-radius: 999px; border: 1px solid rgba(148,163,184,0.14); background: rgba(255,255,255,0.03); color: #cbd5e1; font-size: 0.66rem; font-weight: 800; cursor: pointer; }
 .dict-level-pill.active { border-color: rgba(56,189,248,0.24); background: rgba(56,189,248,0.12); color: #e0f2fe; }
 .dict-practice-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
@@ -588,6 +659,10 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-card-tts-option strong { color: var(--eng-primary); min-width: 2rem; text-align: right; font-size: 0.66rem; }
 .dict-card-tts-option--voice { min-width: 0; }
 .dict-card-tts-option--voice .field-input { width: 150px; min-width: 150px; padding: 0.38rem 0.55rem; font-size: 0.72rem; }
+.dict-top-tts-controls--inline .dict-card-tts-option { gap: 0.28rem; font-size: 0.64rem; }
+.dict-top-tts-controls--inline .dict-card-tts-option input[type=range] { width: 74px; }
+.dict-top-tts-controls--inline .dict-card-tts-option strong { min-width: 1.85rem; font-size: 0.64rem; }
+.dict-top-tts-controls--inline .dict-card-tts-option--voice .field-input { width: 112px; min-width: 112px; padding: 0.32rem 0.46rem; font-size: 0.68rem; }
 .dict-answer-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
 .dict-preview-link { text-decoration: none; }
 .dict-answer-toggle.is-done { border-color: rgba(56,189,248,0.24); background: rgba(56,189,248,0.12); color: #e0f2fe; }
@@ -646,12 +721,16 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-concept-check-question { margin-bottom: 0.55rem !important; font-size: 0.8rem !important; color: #f8fafc !important; }
 .dict-concept-check-goal { margin-top: 0.6rem !important; padding: 0.55rem 0.62rem; border-radius: 10px; background: rgba(34,197,94,0.12); color: #bbf7d0 !important; font-size: 0.74rem !important; line-height: 1.58 !important; }
 .dict-cloze-blank { display: inline-flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 0.18rem; margin: 0 0.12rem; vertical-align: middle; }
+.dict-cloze-blank--phrase { min-width: min(22rem, 72vw); }
 .dict-cloze-input { width: auto; min-width: 4.2rem; height: 2.15rem; padding: 0 0.45rem; border-radius: 8px; border: 1px solid rgba(56,189,248,0.28); background: rgba(15,23,42,0.72); color: #e0f2fe; font-size: 0.88rem; font-weight: 700; text-align: center; box-shadow: inset 0 -2px 0 rgba(125,211,252,0.8); }
+.dict-cloze-input--phrase { width: min(22rem, 72vw); min-width: 9rem; max-width: 100%; }
 .dict-cloze-input:focus { outline: none; border-color: rgba(125,211,252,0.82); box-shadow: 0 0 0 3px rgba(56,189,248,0.12), inset 0 -2px 0 rgba(125,211,252,1); }
 .dict-cloze-input.is-correct { border-color: rgba(96,165,250,0.9); background: rgba(37,99,235,0.18); color: #dbeafe; box-shadow: 0 0 0 2px rgba(59,130,246,0.16), inset 0 -2px 0 rgba(96,165,250,0.95); }
 .dict-cloze-input.is-partial { border-color: rgba(251,191,36,0.95); background: rgba(120,53,15,0.22); color: #fef3c7; box-shadow: 0 0 0 2px rgba(251,191,36,0.12), inset 0 -2px 0 rgba(251,191,36,0.9); }
 .dict-cloze-input.is-wrong { border-color: rgba(248,113,113,0.92); background: rgba(127,29,29,0.2); color: #fee2e2; box-shadow: 0 0 0 2px rgba(248,113,113,0.14), inset 0 -2px 0 rgba(248,113,113,0.92); }
 .dict-answer-word { font-size: 0.68rem; font-weight: 800; line-height: 1; color: #86efac; white-space: nowrap; }
+.dict-sentence-modal .dict-cloze-input { min-width: var(--dict-modal-input-min-width); height: var(--dict-modal-input-height); font-size: var(--dict-modal-input-size); }
+.dict-sentence-modal .dict-answer-word { font-size: var(--dict-modal-answer-size); }
 .dict-cloze-note { margin-bottom: 0.9rem; padding: 0.8rem 0.9rem; border-radius: 12px; background: rgba(15,23,42,0.58); border: 1px solid rgba(148,163,184,0.14); color: #cbd5e1; font-size: 0.8rem; line-height: 1.7; }
 .dict-blank-guide-list { display: grid; gap: 0.7rem; margin-bottom: 0.9rem; }
 .dict-blank-guide-card { background: rgba(8,47,73,0.2); border: 1px solid rgba(56,189,248,0.18); border-radius: 16px; padding: 0.92rem 0.96rem; }
@@ -774,6 +853,7 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-self-check-step strong { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 999px; background: rgba(249,115,22,0.18); color: #fdba74; font-size: 0.68rem; }
 .dict-self-check-goal { padding: 0.55rem 0.62rem; border-radius: 10px; background: rgba(34,197,94,0.12); color: #bbf7d0; font-size: 0.74rem; line-height: 1.58; }
 @media(max-width:960px) {
+  .dict-exam-shell { width: calc(100vw - 1rem); margin-top: 0.75rem; }
   .eng-master-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .eng-focus-strip,
   .eng-masterclass-grid,
@@ -786,6 +866,12 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   .dict-concept-drill-item { grid-template-columns: 1fr; gap: 0.4rem; }
 }
 @media(max-width:640px) {
+  .dict-exam-topbar { padding: 0.8rem 0.85rem; }
+  .dict-exam-title { font-size: 1.08rem; }
+  .dict-exam-actions { width: 100%; }
+  .dict-exam-actions .btn-secondary { flex: 1 1 auto; }
+  .dict-exam-part-picker { width: 100%; }
+  .dict-exam-part-picker .field-input { width: 100%; min-width: 0; }
   .eng-master-hero { margin-top: 0.85rem; padding: 0 0.75rem; }
   .eng-master-copy,
   .eng-side-card { border-radius: 18px; }
@@ -808,11 +894,21 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
     font-size: 0.68rem;
   }
   .dict-tts-toolbar-head { align-items: stretch; }
-  .dict-sentence-modal-trigger { width: 100%; justify-content: center; }
+  .dict-sentence-modal-trigger { width: auto; justify-content: center; }
   .dict-tts-line-buttons { gap: 0.48rem; margin-top: 0.55rem; }
-  .dict-line-row { grid-template-columns: 1fr; gap: 0.55rem; }
+  .dict-line-row,
+  .dict-line-row--sentence,
+  .dict-line-row--controls { grid-template-columns: 1fr; gap: 0.55rem; }
+  .dict-line-group--sentence { grid-template-columns: 1fr; row-gap: 0.35rem; }
+  .dict-line-group--meta,
+  .dict-level-switch,
+  .dict-line-tabs { flex-wrap: wrap; }
   .dict-line-tabs { gap: 0.38rem; }
-  .dict-line-toolbar { margin-top: 0; gap: 0.65rem; justify-content: flex-start; }
+  .dict-line-toolbar,
+  .dict-line-toolbar--sentence,
+  .dict-line-toolbar--controls { margin-top: 0; gap: 0.65rem; justify-content: flex-start; overflow: visible; }
+  .dict-top-tts-controls { width: 100%; padding: 0.48rem 0.56rem; }
+  .dict-top-tts-controls--inline { flex-wrap: wrap; }
   .dict-tts-line-btn {
     padding: 0.28rem 0.58rem;
     font-size: 0.68rem;
@@ -828,6 +924,7 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   .dict-card-tts-option--voice .field-input { min-width: 0 !important; width: 100% !important; }
   .dict-cloze-line { font-size: 0.88rem; line-height: 1.95; padding: 0.8rem 0.85rem; }
   .dict-cloze-input { min-width: 3.5rem; max-width: 100%; font-size: 0.84rem; }
+  .dict-cloze-input--phrase { width: min(100%, 18rem); min-width: 8rem; }
   .dict-answer-word { font-size: 0.64rem; }
   .dict-coach-grid { grid-template-columns: 1fr; }
   .dict-commentary-row { grid-template-columns: 1fr; gap: 0.18rem; }
@@ -846,10 +943,18 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   #eng-s1 .topic-grid--inline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dict-sentence-modal { padding: 0.6rem; }
   .dict-sentence-modal__dialog { width: calc(100vw - 1.2rem); max-height: calc(100vh - 1.2rem); border-radius: 18px; }
-  .dict-sentence-modal__head { padding: 0.95rem 1rem 0.9rem; }
+  .dict-sentence-modal__head { padding: 0.78rem 0.9rem 0.74rem; align-items: flex-start; }
+  .dict-sentence-modal__head-main { flex-wrap: wrap; gap: 0.32rem 0.48rem; }
+  .dict-sentence-modal__caption { white-space: normal; overflow: visible; text-overflow: clip; }
+  .dict-sentence-modal__head-actions { width: 100%; justify-content: space-between; }
+  .dict-sentence-modal__summary { gap: 0.75rem; padding: 0.2rem 0 0.05rem; }
+  .dict-sentence-modal__summary-config { gap: 0.65rem; padding: 0.7rem; }
+  .dict-sentence-modal__summary-control-row { grid-template-columns: 1fr; gap: 0.75rem; }
   .dict-sentence-modal__list { max-height: calc(100vh - 120px); padding: 0.85rem 1rem 1rem; }
-  .dict-sentence-modal__item { padding: 0.85rem 0.9rem; }
+  .dict-sentence-modal__summary-actions .btn-secondary { min-width: 0; flex: 1 1 0; }
   .dict-sentence-modal__text { font-size: 0.92rem; line-height: 1.9; }
+  .dict-sentence-modal__summary-actions { display: grid; grid-template-columns: 1fr; }
+  .dict-sentence-modal__item-actions { width: 100%; justify-content: space-between; }
   .page-header--eng { gap: 0.55rem; }
   .page-header--eng .header-step-tabs { justify-content: flex-start; }
 }

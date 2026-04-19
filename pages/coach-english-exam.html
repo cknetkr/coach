@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영어 전체 시험 — 수행평가 만점 코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/coach-shared.css">
+  <link rel="stylesheet" href="../assets/css/coach-english.css">
+</head>
+<body data-eng-page="dictation-exam">
+<div class="noise-overlay"></div>
+
+<header class="page-header page-header--eng">
+  <a href="../index.html" class="brand">코치<span>.</span></a>
+  <nav class="nav-tabs">
+    <a href="coach-korean.html" class="nav-tab">📚 국어</a>
+    <a href="coach-math.html" class="nav-tab">📐 수학</a>
+    <a href="coach-english.html" class="nav-tab eng">🎧 영어</a>
+  </nav>
+</header>
+
+<main class="dict-exam-shell">
+  <section class="mc" id="dict-script-box">
+    <div class="dict-sentence-modal dict-sentence-modal--page" id="dict-sentence-modal">
+      <div class="dict-sentence-modal__dialog" role="region" aria-labelledby="dict-sentence-modal-title">
+        <div class="dict-sentence-modal__head">
+          <div class="dict-sentence-modal__head-main">
+            <div class="dict-sentence-modal__eyebrow">전체 문장</div>
+            <strong class="dict-sentence-modal__title" id="dict-sentence-modal-title">Part 1 전체 시험</strong>
+          </div>
+          <div class="dict-sentence-modal__head-actions">
+            <label class="dict-exam-part-picker" for="dict-exam-topic-select">
+              <span>Part</span>
+              <select id="dict-exam-topic-select" class="field-input" aria-label="시험 파트 선택"></select>
+            </label>
+            <button type="button" class="btn-secondary dict-exam-theme-toggle" id="dict-exam-theme-toggle">화이트 모드</button>
+            <div class="dict-sentence-modal__font-controls" aria-label="본문 폰트 크기 조절">
+              <button type="button" class="btn-secondary dict-sentence-modal__font-btn" id="dict-sentence-font-decrease" onclick="adjustDictationSentenceModalFont(-1)">A-</button>
+              <button type="button" class="btn-secondary dict-sentence-modal__font-btn" id="dict-sentence-font-increase" onclick="adjustDictationSentenceModalFont(1)">A+</button>
+            </div>
+            <a href="coach-english.html" class="btn-secondary">영어 코치로</a>
+          </div>
+        </div>
+        <div class="dict-sentence-modal__list" id="dict-sentence-modal-list"></div>
+      </div>
+    </div>
+    <div class="dict-script-source" id="dict-script" hidden></div>
+  </section>
+</main>
+
+<div class="toast" id="global-toast"></div>
+
+<script src="../assets/js/coach-english-dictation-bank.js"></script>
+<script src="../assets/js/coach-english-dictation-template.js"></script>
+<script src="../assets/js/coach-shared.js"></script>
+<script src="../assets/js/coach-english.js"></script>
+<script src="../assets/js/coach-english-exam.js"></script>
+</body>
+</html>

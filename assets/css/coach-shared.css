@@ -39,6 +39,22 @@
   --cubic: cubic-bezier(0.22,1,0.36,1);
 }
 
+body[data-theme="light"] {
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --bg-card2: #eef3f9;
+  --bg-input: #ffffff;
+  --border: rgba(15,23,42,0.1);
+  --border-focus: rgba(15,23,42,0.24);
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-dim: #64748b;
+  --accent-light: rgba(124,106,240,0.08);
+  --lit-bg: rgba(244,114,182,0.08);
+  --math-bg: rgba(52,211,153,0.08);
+  --eng-bg: rgba(56,189,248,0.08);
+}
+
 /* ── 리셋 ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -54,12 +70,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   padding: 0 max(1.5rem, calc((100vw - var(--page-max)) / 2 + 1.5rem));
   display: flex; align-items: center; gap: 1.5rem;
 }
+body[data-theme="light"] .page-header { background: rgba(245,247,251,0.94); }
 .page-header .brand {
   font-family: var(--font-brand); font-size: 1.25rem; font-weight: 800;
   color: #fff; white-space: nowrap; text-decoration: none;
   letter-spacing: -0.02em;
   flex: 0 0 auto;
 }
+body[data-theme="light"] .page-header .brand { color: #0f172a; }
 .page-header .brand span { color: var(--accent); }
 .nav-tabs {
   display: flex; gap: 0.25rem; margin-left: auto;
