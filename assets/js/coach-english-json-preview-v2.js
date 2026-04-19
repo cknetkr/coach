@@ -32,7 +32,7 @@ function pv2Head(sentence) {
   if (title) {
     title.textContent = sentence?.subject && sentence?.title
       ? `${sentence.subject} · ${sentence.title}`
-      : '영어 받아쓰기 개념확장';
+      : '영어 받아쓰기 1타 첨삭';
   }
   if (desc) {
     const sentenceLabel = sentence?.tts?.label || sentence?.id || '선택한 문장';

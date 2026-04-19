@@ -43,6 +43,11 @@ const dictSentenceModalState = {
   open: false,
   activeIndex: -1,
 };
+const dictConceptExplorerState = {};
+const dictConceptTTSState = {
+  currentButtonId: '',
+  currentUtterance: null,
+};
 let selectedDictLevel = 'normal';
 let dictLineLevels = [];
 let dictLineTTSSettings = [];
@@ -54,6 +59,24 @@ const DICT_LEVEL_LABELS = {
   normal: '중',
   hard: '상',
 };
+
+function createDefaultDictConceptState() {
+  return {
+    open: false,
+    section: 'essential',
+    activeTab: 'blanks',
+    speakingMode: 'schoolInterview',
+    loading: false,
+    data: null,
+  };
+}
+
+function getDictConceptState(lineIndex) {
+  if (!dictConceptExplorerState[lineIndex]) {
+    dictConceptExplorerState[lineIndex] = createDefaultDictConceptState();
+  }
+  return dictConceptExplorerState[lineIndex];
+}
 
 function getDictationHint(hints, level) {
   if (!hints) return null;
@@ -208,6 +231,8 @@ function getDictationSentenceEntries(topic) {
       guide: entry.guide || null,
       commentary: entry.commentary || null,
       fullMeaning: entry.fullMeaning || null,
+      examModes: entry.examModes || null,
+      vocabulary: Array.isArray(entry.vocabulary) ? entry.vocabulary : [],
       blanks: Array.isArray(entry.blanks) ? entry.blanks : [],
     };
   });
@@ -680,11 +705,36 @@ function getDictationGuide(sentenceEntry) {
 }
 
 function buildDictationBlankGuideHtml(blank, blankIndex, lineIndex, level) {
-  const difficultyText = blank.difficulty?.basis
-    ? `<p><strong>난도 근거:</strong> ${escapeHtml(blank.difficulty.basis)}</p>`
-    : '';
+  const tagToneClass = (tag) => {
+    const value = String(tag || '');
+    if (value.includes('⭐')) return 'is-core';
+    if (value.includes('🔥')) return 'is-trap';
+    if (value.includes('🎯')) return 'is-exam';
+    if (value.includes('⚠️')) return 'is-mix';
+    return '';
+  };
+  const explanation = blank.explanation || {};
+  const coreText = explanation.core || [explanation.easy, explanation.role].filter(Boolean).join(' / ');
   const hintText = blank.hint
-    ? `<p><strong>${escapeHtml(DICT_LEVEL_LABELS[level] || level)} 힌트:</strong> ${escapeHtml(blank.hint)}</p>`
+    ? `<div class="dict-blank-hint"><strong>${escapeHtml(DICT_LEVEL_LABELS[level] || level)} 힌트</strong><span>${escapeHtml(blank.hint)}</span></div>`
+    : '';
+  const tagText = Array.isArray(blank.tags) && blank.tags.length
+    ? `
+      <div class="dict-blank-tag-list">
+        ${blank.tags.map((tag) => `<span class="dict-blank-tag ${tagToneClass(tag)}">${escapeHtml(tag)}</span>`).join('')}
+      </div>
+    `
+    : '';
+  const coachLine = blank.coachLine
+    ? `
+      <div class="dict-blank-coachline">
+        <strong>1타 코멘트</strong>
+        <p>${escapeHtml(blank.coachLine)}</p>
+      </div>
+    `
+    : '';
+  const difficultyText = blank.difficulty?.basis
+    ? `<p class="dict-blank-footnote"><strong>난도 근거:</strong> ${escapeHtml(blank.difficulty.basis)}</p>`
     : '';
   const wrongPatterns = Array.isArray(blank.wrongPatterns) && blank.wrongPatterns.length
     ? `
@@ -695,20 +745,75 @@ function buildDictationBlankGuideHtml(blank, blankIndex, lineIndex, level) {
       </div>
     `
     : '';
+  const diagnosis = Array.isArray(blank.diagnosis) && blank.diagnosis.length
+    ? `
+      <div class="dict-blank-diagnosis">
+        <div class="dict-blank-section-label">오답 진단표</div>
+        ${blank.diagnosis.map((item) => `
+          <div class="dict-blank-diagnosis-row">
+            <div class="dict-blank-diagnosis-cell">
+              <strong>증상</strong>
+              <span>${escapeHtml(item.symptom || '')}</span>
+            </div>
+            <div class="dict-blank-diagnosis-cell">
+              <strong>원인</strong>
+              <span>${escapeHtml(item.cause || '')}</span>
+            </div>
+            <div class="dict-blank-diagnosis-cell">
+              <strong>처방</strong>
+              <span>${escapeHtml(item.fix || '')}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `
+    : '';
+  const passBlock = blank.selfCheck?.passCriteria || (Array.isArray(blank.selfCheck?.routine) && blank.selfCheck.routine.length)
+    ? `
+      <div class="dict-blank-pass">
+        <div class="dict-blank-section-label">합격 기준</div>
+        ${blank.selfCheck?.question ? `<p class="dict-blank-pass-question">${escapeHtml(blank.selfCheck.question)}</p>` : ''}
+        ${blank.selfCheck?.passCriteria ? `<p class="dict-blank-pass-criteria">✅ ${escapeHtml(blank.selfCheck.passCriteria)}</p>` : ''}
+        ${Array.isArray(blank.selfCheck?.routine) && blank.selfCheck.routine.length ? `
+          <div class="dict-blank-routine-list">
+            ${blank.selfCheck.routine.map((item) => `
+              <div class="dict-blank-routine-item">
+                <strong>루틴 ${escapeHtml(item.step || '')}</strong>
+                <span>${escapeHtml(item.do || '')}</span>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `
+    : '';
   return `
     <div class="dict-blank-guide-card">
-      <div class="dict-coach-tag">빈칸 ${blankIndex + 1}</div>
+      <div class="dict-blank-head">
+        <div>
+          <div class="dict-coach-tag">빈칸 ${blankIndex + 1}</div>
+          <div class="dict-blank-answer-row">
+            <strong>${escapeHtml(blank.answer)}</strong>
+            ${blank.pos ? `<span>${escapeHtml(blank.pos)}</span>` : ''}
+          </div>
+        </div>
+        ${tagText}
+      </div>
       <div class="dict-guide-answer" id="dict-guide-answer-${lineIndex}-${blankIndex}" hidden>
         <p><strong>정답:</strong> ${escapeHtml(blank.answer)}</p>
         ${blank.pos ? `<p><strong>문법/역할:</strong> ${escapeHtml(blank.pos)}</p>` : ''}
       </div>
+      ${coachLine}
       ${hintText}
-      <p><strong>한글로 풀면:</strong> ${escapeHtml(blank.explanation.easy)}</p>
-      <p><strong>문장 속 역할:</strong> ${escapeHtml(blank.explanation.role)}</p>
-      <p><strong>들을 때 포인트:</strong> ${escapeHtml(blank.explanation.listen)}</p>
-      <p><strong>자주 틀리는 이유:</strong> ${escapeHtml(blank.explanation.trap)}</p>
+      <div class="dict-blank-note-grid">
+        ${coreText ? `<div class="dict-blank-note-row"><strong>CORE</strong><span>${escapeHtml(coreText)}</span></div>` : ''}
+        ${explanation.listen ? `<div class="dict-blank-note-row"><strong>LISTEN</strong><span>${escapeHtml(explanation.listen)}</span></div>` : ''}
+        ${explanation.trap ? `<div class="dict-blank-note-row"><strong>TRAP</strong><span>${escapeHtml(explanation.trap)}</span></div>` : ''}
+      </div>
       ${difficultyText}
       ${wrongPatterns}
+      ${diagnosis}
+      ${passBlock}
     </div>
   `;
 }
@@ -869,6 +974,753 @@ function buildDictationFullMeaningHtml(sentenceEntry) {
   `;
 }
 
+function getDictationConceptDataPath(sentenceEntry) {
+  const conceptDataPaths = {
+    'dot-s01': '../data/english-dictation/topic01-the-dot/s01.json',
+    'dot-s02': '../data/english-dictation/topic01-the-dot/s02.json',
+  };
+  return conceptDataPaths[String(sentenceEntry?.id || '')] || '';
+}
+
+function escapeDictationJsString(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'");
+}
+
+// Sentence JSON is split into exam-essential and advanced study lanes.
+// Keep this mapping stable so future prompt outputs can target the same UI slots.
+function buildDictationConceptSections(sentenceEntry) {
+  const commentary = sentenceEntry?.commentary || {};
+  const toeic = sentenceEntry?.examModes?.toeic || {};
+  const school = sentenceEntry?.examModes?.schoolInterview || {};
+  const opic = sentenceEntry?.examModes?.opic || {};
+  const toeics = sentenceEntry?.examModes?.toeicSpeaking || {};
+  const grammarSummary = (() => {
+    const patterns = Array.isArray(toeic.keyPatterns) && toeic.keyPatterns.length
+      ? toeic.keyPatterns
+      : ["would like to", 'by + 저자'];
+    return patterns.slice(0, 2).join(' / ');
+  })();
+  const pronunciationSummary = [
+    commentary?.pronunciation?.linking ? '연음' : '',
+    commentary?.pronunciation?.stress ? '강세' : '',
+    commentary?.pronunciation?.weakForm ? '약형' : '',
+  ].filter(Boolean).join(' · ') || '연음 · 강세 · 약형';
+  const blankSummary = (sentenceEntry?.blanks || []).map((blank) => blank.answer).slice(0, 3).join(' · ') || '핵심 빈칸';
+  const meaningSummary = '직역 · 자연 · 상황';
+  const schoolSummary = Array.isArray(school.answerFlow) && school.answerFlow.length
+    ? school.answerFlow.slice(0, 3).map((item) => item.label).join(' · ')
+    : '시작 · 핵심 이유 · 마무리';
+  const opicSummary = Array.isArray(opic.answerFlow) && opic.answerFlow.length
+    ? opic.answerFlow.slice(0, 3).map((item) => item.label).join(' · ')
+    : '오프닝 · 이유 · 마무리';
+  const toeicSpeakingSummary = Array.isArray(toeics.responseFrames) && toeics.responseFrames.length
+    ? toeics.responseFrames.slice(0, 3).map((item) => item.label).join(' · ')
+    : '의견 · 이유 · 예시';
+  const vocabularySummary = (sentenceEntry?.vocabulary || []).map((item) => item.word).slice(0, 3).join(' · ') || '핵심어 · 표현';
+  return [
+    {
+      key: 'essential',
+      label: '시험 필수',
+      summary: '받아쓰기 · 해석 · 빈칸 · 발음',
+      cards: [
+        { key: 'blanks', label: '빈칸 해설', summary: blankSummary },
+        { key: 'pronunciation', label: '발음·듣기', summary: pronunciationSummary },
+        { key: 'vocabulary', label: '핵심 어휘', summary: vocabularySummary },
+        { key: 'meaning', label: '문장 해석', summary: meaningSummary },
+        { key: 'grammar', label: '문법 포인트', summary: grammarSummary },
+      ],
+    },
+    {
+      key: 'advanced',
+      label: '심화 확장',
+      summary: '학교면접 · 오픽 · 토익스피킹',
+      cards: [
+        { key: 'schoolInterview', label: '학교면접', summary: schoolSummary },
+        { key: 'opic', label: '오픽', summary: opicSummary },
+        { key: 'toeicSpeaking', label: '토익스피킹', summary: toeicSpeakingSummary },
+      ],
+    },
+  ];
+}
+
+function buildDictationPronunciationGapHtml(items) {
+  if (!Array.isArray(items) || !items.length) return '';
+  return `
+    <div class="dict-pron-gap-list">
+      ${items.map((item) => `
+        <div class="dict-pron-gap-card">
+          <div class="dict-pron-gap-head">
+            <strong>${escapeHtml(item.word || '')}</strong>
+            ${item.pos ? `<span>${escapeHtml(item.pos)}</span>` : ''}
+          </div>
+          <div class="dict-pron-gap-row">
+            <label>외운 소리</label>
+            <div>
+              <div class="dict-pron-syllables">
+                ${(Array.isArray(item.known?.syllables) ? item.known.syllables : []).map((syllable) => `
+                  <span class="dict-pron-syllable is-${escapeHtml(syllable.type || 'normal')}">${escapeHtml(syllable.text || '')}</span>
+                `).join('')}
+              </div>
+              ${item.known?.desc ? `<p>${escapeHtml(item.known.desc)}</p>` : ''}
+              <div class="dict-concept-tts-row">
+                ${buildDictationConceptTTSButtons(item.known?.ttsText || item.word || '', [item.known?.ttsRate || 1, 0.6], ['보통 속도', '느리게'], `known-${escapeDictationJsString(item.word || 'gap')}`)}
+              </div>
+            </div>
+          </div>
+          <div class="dict-pron-gap-row">
+            <label>실제 소리</label>
+            <div>
+              <div class="dict-pron-syllables">
+                ${(Array.isArray(item.actual?.syllables) ? item.actual.syllables : []).map((syllable) => `
+                  <span class="dict-pron-syllable is-${escapeHtml(syllable.type || 'normal')}">${escapeHtml(syllable.text || '')}</span>
+                `).join('')}
+              </div>
+              ${item.actual?.hearPoint ? `<p class="dict-pron-hear-point">${escapeHtml(item.actual.hearPoint)}</p>` : ''}
+              <div class="dict-concept-tts-row">
+                ${buildDictationConceptTTSButtons(item.actual?.ttsText || item.word || '', [item.actual?.ttsRate || 1, item.actual?.ttsRateSlow || 0.75], ['실제 속도로 듣기', `${Number(item.actual?.ttsRateSlow || 0.75).toFixed(2).replace(/0$/, '')}x`], `actual-${escapeDictationJsString(item.word || 'gap')}`)}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function buildDictationConceptTTSButtons(text, rates, labels, keyPrefix) {
+  const values = Array.isArray(rates) && rates.length ? rates : [1];
+  return values.map((rate, index) => {
+    const buttonId = `dict-concept-tts-${keyPrefix}-${index}`.replace(/[^a-zA-Z0-9_-]/g, '-');
+    return `
+      <button
+        type="button"
+        id="${buttonId}"
+        class="dict-concept-tts-btn${index > 0 ? ' slow' : ''}"
+        onclick="playDictationConceptTTS('${escapeDictationJsString(buttonId)}', '${escapeDictationJsString(text)}', ${Number(rate) || 1})"
+      >
+        ▶ ${escapeHtml(labels?.[index] || `${Number(rate).toFixed(1)}x 듣기`)}
+      </button>
+    `;
+  }).join('');
+}
+
+function buildDictationConceptFlowBox(sentenceEntry) {
+  const guide = sentenceEntry?.guide || {};
+  const units = Array.isArray(guide.flowUnits) ? guide.flowUnits : [];
+  if (!units.length) return '';
+  return `
+    <div class="dict-flow-box">
+      <div class="dict-flow-label">끊어 읽기 단위 ( / = 짧은 쉼 )</div>
+      <div class="dict-flow-line">
+        ${units.map((unit, index) => `
+          ${index ? '<span class="dict-flow-arrow">/</span>' : ''}
+          <span class="dict-flow-word tone-${escapeHtml(unit.tone || 'a')}${unit.subtle ? ' subtle' : ''}">${escapeHtml(unit.text || '')}</span>
+        `).join('')}
+      </div>
+      ${guide.fullHeard ? `<div class="dict-flow-heard">${escapeHtml(guide.fullHeard)}</div>` : ''}
+      <div class="dict-concept-tts-row">
+        ${buildDictationConceptTTSButtons(sentenceEntry?.tts?.text || sentenceEntry?.text || '', sentenceEntry?.tts?.rates || [1, 0.7, 0.5], ['전체 문장 듣기', '0.7x 느리게', '0.5x 아주 느리게'], 'sentence')}
+      </div>
+      <div class="dict-flow-legend">
+        <div><span class="dict-flow-dot tone-a"></span>강세 음절</div>
+        <div><span class="dict-flow-dot tone-b"></span>약형/축약</div>
+        <div><span class="dict-flow-dot tone-d"></span>연음 뭉침</div>
+        <div><span class="dict-flow-dot ghost"></span>거의 안 들림</div>
+      </div>
+    </div>
+  `;
+}
+
+function stopDictationConceptTTS() {
+  if (!supportsDictationTTS()) return;
+  window.speechSynthesis.cancel();
+  if (dictConceptTTSState.currentButtonId) {
+    document.getElementById(dictConceptTTSState.currentButtonId)?.classList.remove('playing');
+  }
+  dictConceptTTSState.currentButtonId = '';
+  dictConceptTTSState.currentUtterance = null;
+}
+
+function playDictationConceptTTS(buttonId, text, rate = 1) {
+  if (!supportsDictationTTS()) {
+    showToast('이 브라우저는 TTS를 지원하지 않습니다');
+    return;
+  }
+  const phrase = String(text || '').trim();
+  if (!phrase) {
+    showToast('재생할 문장이 없습니다');
+    return;
+  }
+  const button = document.getElementById(buttonId);
+  const wasSame = dictConceptTTSState.currentButtonId === buttonId;
+  stopDictationTTS({ preserveStatus: true });
+  stopDictationConceptTTS();
+  if (wasSame) return;
+  const utterance = new SpeechSynthesisUtterance(phrase);
+  utterance.lang = 'en-US';
+  utterance.rate = Number(rate) || 1;
+  const voice = getEnglishDictationVoices().find((item) => /en-us/i.test(item.lang)) || getEnglishDictationVoices()[0] || null;
+  if (voice) utterance.voice = voice;
+  utterance.onstart = () => {
+    button?.classList.add('playing');
+    dictConceptTTSState.currentButtonId = buttonId;
+    dictConceptTTSState.currentUtterance = utterance;
+    setDictationTTSStatus(`재생 중: ${phrase}`, 'active');
+  };
+  utterance.onend = utterance.onerror = () => {
+    button?.classList.remove('playing');
+    dictConceptTTSState.currentButtonId = '';
+    dictConceptTTSState.currentUtterance = null;
+    setDictationTTSStatus('재생 완료', 'active');
+  };
+  window.speechSynthesis.resume();
+  window.setTimeout(() => window.speechSynthesis.speak(utterance), 40);
+}
+
+function buildDictationConceptPriorityHtml({ tag = '1타 첨삭', title = '', priority = '', training = '', target = '', warning = '' }) {
+  const badges = [
+    priority ? `<span class="dict-concept-badge is-critical">중요도 ${escapeHtml(priority)}</span>` : '',
+    training ? `<span class="dict-concept-badge">${escapeHtml(training)}</span>` : '',
+    target ? `<span class="dict-concept-badge is-soft">${escapeHtml(target)}</span>` : '',
+  ].filter(Boolean).join('');
+  return `
+    <div class="dict-commentary-section dict-concept-priority">
+      <div class="dict-coach-tag">${escapeHtml(tag)}</div>
+      ${title ? `<p class="dict-concept-priority-title">${escapeHtml(title)}</p>` : ''}
+      ${badges ? `<div class="dict-concept-badge-row">${badges}</div>` : ''}
+      ${warning ? `<p class="dict-concept-warning">${escapeHtml(warning)}</p>` : ''}
+    </div>
+  `;
+}
+
+function buildDictationConceptDrillHtml(items) {
+  const drills = Array.isArray(items) ? items.filter(Boolean) : [];
+  if (!drills.length) return '';
+  return `
+    <div class="dict-concept-drill-list">
+      ${drills.map((item) => `
+        <div class="dict-concept-drill-item">
+          <strong>${escapeHtml(item.label || '')}</strong>
+          <span>${escapeHtml(item.text || '')}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function buildDictationConceptSelfCheckHtml(items) {
+  const checks = Array.isArray(items) ? items.filter((item) => item?.question) : [];
+  if (!checks.length) return '';
+  return `
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">통과 기준</div>
+      <div class="dict-concept-check-list">
+        ${checks.map((item) => `
+          <div class="dict-concept-check-card">
+            <p class="dict-concept-check-question">${escapeHtml(item.question || '')}</p>
+            ${Array.isArray(item.solutions) && item.solutions.length ? `
+              <div class="dict-commentary-bullets">
+                ${item.solutions.map((solution) => `<div>${escapeHtml(solution.desc || '')}</div>`).join('')}
+              </div>
+            ` : ''}
+            ${item.goalTip ? `<p class="dict-concept-check-goal">${escapeHtml(item.goalTip)}</p>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Grammar tab should coach the student on what must be memorized, not just list rules.
+function buildDictationConceptGrammarHtml(sentenceEntry) {
+  const toeic = sentenceEntry?.examModes?.toeic || {};
+  const patterns = Array.isArray(toeic.keyPatterns) && toeic.keyPatterns.length
+    ? toeic.keyPatterns
+    : ["I'd like to + 동사원형", 'by + 사람'];
+  const grammarCards = [
+    {
+      title: "I'd like to = I would like to",
+      summary: '`would like to + 동사원형`을 통째로 외워야 발표 시작이 흔들리지 않습니다.',
+      why: '축약형을 못 알아보면 듣기, 독해, 말하기에서 전부 속도가 끊깁니다.',
+      drill: '3초 안에 `I would like to`와 `I\'d like to`를 서로 바꿔 말하기 5회',
+    },
+    {
+      title: 'introduce + 목적어',
+      summary: '`introduce` 뒤에는 사람, 책, 주제 같은 목적어가 바로 옵니다.',
+      why: '`introduce about`처럼 전치사를 붙이면 점수가 바로 깎이는 대표 실수입니다.',
+      drill: '`introduce a book / a speaker / myself` 3세트를 소리 내어 반복',
+    },
+    {
+      title: 'by + 사람',
+      summary: '`The Dot by Peter Reynolds`처럼 작품과 저자를 묶는 기본 전치사입니다.',
+      why: '`of / with / from`과 헷갈리면 토익 전치사 문제와 독해 해석이 같이 무너집니다.',
+      drill: '`a book by ~`, `a song by ~`, `a movie by ~`로 바꿔 말하기',
+    },
+  ];
+  return `
+    ${buildDictationConceptPriorityHtml({
+      title: '이 문장은 문법 설명보다 발표 시작 구조를 통째로 암기해야 점수가 납니다.',
+      priority: '★★★★★',
+      training: '필수 암기 + 이해 필수',
+      target: '3초 안에 구조 복원',
+      warning: '여기서 `would like to`, `introduce`, `by + 사람`을 못 잡으면 뒤에서 아무리 반복해도 계속 틀립니다.',
+    })}
+    <div class="dict-commentary-section">
+        <div class="dict-coach-tag">무조건 외울 구조</div>
+        <div class="dict-concept-chip-list">
+          ${patterns.map((item) => `<span class="dict-concept-chip">${escapeHtml(item)}</span>`).join('')}
+        </div>
+        <p class="dict-concept-emphasis">이 문법 탭의 목적은 규칙 암기가 아니라, 시험장에서 바로 꺼내 쓸 구조를 몸에 붙이는 것입니다.</p>
+        <div class="dict-concept-study-grid">
+          ${grammarCards.map((card) => `
+            <div class="dict-concept-study-card">
+              <strong>${escapeHtml(card.title)}</strong>
+              <p>${escapeHtml(card.summary)}</p>
+            <div class="dict-commentary-bullets">
+              <div>${escapeHtml(card.why)}</div>
+              <div>${escapeHtml(card.drill)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ${(toeic.grammarPoints || []).length ? `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">시험에서 걸리는 이유</div>
+        <div class="dict-commentary-bullets">
+          ${(toeic.grammarPoints || []).map((point) => `<div>${escapeHtml(point.label || '')} · ${escapeHtml(point.desc || '')}</div>`).join('')}
+        </div>
+      </div>
+    ` : ''}
+    ${buildDictationConceptDrillHtml([
+      { label: '암기', text: '`I would like to`를 축약형과 원형으로 5번씩 바꿔 말하세요.' },
+      { label: '적용', text: '`introduce` 뒤 목적어를 바꿔 새 문장 3개를 직접 만드세요.' },
+      { label: '점검', text: '`by + 사람`이 보이면 저자 표시라고 바로 말할 수 있어야 합니다.' },
+    ])}
+  `;
+}
+
+function buildDictationConceptPronunciationHtml(sentenceEntry) {
+  const commentary = sentenceEntry?.commentary || {};
+  const guide = sentenceEntry?.guide || {};
+  const pronunciationItems = [
+    { label: '연음', value: commentary?.pronunciation?.linking },
+    { label: '약형', value: commentary?.pronunciation?.weakForm },
+    { label: '강세', value: commentary?.pronunciation?.stress },
+  ].filter((item) => item.value);
+  return `
+    ${pronunciationItems.length ? `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">발음 3포인트</div>
+        <div class="dict-pron-summary-grid">
+          ${pronunciationItems.map((item) => `
+            <div class="dict-pron-summary-card">
+              <div class="dict-pron-summary-tag">${escapeHtml(item.label)}</div>
+              <div class="dict-pron-summary-text">${escapeHtml(item.value)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+    ${buildDictationPronunciationGapHtml(commentary?.pronunciationGap || [])}
+    ${buildDictationConceptFlowBox(sentenceEntry)}
+    ${(guide?.p || guide?.c) ? `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">귀에 걸어둘 소리</div>
+        <div class="dict-commentary-list">
+          ${guide?.p ? `<div class="dict-commentary-row"><strong>끊어 듣기</strong><span>${escapeHtml(guide.p)}</span></div>` : ''}
+          ${guide?.c ? `<div class="dict-commentary-row"><strong>듣는 요령</strong><span>${escapeHtml(guide.c)}</span></div>` : ''}
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function buildDictationConceptBlanksHtml(sentenceEntry, lineIndex) {
+  const practiceMeta = dictPracticeMeta[lineIndex];
+  const blanks = Array.isArray(practiceMeta?.blanks) ? practiceMeta.blanks : [];
+  const blankAnswers = blanks.map((blank) => blank.answer).filter(Boolean).join(' · ');
+  return `
+    ${buildDictationConceptPriorityHtml({
+      title: '빈칸 탭은 해설 읽는 곳이 아니라, 어디서 점수가 깎이는지 먼저 찍고 바로 교정 루프로 들어가는 곳입니다.',
+      priority: '★★★★★',
+      training: '반복 훈련',
+      target: '빈칸 신호 즉시 반응',
+      warning: '순서는 고정입니다. 호통 -> 진단 -> 처방 -> 합격 기준. 이 흐름이 안 잡히면 같은 오답을 계속 반복합니다.',
+    })}
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">이번 문장에서 먼저 적어야 할 답</div>
+      <div class="dict-concept-chip-list">
+        ${blanks.map((blank) => `<span class="dict-concept-chip">${escapeHtml(blank.answer || '')}</span>`).join('')}
+      </div>
+      <div class="dict-commentary-bullets">
+        <div>${escapeHtml(blankAnswers || '핵심 빈칸을 먼저 고정하세요.')}</div>
+        <div>순서는 '소리 확인 -> 철자 확정 -> 오답 사고경로 차단'으로 가져가야 실전에서 덜 흔들립니다.</div>
+      </div>
+    </div>
+    <div class="dict-blank-guide-list">
+      ${blanks.map((blank, blankIndex) => buildDictationBlankGuideHtml(blank, blankIndex, lineIndex, dictLineLevels[lineIndex] || selectedDictLevel)).join('')}
+    </div>
+    ${buildDictationConceptDrillHtml([
+      { label: '1차', text: '정답 가리고 소리만 듣고 빈칸을 적으세요. 해석은 나중입니다.' },
+      { label: '2차', text: '틀린 빈칸은 무조건 진단표 원인과 연결해서 다시 써야 합니다.' },
+      { label: '통과', text: 'passCriteria를 찍기 전에는 이 문장 끝난 게 아닙니다.' },
+    ])}
+  `;
+}
+
+// Meaning tab must separate "understand the sentence" from "see how the test will trap it".
+function buildDictationConceptMeaningHtml(sentenceEntry) {
+  const toeic = sentenceEntry?.examModes?.toeic || {};
+  const fullMeaning = sentenceEntry?.fullMeaning || {};
+  const meaningHtml = buildDictationFullMeaningHtml(sentenceEntry);
+  const toeicHtml = (toeic.learningGoal || toeic.coachLine || toeic.fastRule || (toeic.quickChecks || []).length) ? `
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">시험에서 이렇게 걸린다</div>
+      <p>${escapeHtml(toeic.coachLine || toeic.learningGoal || '이 문장은 토익에서 패턴과 전치사 포인트를 함께 묻기 좋은 구조입니다.')}</p>
+      ${toeic.fastRule ? `<p class="dict-concept-emphasis">${escapeHtml(toeic.fastRule)}</p>` : ''}
+      ${(toeic.quickChecks || []).length ? `
+        <div class="dict-commentary-bullets">
+          ${(toeic.quickChecks || []).map((item) => `<div>${escapeHtml(item.stem || item.question || '')} ${escapeHtml(item.rationale || item.answer || '')}</div>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+  ` : '';
+  const coachIntroHtml = (fullMeaning.literal || fullMeaning.natural || fullMeaning.context) ? `
+    ${buildDictationConceptPriorityHtml({
+      title: '해석 탭은 문장 뜻을 아는 데서 끝나면 안 되고, 그 뜻으로 빈칸을 역추론할 수 있어야 합니다.',
+      priority: '★★★★☆',
+      training: '이해 + 문맥 추론',
+      target: '뜻 보고 빈칸 예측',
+      warning: '직역만 보고 넘어가면 시험에서는 단어는 알아도 빈칸을 못 메우는 상태가 됩니다.',
+    })}
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">1타 강사 코멘트</div>
+      <div class="dict-commentary-bullets">
+        ${fullMeaning.natural ? `<div>이 문장은 ${escapeHtml(fullMeaning.natural)}처럼 자연스럽게 이해돼야 문맥으로 빈칸을 추론할 수 있습니다.</div>` : ''}
+        ${fullMeaning.context ? `<div>${escapeHtml(fullMeaning.context)}</div>` : ''}
+        <div>시험에서는 해석을 보기 위한 탭이 아니라, 빈칸 앞뒤 의미를 빠르게 연결하기 위한 탭으로 써야 합니다.</div>
+      </div>
+    </div>
+  ` : '';
+  return coachIntroHtml || meaningHtml || toeicHtml
+    ? `${coachIntroHtml}${meaningHtml}${toeicHtml}`
+    : `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">문장 해석</div>
+        <p>등록된 의미 데이터가 없습니다.</p>
+      </div>
+    `;
+}
+
+function buildDictationConceptToeicHtml(sentenceEntry) {
+  const toeic = sentenceEntry?.examModes?.toeic || {};
+  return `
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">토익 포인트</div>
+      <p>${escapeHtml(toeic.learningGoal || toeic.coachLine || '등록된 토익 확장 데이터가 없습니다.')}</p>
+      ${toeic.fastRule ? `<p class="dict-concept-emphasis">${escapeHtml(toeic.fastRule)}</p>` : ''}
+      <div class="dict-commentary-bullets">
+        ${(toeic.quickChecks || []).map((item) => `<div>${escapeHtml(item.stem || item.question || '')} ${escapeHtml(item.rationale || item.answer || '')}</div>`).join('')}
+      </div>
+    </div>
+    ${(toeic.grammarPoints || []).map((point) => `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">${escapeHtml(point.label || '문법 포인트')}</div>
+        <p>${escapeHtml(point.desc || '')}</p>
+      </div>
+    `).join('')}
+  `;
+}
+
+function buildDictationConceptSpeakingModeHtml(sentenceEntry, modeKey) {
+  const modeMap = {
+    schoolInterview: { label: '학교면접', block: sentenceEntry?.examModes?.schoolInterview || {} },
+    opic: { label: '오픽', block: sentenceEntry?.examModes?.opic || {} },
+    toeicSpeaking: { label: '토익스피킹', block: sentenceEntry?.examModes?.toeicSpeaking || {} },
+  };
+  const selectedMode = modeMap[modeKey];
+  if (!selectedMode || !selectedMode.block || !Object.keys(selectedMode.block).length) {
+    return `
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">스피킹 확장</div>
+        <p>등록된 스피킹 확장 데이터가 없습니다.</p>
+      </div>
+    `;
+  }
+  const block = selectedMode.block;
+  const flow = block.answerFlow || block.responseFrames || [];
+  const sampleAnswers = Array.isArray(block.sampleAnswers) ? block.sampleAnswers.slice(0, 2) : [];
+  const followUps = Array.isArray(block.followUps) ? block.followUps.slice(0, 2) : [];
+  const recoveryLines = Array.isArray(block.recoveryLines) ? block.recoveryLines.slice(0, 2) : [];
+  const selfChecks = Array.isArray(block.selfCheck) ? block.selfCheck.slice(0, 1) : [];
+  return `
+    ${buildDictationConceptPriorityHtml({
+      title: '이 문장 하나를 오프닝으로 잡아 두면 학교 면접, 오픽, 토스까지 다른 답변으로 확장할 수 있습니다.',
+      priority: '★★★★☆',
+      training: '반복 훈련 + 말하기 적용',
+      target: '2초 안에 시작',
+      warning: '첫 문장이 막히면 뒤 이유 문장과 예시 문장도 같이 무너집니다. 오프닝부터 자동화해야 합니다.',
+    })}
+    <div class="dict-concept-speak-grid">
+      <div class="dict-commentary-section">
+        <div class="dict-coach-tag">${escapeHtml(selectedMode.label)}</div>
+        <p>${escapeHtml(block.learningGoal || block.coachLine || '')}</p>
+        ${block.fastRule ? `<p class="dict-concept-emphasis">${escapeHtml(block.fastRule)}</p>` : ''}
+        ${flow.length ? `
+          <div class="dict-commentary-list">
+            ${flow.slice(0, 4).map((item) => `
+              <div class="dict-commentary-row"><strong>${escapeHtml(item.label || '')}</strong><span>${escapeHtml(item.text || '')}</span></div>
+            `).join('')}
+          </div>
+        ` : ''}
+        ${sampleAnswers.length ? `
+          <div class="dict-concept-mini-list">
+            ${sampleAnswers.map((item) => `
+              <div class="dict-concept-mini-card">
+                <strong>${escapeHtml(item.label || '샘플 답변')}</strong>
+                <p>${escapeHtml(item.text || '')}</p>
+                ${item.coaching ? `<span>${escapeHtml(item.coaching)}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+        ${followUps.length ? `
+          <div class="dict-commentary-bullets">
+            ${followUps.map((item) => `<div>${escapeHtml(item.label || '')} · ${escapeHtml(item.text || '')}</div>`).join('')}
+          </div>
+        ` : ''}
+        ${recoveryLines.length ? `
+          <div class="dict-concept-chip-list">
+            ${recoveryLines.map((line) => `<span class="dict-concept-chip">${escapeHtml(line)}</span>`).join('')}
+          </div>
+        ` : ''}
+        ${selfChecks.length ? `
+          <div class="dict-commentary-bullets">
+            ${selfChecks.map((item) => `<div>${escapeHtml(item.goalTip || item.question || '')}</div>`).join('')}
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function buildDictationConceptVocabularyHtml(sentenceEntry) {
+  const vocabulary = sentenceEntry?.vocabulary || [];
+  const voca = sentenceEntry?.examModes?.voca || {};
+  const quickChecks = Array.isArray(voca.quickChecks) ? voca.quickChecks : [];
+  const selfChecks = Array.isArray(voca.selfCheck) ? voca.selfCheck.slice(0, 2) : [];
+  return `
+    ${buildDictationConceptPriorityHtml({
+      title: '고득점을 위한 어휘 학습은 단어 뜻만 아는 수준을 넘어서야 합니다. `뜻 + 묶음 표현 + 시험에서 쓰이는 자리`까지 한 세트로 외워야 합니다.',
+      priority: '★★★★★',
+      training: '필수 암기 + 반복 훈련',
+      target: '단어를 보면 예문이 바로 나와야 함',
+      warning: '고득점을 위해서는 어휘를 얕게 외우면 안 됩니다. 듣기, 파트5, 말하기가 같이 흔들리지 않도록 어휘를 바닥부터 단단히 잡아야 합니다.',
+    })}
+    <div class="dict-commentary-section">
+      <div class="dict-coach-tag">어휘 코칭</div>
+      <p>${escapeHtml(voca.coachLine || voca.fastRule || '핵심 어휘를 의미와 쓰임으로 묶어 보세요.')}</p>
+      ${voca.fastRule ? `<p class="dict-concept-emphasis">${escapeHtml(voca.fastRule)}</p>` : ''}
+      ${quickChecks.length ? `
+        <div class="dict-commentary-bullets">
+          ${quickChecks.map((item) => `<div>${escapeHtml(item.question || '')} ${escapeHtml(item.answer || '')} ${escapeHtml(item.coaching || '')}</div>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+    <div class="dict-concept-vocab-list">
+      ${vocabulary.map((item, index) => `
+        <div class="dict-commentary-section">
+          <div class="dict-concept-word-head">
+            <div>
+              <div class="dict-coach-tag">${escapeHtml(item.word || '')}</div>
+              <p class="dict-concept-word-meta">
+                ${escapeHtml((item.meanings || []).join(', '))}
+                ${item.pos ? ` · ${escapeHtml(item.pos)}` : ''}
+                ${item.pronunciation ? ` · ${escapeHtml(item.pronunciation)}` : ''}
+              </p>
+            </div>
+            <span class="dict-concept-badge${item.isMust ? ' is-critical' : ''}">${escapeHtml(item.isMust ? '필수 암기' : '보조 표현')}</span>
+          </div>
+          ${item.exampleSentence ? `<p class="dict-concept-example">${escapeHtml(item.exampleSentence)}${item.exampleContext ? ` · ${escapeHtml(item.exampleContext)}` : ''}</p>` : ''}
+          ${item.ttsText ? `
+            <div class="dict-concept-tts-row">
+              ${buildDictationConceptTTSButtons(item.ttsText, [1, 0.72], ['듣기', '느리게'], `voca-${escapeDictationJsString(item.word || `word-${index}`)}`)}
+            </div>
+          ` : ''}
+          ${buildDictationConceptDrillHtml([
+            { label: '왜 중요', text: item.isMust ? '이 단어는 이 문장뿐 아니라 발표 시작, 토익, 말하기까지 반복해서 재등장합니다.' : '뜻만 말하지 말고 이 문장에서 어떤 자리인지 같이 기억해야 합니다.' },
+            item.collocations?.length ? { label: '묶음 암기', text: item.collocations.slice(0, 3).join(' / ') } : null,
+            item.toeicNote ? { label: '토익 포인트', text: item.toeicNote } : null,
+            item.opicNote ? { label: '말하기 포인트', text: item.opicNote } : null,
+          ])}
+          ${Array.isArray(item.collocations) && item.collocations.length ? `
+            <div class="dict-concept-chip-list">
+              ${item.collocations.map((term) => `<span class="dict-concept-chip">${escapeHtml(term)}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${Array.isArray(item.synonyms) && item.synonyms.length ? `
+            <div class="dict-commentary-row"><strong>비슷한 말</strong><span>${escapeHtml(item.synonyms.join(', '))}</span></div>
+          ` : ''}
+          ${Array.isArray(item.derivatives) && item.derivatives.length ? `
+            <div class="dict-commentary-row"><strong>파생어</strong><span>${escapeHtml(item.derivatives.join(', '))}</span></div>
+          ` : ''}
+          ${Array.isArray(item.confusables) && item.confusables.length ? `
+            <div class="dict-commentary-bullets">
+              ${item.confusables.map((pair) => `<div>${escapeHtml(pair.word || '')} · ${escapeHtml(pair.desc || '')}</div>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `).join('')}
+    </div>
+    ${buildDictationConceptSelfCheckHtml(selfChecks)}
+  `;
+}
+
+function buildDictationConceptExplorerBody(sentenceEntry, lineIndex, activeTab) {
+  switch (activeTab) {
+    case 'grammar':
+      return buildDictationConceptGrammarHtml(sentenceEntry);
+    case 'pronunciation':
+      return buildDictationConceptPronunciationHtml(sentenceEntry);
+    case 'blanks':
+      return buildDictationConceptBlanksHtml(sentenceEntry, lineIndex);
+    case 'meaning':
+      return buildDictationConceptMeaningHtml(sentenceEntry);
+    case 'toeic':
+      return buildDictationConceptToeicHtml(sentenceEntry);
+    case 'schoolInterview':
+    case 'opic':
+    case 'toeicSpeaking':
+      return buildDictationConceptSpeakingModeHtml(sentenceEntry, activeTab);
+    case 'vocabulary':
+      return buildDictationConceptVocabularyHtml(sentenceEntry);
+    default:
+      return buildDictationConceptGrammarHtml(sentenceEntry);
+  }
+}
+
+function renderDictationConceptExplorer(lineIndex) {
+  const state = getDictConceptState(lineIndex);
+  const container = document.getElementById(`dict-concept-shell-${lineIndex}`);
+  const button = document.getElementById(`dict-open-concept-${lineIndex}`);
+  const sentenceEntry = state?.data || dictSentenceEntries[lineIndex];
+  if (!container || !state || !sentenceEntry) return;
+  if (!state.open) {
+    container.hidden = true;
+    if (button) button.textContent = '🧪 1타 첨삭';
+    return;
+  }
+  const sections = buildDictationConceptSections(sentenceEntry);
+  const activeSection = sections.find((section) => section.key === state.section) || sections[0] || null;
+  const cards = activeSection?.cards || [];
+  if (activeSection && !cards.some((card) => card.key === state.activeTab)) {
+    state.activeTab = cards[0]?.key || 'meaning';
+  }
+  container.hidden = false;
+  if (button) button.textContent = '🧪 첨삭 닫기';
+  if (state.loading) {
+    container.innerHTML = `<div class="dict-commentary-section"><div class="dict-coach-tag">첨삭 로딩 중</div><p>첫 문장 첨삭 데이터를 불러오고 있습니다.</p></div>`;
+    return;
+  }
+  container.innerHTML = `
+    <div class="dict-concept-explorer">
+      <div class="dict-concept-body dict-concept-body--full">
+        <div class="dict-concept-section-tabs">
+          ${sections.map((section) => `
+            <button
+              type="button"
+              class="dict-concept-section-tab${activeSection?.key === section.key ? ' active' : ''}"
+              onclick="setDictationConceptSection(${lineIndex}, '${escapeDictationJsString(section.key)}')"
+            >
+              <strong>${escapeHtml(section.label)}</strong>
+              <span>${escapeHtml(section.summary)}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="dict-concept-explorer dict-concept-explorer--nested">
+          <div class="dict-concept-nav">
+            ${cards.map((card) => `
+              <button
+                type="button"
+                class="dict-concept-tab${state.activeTab === card.key ? ' active' : ''}"
+                onclick="setDictationConceptTab(${lineIndex}, '${escapeDictationJsString(card.key)}')"
+              >
+                <strong>${escapeHtml(card.label)}</strong>
+                <span>${escapeHtml(card.summary)}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div class="dict-concept-body">
+            ${buildDictationConceptExplorerBody(sentenceEntry, lineIndex, state.activeTab)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function ensureDictationConceptData(lineIndex) {
+  const state = getDictConceptState(lineIndex);
+  const sentenceEntry = dictSentenceEntries[lineIndex];
+  if (!state || state.data || !sentenceEntry) return;
+  const path = getDictationConceptDataPath(sentenceEntry);
+  if (!path) {
+    state.data = sentenceEntry;
+    return;
+  }
+  state.loading = true;
+  renderDictationConceptExplorer(lineIndex);
+  try {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    state.data = { ...sentenceEntry, ...data };
+  } catch (error) {
+    console.error(error);
+    state.data = sentenceEntry;
+    showToast('첨삭 데이터를 불러오지 못했습니다');
+  } finally {
+    state.loading = false;
+    renderDictationConceptExplorer(lineIndex);
+  }
+}
+
+function setDictationConceptTab(lineIndex, tabKey) {
+  const state = getDictConceptState(lineIndex);
+  state.activeTab = tabKey;
+  renderDictationConceptExplorer(lineIndex);
+}
+
+function setDictationConceptSection(lineIndex, sectionKey) {
+  const state = getDictConceptState(lineIndex);
+  const sentenceEntry = state?.data || dictSentenceEntries[lineIndex];
+  if (!state || !sentenceEntry) return;
+  const section = buildDictationConceptSections(sentenceEntry).find((item) => item.key === sectionKey);
+  if (!section) return;
+  state.section = section.key;
+  state.activeTab = section.cards[0]?.key || 'meaning';
+  renderDictationConceptExplorer(lineIndex);
+}
+
+function setDictationConceptSpeakingMode(lineIndex, modeKey) {
+  const state = getDictConceptState(lineIndex);
+  state.speakingMode = modeKey;
+  renderDictationConceptExplorer(lineIndex);
+}
+
+function toggleDictationConceptExplorer(lineIndex) {
+  const state = getDictConceptState(lineIndex);
+  state.open = !state.open;
+  if (!state.open) stopDictationConceptTTS();
+  renderDictationConceptExplorer(lineIndex);
+  if (state.open) {
+    void ensureDictationConceptData(lineIndex);
+  }
+}
+
 function toggleDictationSelfCheckSolution(lineIndex, itemIndex) {
   const el = document.getElementById(`dict-self-check-solution-${lineIndex}-${itemIndex}`);
   if (!el) return;
@@ -884,6 +1736,7 @@ function setDictationTTSStatus(message, tone = '') {
   if (!el) return;
   el.textContent = message;
   el.className = `dict-tts-status${tone ? ` ${tone}` : ''}`;
+  el.hidden = !String(message || '').trim();
 }
 
 function getEnglishDictationVoices() {
@@ -894,13 +1747,13 @@ function getEnglishDictationVoices() {
 
 function ensureDictationLineTTSSettings() {
   dictLineTTSSettings = dictTTSState.lines.map((_, index) => ({
-    rate: Number(dictLineTTSSettings[index]?.rate) || 0.9,
+    rate: Number(dictLineTTSSettings[index]?.rate) || 1,
     voiceName: dictLineTTSSettings[index]?.voiceName || '',
   }));
 }
 
 function getDictationLineTTSSetting(index) {
-  return dictLineTTSSettings[index] || { rate: 0.9, voiceName: '' };
+  return dictLineTTSSettings[index] || { rate: 1, voiceName: '' };
 }
 
 function populateDictationVoices() {
@@ -1044,10 +1897,35 @@ function renderDictationLineButtons() {
     container.innerHTML = '';
     return;
   }
-  container.innerHTML = dictTTSState.lines.map((_, index) => (
-    `<button type="button" class="dict-tts-line-btn" onclick="focusDictationSentence(${index})">문장 ${index + 1}</button>`
-  )).join('');
-  highlightDictationLineButton(dictTTSState.currentIndex);
+  const activeIndex = dictTTSState.currentIndex >= 0 ? dictTTSState.currentIndex : 0;
+  const activeMeta = dictPracticeMeta[activeIndex];
+  const blankCountLabel = activeMeta
+    ? (activeMeta.isStudyMode ? '전체 공개' : `빈칸 ${activeMeta.blanks.length}개`)
+    : '';
+  container.innerHTML = `
+    <div class="dict-line-row">
+      <div class="dict-line-group">
+        <span class="dict-line-group-label">문장 선택</span>
+        <div class="dict-line-tabs">
+          ${dictTTSState.lines.map((_, index) => (
+            `<button type="button" class="dict-tts-line-btn" onclick="focusDictationSentence(${index})">문장 ${index + 1}</button>`
+          )).join('')}
+        </div>
+      </div>
+      <div class="dict-line-toolbar">
+        <div class="dict-line-group dict-line-group--meta">
+        <span class="dict-line-group-label">난이도</span>
+        ${blankCountLabel ? `<span class="dict-difficulty-chip subtle">${blankCountLabel}</span>` : ''}
+        <div class="dict-level-switch">
+          ${Object.entries(DICT_LEVEL_LABELS).map(([levelKey, label]) => `
+            <button type="button" class="dict-level-pill${activeMeta?.level === levelKey ? ' active' : ''}" onclick="setDictationLineLevel(${activeIndex}, '${levelKey}')">${label}</button>
+          `).join('')}
+        </div>
+      </div>
+      </div>
+    </div>
+  `;
+  highlightDictationLineButton(activeIndex);
 }
 
 function getDictationPreviewHref(sentenceEntry, index) {
@@ -1068,10 +1946,12 @@ function renderDictationPracticeCards() {
   ensureDictationLineTTSSettings();
   dictPracticeMeta = dictSentenceEntries.map((sentenceEntry, index) => buildDictationPracticeMeta(sentenceEntry, dictLineLevels[index] || selectedDictLevel, index));
   container.innerHTML = dictPracticeMeta.map((meta, index) => {
-    const guide = getDictationGuide(dictSentenceEntries[index]);
+    const sentenceEntry = dictSentenceEntries[index];
+    const guide = getDictationGuide(sentenceEntry);
     const blankCountLabel = meta.isStudyMode ? '전체 공개' : `빈칸 ${meta.blanks.length}개`;
     const ttsSetting = getDictationLineTTSSetting(index);
-    const jsonPreviewHref = getDictationPreviewHref(dictSentenceEntries[index], index);
+    const useInlineConceptExplorer = Boolean(getDictationConceptDataPath(sentenceEntry));
+    const jsonPreviewHref = useInlineConceptExplorer ? '' : getDictationPreviewHref(sentenceEntry, index);
     return `
       <article class="dict-practice-card" id="dict-card-${index}">
         <div class="dict-practice-head">
@@ -1079,11 +1959,6 @@ function renderDictationPracticeCards() {
             <div class="dict-practice-meta">
               <span class="dict-practice-step">문장 ${index + 1}</span>
               <span class="dict-difficulty-chip subtle">${blankCountLabel}</span>
-              <div class="dict-level-switch">
-                ${Object.entries(DICT_LEVEL_LABELS).map(([levelKey, label]) => `
-                  <button type="button" class="dict-level-pill${meta.level === levelKey ? ' active' : ''}" onclick="setDictationLineLevel(${index}, '${levelKey}')">${label}</button>
-                `).join('')}
-              </div>
             </div>
             <div class="dict-practice-sub">한 번 듣고 빈칸만 채우기. 필요하면 같은 문장을 다시 듣고 정답을 확인하세요.</div>
           </div>
@@ -1102,28 +1977,39 @@ function renderDictationPracticeCards() {
               </label>
             </div>
             <button class="btn-secondary" type="button" onclick="playDictationSentence(${index})">🔊 문장 듣기</button>
-            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 개념확장</a>` : ''}
+            ${useInlineConceptExplorer ? `<button class="btn-secondary dict-concept-toggle" id="dict-open-concept-${index}" type="button" onclick="toggleDictationConceptExplorer(${index})">🧪 1타 첨삭</button>` : ''}
+            ${jsonPreviewHref ? `<a class="btn-secondary dict-preview-link" href="${jsonPreviewHref}" target="_blank" rel="noopener noreferrer">🧪 1타 첨삭</a>` : ''}
             <button class="btn-secondary dict-answer-toggle" id="dict-answer-toggle-${index}" type="button" onclick="revealDictationAnswer(${index})">
               <span id="dict-answer-toggle-label-${index}">정답 보기</span>
             </button>
           </div>
         </div>
-        ${buildDictationLearningGoalHtml(dictSentenceEntries[index], guide)}
         <div class="dict-cloze-line">${meta.previewHtml}</div>
-        ${buildDictationFullMeaningHtml(dictSentenceEntries[index])}
-        ${meta.isStudyMode ? `
-          <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
+        ${useInlineConceptExplorer ? `
+          <div class="dict-concept-shell" id="dict-concept-shell-${index}" hidden></div>
         ` : `
-          <div class="dict-blank-guide-list">
-            ${meta.blanks.map((blank, blankIndex) => buildDictationBlankGuideHtml(blank, blankIndex, index, meta.level)).join('')}
-          </div>
+          ${buildDictationLearningGoalHtml(sentenceEntry, guide)}
+          ${buildDictationFullMeaningHtml(sentenceEntry)}
+          ${meta.isStudyMode ? `
+            <div class="dict-cloze-note">쉬움 난이도는 전체 문장을 공개합니다. 먼저 흐름과 의미를 익힌 뒤 하·중·상으로 올리세요.</div>
+          ` : `
+            <div class="dict-blank-guide-list">
+              ${meta.blanks.map((blank, blankIndex) => buildDictationBlankGuideHtml(blank, blankIndex, index, meta.level)).join('')}
+            </div>
+          `}
+          ${buildDictationCommentaryHtml(sentenceEntry, guide, index)}
         `}
-        ${buildDictationCommentaryHtml(dictSentenceEntries[index], guide, index)}
       </article>
     `;
   }).join('');
+  renderDictationLineButtons();
   populateDictationVoices();
-  highlightDictationLineButton(dictTTSState.currentIndex);
+  highlightDictationLineButton(dictTTSState.currentIndex >= 0 ? dictTTSState.currentIndex : 0);
+  Object.entries(dictConceptExplorerState).forEach(([lineIndex, state]) => {
+    if (state.open) {
+      renderDictationConceptExplorer(Number(lineIndex));
+    }
+  });
 }
 
 function syncDictationTTSFromScript() {
@@ -1147,7 +2033,7 @@ function syncDictationTTSFromScript() {
     setDictationTTSStatus('스크립트 생성 후 듣기 가능');
     return;
   }
-  setDictationTTSStatus(`TTS 준비 · ${dictTTSState.lines.length}문장`, 'active');
+  setDictationTTSStatus('');
 }
 
 function stopDictationTTS(options = {}) {
@@ -1162,7 +2048,7 @@ function stopDictationTTS(options = {}) {
   setActiveDictationSentenceModalItem(-1);
   if (!preserveStatus) {
     setDictationTTSStatus(
-      dictTTSState.lines.length ? '정지됨 · 문장 선택 가능' : '스크립트 생성 후 듣기 가능'
+      dictTTSState.lines.length ? '' : '스크립트 생성 후 듣기 가능'
     );
   }
 }
@@ -1172,7 +2058,7 @@ function createDictationUtterance(text, index) {
   const setting = getDictationLineTTSSetting(index);
   const selectedVoice = getDictationVoice(setting.voiceName);
   utterance.lang = selectedVoice?.lang || 'en-US';
-  utterance.rate = Number(setting.rate) || 0.9;
+  utterance.rate = Number(setting.rate) || 1;
   utterance.pitch = 1;
   if (selectedVoice) utterance.voice = selectedVoice;
   utterance.onstart = () => {
@@ -1199,7 +2085,7 @@ function createDictationUtterance(text, index) {
     dictTTSState.playingAll = false;
     dictTTSState.pendingNextIndex = index < dictTTSState.lines.length - 1 ? index + 1 : -1;
     highlightDictationLineButton(-1);
-    setDictationTTSStatus('TTS 오류 · 다시 시도', 'warn');
+    setDictationTTSStatus('듣기 오류 · 다시 시도', 'warn');
     setActiveDictationSentenceModalItem(-1);
   };
   return utterance;
@@ -1226,7 +2112,7 @@ function speakDictationText(text, index) {
 
 function setDictationLineRate(index, value) {
   ensureDictationLineTTSSettings();
-  const rate = Number(value) || 0.9;
+  const rate = Number(value) || 1;
   dictLineTTSSettings[index] = {
     ...getDictationLineTTSSetting(index),
     rate,
@@ -1277,6 +2163,7 @@ function refreshDictationView() {
   const topicLabel = document.getElementById('dict-current-topic');
   if (!el || !box) return;
   stopDictationTTS({ preserveStatus: true });
+  Object.keys(dictConceptExplorerState).forEach((key) => delete dictConceptExplorerState[key]);
   dictSentenceEntries = getDictationSentenceEntries(selectedDictTopic);
   const sourceLines = dictSentenceEntries.map((entry) => entry.text);
   dictLineLevels = sourceLines.map((_, index) => dictLineLevels[index] || selectedDictLevel);
@@ -1289,7 +2176,8 @@ function refreshDictationView() {
 }
 
 function setDictationLineLevel(index, level) {
-  dictLineLevels[index] = level;
+  selectedDictLevel = level;
+  dictLineLevels = dictSentenceEntries.map(() => level);
   renderDictationPracticeCards();
   resetDictationFeedback();
 }

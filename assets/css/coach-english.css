@@ -529,7 +529,13 @@
 input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-tts-toolbar { margin-bottom: 0.9rem; }
 .dict-tts-toolbar-head { display: flex; justify-content: space-between; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
-.dict-tts-line-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.dict-tts-line-buttons { display: grid; gap: 0.6rem; }
+.dict-line-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.85rem; align-items: end; }
+.dict-line-group { display: grid; gap: 0.38rem; min-width: 0; }
+.dict-line-group--meta { display: flex; gap: 0.38rem; flex-wrap: wrap; align-items: center; }
+.dict-line-group-label { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: var(--text-dim); }
+.dict-line-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.dict-line-toolbar { display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: flex-end; justify-content: flex-end; margin-top: 0; padding-top: 0.1rem; }
 .dict-tts-status { font-size: 0.73rem; color: #bae6fd; line-height: 1.4; }
 .dict-tts-status.warn { color: #fcd34d; }
 .dict-tts-status.active { color: #e0f2fe; }
@@ -586,6 +592,59 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-preview-link { text-decoration: none; }
 .dict-answer-toggle.is-done { border-color: rgba(56,189,248,0.24); background: rgba(56,189,248,0.12); color: #e0f2fe; }
 .dict-cloze-line { margin-bottom: 0.7rem; padding: 0.72rem 0.82rem; border-radius: 12px; border: 1px solid rgba(56,189,248,0.18); background: rgba(56,189,248,0.08); font-size: 0.86rem; line-height: 1.85; color: #f8fafc; word-break: keep-all; }
+.dict-concept-shell { margin-top: 0.85rem; }
+.dict-concept-explorer { display: grid; grid-template-columns: minmax(190px, 230px) minmax(0, 1fr); align-items: start; gap: 0.85rem; }
+.dict-concept-explorer--nested { grid-template-columns: minmax(190px, 230px) minmax(0, 1fr); }
+.dict-concept-nav { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+.dict-concept-tab { padding: 0.62rem 0.72rem; border-radius: 12px; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.42); color: #dbeafe; text-align: left; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.18s; min-height: 68px; }
+.dict-concept-tab strong { display: block; font-size: 0.72rem; color: #f8fafc; letter-spacing: -0.01em; }
+.dict-concept-tab span { display: -webkit-box; margin-top: 0.24rem; font-size: 0.68rem; line-height: 1.45; color: #94a3b8; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dict-concept-tab:hover { border-color: rgba(125,211,252,0.28); background: rgba(30,41,59,0.7); transform: translateY(-1px); }
+.dict-concept-tab.active { border-color: rgba(56,189,248,0.34); background: linear-gradient(180deg, rgba(8,47,73,0.52), rgba(15,23,42,0.78)); box-shadow: 0 0 0 1px rgba(56,189,248,0.12) inset; }
+.dict-concept-body { display: grid; gap: 0.75rem; min-width: 0; }
+.dict-concept-body--full { grid-column: 1 / -1; }
+.dict-concept-section-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 0.15rem; }
+.dict-concept-section-tab { padding: 0.68rem 0.82rem; border-radius: 14px; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.46); color: #dbeafe; text-align: left; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.18s; }
+.dict-concept-section-tab strong { display: block; font-size: 0.78rem; color: #f8fafc; letter-spacing: -0.01em; }
+.dict-concept-section-tab span { display: block; margin-top: 0.26rem; font-size: 0.7rem; line-height: 1.5; color: #94a3b8; }
+.dict-concept-section-tab:hover { border-color: rgba(125,211,252,0.28); background: rgba(30,41,59,0.72); transform: translateY(-1px); }
+.dict-concept-section-tab.active { border-color: rgba(56,189,248,0.36); background: linear-gradient(180deg, rgba(8,47,73,0.58), rgba(15,23,42,0.82)); box-shadow: 0 0 0 1px rgba(56,189,248,0.12) inset; }
+.dict-concept-chip-list { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.7rem; }
+.dict-concept-chip { display: inline-flex; align-items: center; padding: 0.3rem 0.62rem; border-radius: 999px; border: 1px solid rgba(56,189,248,0.24); background: rgba(56,189,248,0.1); color: #dbeafe; font-size: 0.72rem; font-weight: 700; }
+.dict-concept-emphasis { margin-top: 0.7rem !important; padding: 0.7rem 0.8rem; border-radius: 12px; background: rgba(8,47,73,0.22); border: 1px solid rgba(56,189,248,0.18); color: #bae6fd !important; }
+.dict-concept-priority { background: linear-gradient(180deg, rgba(8,47,73,0.42), rgba(15,23,42,0.84)); border-color: rgba(56,189,248,0.22); }
+.dict-concept-priority-title { font-size: 0.86rem !important; font-weight: 700; color: #f8fafc !important; }
+.dict-concept-badge-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
+.dict-concept-badge { display: inline-flex; align-items: center; padding: 0.28rem 0.62rem; border-radius: 999px; border: 1px solid rgba(125,211,252,0.18); background: rgba(15,23,42,0.72); color: #dbeafe; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.02rem; }
+.dict-concept-badge.is-critical { border-color: rgba(251,191,36,0.28); background: rgba(120,53,15,0.28); color: #fde68a; }
+.dict-concept-badge.is-soft { border-color: rgba(148,163,184,0.16); background: rgba(30,41,59,0.82); color: #cbd5e1; }
+.dict-concept-warning { margin-top: 0.75rem !important; padding: 0.68rem 0.78rem; border-radius: 12px; background: rgba(127,29,29,0.18); border: 1px solid rgba(248,113,113,0.18); color: #fecaca !important; }
+.dict-concept-study-grid { display: grid; gap: 0.7rem; }
+.dict-concept-study-card { padding: 0.82rem 0.86rem; border-radius: 12px; border: 1px solid rgba(148,163,184,0.12); background: rgba(2,6,23,0.3); }
+.dict-concept-study-card strong { display: block; font-size: 0.8rem; color: #f8fafc; margin-bottom: 0.45rem; }
+.dict-concept-study-card p { margin: 0 0 0.58rem; font-size: 0.78rem; line-height: 1.7; color: #e2e8f0; }
+.dict-concept-drill-list { display: grid; gap: 0.6rem; }
+.dict-concept-drill-item { display: grid; grid-template-columns: 82px 1fr; gap: 0.7rem; padding: 0.8rem 0.86rem; border-radius: 12px; border: 1px solid rgba(148,163,184,0.12); background: rgba(15,23,42,0.5); }
+.dict-concept-drill-item strong { color: #7dd3fc; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04rem; text-transform: uppercase; }
+.dict-concept-drill-item span { font-size: 0.78rem; line-height: 1.68; color: #dbeafe; }
+.dict-concept-subtabs { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.dict-concept-subtab { display: inline-flex; align-items: center; justify-content: center; padding: 0.46rem 0.78rem; border-radius: 999px; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.48); color: #cbd5e1; font-size: 0.72rem; font-weight: 800; cursor: pointer; transition: border-color 0.18s, background 0.18s, color 0.18s; }
+.dict-concept-subtab:hover { border-color: rgba(125,211,252,0.24); color: #e0f2fe; }
+.dict-concept-subtab.active { border-color: rgba(56,189,248,0.34); background: rgba(8,47,73,0.52); color: #f0f9ff; box-shadow: 0 0 0 1px rgba(56,189,248,0.12) inset; }
+.dict-concept-speak-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+.dict-concept-mini-list { display: grid; gap: 0.55rem; margin-top: 0.72rem; }
+.dict-concept-mini-card { padding: 0.76rem 0.8rem; border-radius: 12px; background: rgba(2,6,23,0.26); border: 1px solid rgba(148,163,184,0.12); }
+.dict-concept-mini-card strong { display: block; margin-bottom: 0.32rem; font-size: 0.76rem; color: #fff; }
+.dict-concept-mini-card p { margin: 0; font-size: 0.78rem; line-height: 1.66; color: #dbeafe; }
+.dict-concept-mini-card span { display: block; margin-top: 0.45rem; font-size: 0.72rem; line-height: 1.58; color: #94a3b8; }
+.dict-concept-vocab-list { display: grid; gap: 0.75rem; }
+.dict-concept-example { margin-top: 0.52rem !important; color: #cbd5e1 !important; }
+.dict-concept-word-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.7rem; margin-bottom: 0.2rem; }
+.dict-concept-word-meta { color: #e2e8f0 !important; }
+.dict-concept-check-list { display: grid; gap: 0.65rem; }
+.dict-concept-check-card { padding: 0.8rem 0.84rem; border-radius: 12px; background: rgba(2,6,23,0.26); border: 1px solid rgba(148,163,184,0.12); }
+.dict-concept-check-question { margin-bottom: 0.55rem !important; font-size: 0.8rem !important; color: #f8fafc !important; }
+.dict-concept-check-goal { margin-top: 0.6rem !important; padding: 0.55rem 0.62rem; border-radius: 10px; background: rgba(34,197,94,0.12); color: #bbf7d0 !important; font-size: 0.74rem !important; line-height: 1.58 !important; }
 .dict-cloze-blank { display: inline-flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 0.18rem; margin: 0 0.12rem; vertical-align: middle; }
 .dict-cloze-input { width: auto; min-width: 4.2rem; height: 2.15rem; padding: 0 0.45rem; border-radius: 8px; border: 1px solid rgba(56,189,248,0.28); background: rgba(15,23,42,0.72); color: #e0f2fe; font-size: 0.88rem; font-weight: 700; text-align: center; box-shadow: inset 0 -2px 0 rgba(125,211,252,0.8); }
 .dict-cloze-input:focus { outline: none; border-color: rgba(125,211,252,0.82); box-shadow: 0 0 0 3px rgba(56,189,248,0.12), inset 0 -2px 0 rgba(125,211,252,1); }
@@ -595,12 +654,48 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-answer-word { font-size: 0.68rem; font-weight: 800; line-height: 1; color: #86efac; white-space: nowrap; }
 .dict-cloze-note { margin-bottom: 0.9rem; padding: 0.8rem 0.9rem; border-radius: 12px; background: rgba(15,23,42,0.58); border: 1px solid rgba(148,163,184,0.14); color: #cbd5e1; font-size: 0.8rem; line-height: 1.7; }
 .dict-blank-guide-list { display: grid; gap: 0.7rem; margin-bottom: 0.9rem; }
-.dict-blank-guide-card { background: rgba(8,47,73,0.2); border: 1px solid rgba(56,189,248,0.18); border-radius: 12px; padding: 0.82rem 0.9rem; }
+.dict-blank-guide-card { background: rgba(8,47,73,0.2); border: 1px solid rgba(56,189,248,0.18); border-radius: 16px; padding: 0.92rem 0.96rem; }
 .dict-blank-guide-card p { margin: 0.38rem 0 0; font-size: 0.8rem; line-height: 1.72; color: #dbeafe; }
 .dict-blank-guide-card strong { color: #fff; }
+.dict-blank-head { display: flex; justify-content: space-between; gap: 0.8rem; align-items: flex-start; margin-bottom: 0.6rem; }
+.dict-blank-answer-row { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+.dict-blank-answer-row strong { font-size: 1rem; color: #f8fafc; }
+.dict-blank-answer-row span { font-size: 0.72rem; color: #cbd5e1; }
+.dict-blank-tag-list { display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: flex-end; }
+.dict-blank-tag { display: inline-flex; align-items: center; min-height: 1.5rem; padding: 0 0.55rem; border-radius: 999px; font-size: 0.67rem; font-weight: 800; letter-spacing: 0.02rem; border: 1px solid rgba(148,163,184,0.18); background: rgba(30,41,59,0.78); color: #e2e8f0; }
+.dict-blank-tag.is-core { background: rgba(251,191,36,0.16); border-color: rgba(251,191,36,0.34); color: #fde68a; }
+.dict-blank-tag.is-trap { background: rgba(251,113,133,0.14); border-color: rgba(251,113,133,0.34); color: #fecdd3; }
+.dict-blank-tag.is-exam { background: rgba(56,189,248,0.14); border-color: rgba(56,189,248,0.3); color: #bae6fd; }
+.dict-blank-tag.is-mix { background: rgba(251,146,60,0.14); border-color: rgba(251,146,60,0.3); color: #fed7aa; }
+.dict-blank-coachline { margin-bottom: 0.72rem; padding: 0.78rem 0.82rem; border-radius: 14px; background: rgba(120,53,15,0.2); border: 1px solid rgba(251,191,36,0.26); box-shadow: inset 0 0 0 1px rgba(251,191,36,0.08); }
+.dict-blank-coachline strong { display: inline-block; margin-bottom: 0.22rem; font-size: 0.7rem; letter-spacing: 0.05rem; text-transform: uppercase; color: #fde68a; }
+.dict-blank-coachline p { margin: 0; color: #fef3c7; font-size: 0.82rem; line-height: 1.68; font-weight: 700; }
+.dict-blank-hint { display: grid; gap: 0.18rem; margin-bottom: 0.7rem; padding: 0.64rem 0.72rem; border-radius: 12px; background: rgba(15,23,42,0.56); border: 1px solid rgba(148,163,184,0.14); }
+.dict-blank-hint strong { font-size: 0.68rem; letter-spacing: 0.05rem; text-transform: uppercase; color: #7dd3fc; }
+.dict-blank-hint span { font-size: 0.78rem; line-height: 1.65; color: #dbeafe; }
+.dict-blank-note-grid { display: grid; gap: 0.42rem; margin-bottom: 0.72rem; }
+.dict-blank-note-row { display: grid; grid-template-columns: 60px 1fr; gap: 0.7rem; padding: 0.58rem 0.66rem; border-radius: 12px; background: rgba(15,23,42,0.56); border: 1px solid rgba(148,163,184,0.12); }
+.dict-blank-note-row strong { font-size: 0.67rem; letter-spacing: 0.06rem; text-transform: uppercase; color: #93c5fd; }
+.dict-blank-note-row span { font-size: 0.78rem; line-height: 1.66; color: #dbeafe; }
+.dict-blank-footnote { margin-top: 0.56rem !important; color: #cbd5e1 !important; }
 .dict-guide-answer { margin-top: 0.4rem; padding: 0.6rem 0.68rem; border-radius: 10px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18); }
 .dict-wrong-patterns { display: grid; gap: 0.32rem; margin-top: 0.6rem; }
 .dict-wrong-pattern-item { font-size: 0.75rem; line-height: 1.6; color: #fecaca; }
+.dict-blank-section-label { margin-bottom: 0.48rem; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: #fca5a5; }
+.dict-blank-diagnosis { margin-top: 0.78rem; padding: 0.78rem 0.82rem; border-radius: 14px; background: rgba(127,29,29,0.14); border: 1px solid rgba(248,113,113,0.18); }
+.dict-blank-diagnosis-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; padding-top: 0.55rem; margin-top: 0.55rem; border-top: 1px solid rgba(248,113,113,0.12); }
+.dict-blank-diagnosis-row:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+.dict-blank-diagnosis-cell { display: grid; gap: 0.22rem; }
+.dict-blank-diagnosis-cell strong { font-size: 0.66rem; letter-spacing: 0.05rem; text-transform: uppercase; color: #fca5a5; }
+.dict-blank-diagnosis-cell span { font-size: 0.76rem; line-height: 1.62; color: #fee2e2; }
+.dict-blank-pass { margin-top: 0.8rem; padding: 0.82rem 0.86rem; border-radius: 14px; background: rgba(20,83,45,0.2); border: 1px solid rgba(74,222,128,0.2); }
+.dict-blank-pass .dict-blank-section-label { color: #86efac; }
+.dict-blank-pass-question { margin: 0 0 0.4rem; font-size: 0.78rem; line-height: 1.64; color: #dcfce7; }
+.dict-blank-pass-criteria { margin: 0; font-size: 0.8rem; line-height: 1.66; color: #bbf7d0; font-weight: 700; }
+.dict-blank-routine-list { display: grid; gap: 0.42rem; margin-top: 0.62rem; }
+.dict-blank-routine-item { display: grid; gap: 0.16rem; padding: 0.58rem 0.64rem; border-radius: 12px; background: rgba(15,23,42,0.48); border: 1px solid rgba(74,222,128,0.12); }
+.dict-blank-routine-item strong { font-size: 0.67rem; letter-spacing: 0.05rem; text-transform: uppercase; color: #86efac; }
+.dict-blank-routine-item span { font-size: 0.76rem; line-height: 1.62; color: #dcfce7; }
 .dict-coach-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
 .dict-coach-block { background: rgba(15,23,42,0.62); border: 1px solid rgba(148,163,184,0.12); border-radius: 12px; padding: 0.78rem 0.85rem; }
 .dict-coach-tag { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: var(--eng-primary); margin-bottom: 0.4rem; }
@@ -618,6 +713,10 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-commentary-bullets { display: grid; gap: 0.38rem; }
 .dict-commentary-bullets div { position: relative; padding-left: 0.85rem; font-size: 0.78rem; line-height: 1.68; color: #dbeafe; }
 .dict-commentary-bullets div::before { content: ""; position: absolute; left: 0; top: 0.52rem; width: 5px; height: 5px; border-radius: 999px; background: var(--eng-primary); }
+.dict-pron-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; }
+.dict-pron-summary-card { padding: 0.8rem 0.85rem; border-radius: 14px; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.48); }
+.dict-pron-summary-tag { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06rem; text-transform: uppercase; color: #7dd3fc; }
+.dict-pron-summary-text { margin-top: 0.42rem; font-size: 0.8rem; line-height: 1.68; color: #e2e8f0; }
 .dict-pron-gap-list { display: grid; gap: 0.65rem; }
 .dict-pron-gap-card { border: 1px solid rgba(148,163,184,0.14); border-radius: 12px; overflow: hidden; background: rgba(2,6,23,0.35); }
 .dict-pron-gap-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.72rem 0.82rem; background: rgba(15,23,42,0.78); border-bottom: 1px solid rgba(148,163,184,0.12); }
@@ -635,12 +734,40 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
 .dict-pron-syllable.is-merge { background: rgba(249,115,22,0.16); color: #fed7aa; border-color: rgba(251,146,60,0.34); }
 .dict-pron-syllable.is-ghost { background: rgba(15,23,42,0.55); color: #94a3b8; border-style: dashed; text-decoration: line-through; }
 .dict-pron-hear-point { color: #fdba74 !important; }
+.dict-concept-tts-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.7rem; }
+.dict-concept-tts-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.42rem 0.76rem; border-radius: 999px; border: 1px solid rgba(125,211,252,0.24); background: rgba(15,23,42,0.82); color: #dbeafe; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+.dict-concept-tts-btn.slow { color: #bae6fd; }
+.dict-concept-tts-btn.playing { border-color: rgba(56,189,248,0.52); background: rgba(8,47,73,0.55); color: #f0f9ff; box-shadow: 0 0 0 1px rgba(56,189,248,0.15) inset; }
+.dict-flow-box { padding: 0.9rem 0.95rem; border-radius: 16px; border: 1px solid rgba(125,211,252,0.16); background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(2,6,23,0.7)); }
+.dict-flow-label { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.7rem; }
+.dict-flow-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.dict-flow-arrow { color: #64748b; font-size: 0.85rem; }
+.dict-flow-word { display: inline-flex; align-items: center; justify-content: center; min-height: 1.9rem; padding: 0.24rem 0.62rem; border-radius: 10px; border: 1px solid rgba(148,163,184,0.18); font-size: 0.78rem; font-weight: 700; }
+.dict-flow-word.tone-a { background: rgba(59,130,246,0.18); color: #dbeafe; border-color: rgba(96,165,250,0.34); }
+.dict-flow-word.tone-b { background: rgba(129,140,248,0.16); color: #ddd6fe; border-color: rgba(165,180,252,0.3); }
+.dict-flow-word.tone-c { background: rgba(51,65,85,0.55); color: #e2e8f0; }
+.dict-flow-word.tone-d { background: rgba(249,115,22,0.16); color: #fed7aa; border-color: rgba(251,146,60,0.34); }
+.dict-flow-word.subtle { opacity: 0.76; }
+.dict-flow-heard { margin-top: 0.75rem; font-size: 0.8rem; line-height: 1.68; color: #cbd5e1; }
+.dict-flow-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; font-size: 0.72rem; color: #94a3b8; }
+.dict-flow-legend div { display: inline-flex; align-items: center; gap: 0.32rem; }
+.dict-flow-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+.dict-flow-dot.tone-a { background: #60a5fa; }
+.dict-flow-dot.tone-b { background: #a5b4fc; }
+.dict-flow-dot.tone-d { background: #fb923c; }
+.dict-flow-dot.ghost { background: #64748b; }
 .dict-self-check-list { display: grid; gap: 0.5rem; }
 .dict-self-check-card { display: grid; gap: 0.45rem; }
 .dict-self-check-item { display: grid; grid-template-columns: 18px 1fr; gap: 0.55rem; align-items: start; font-size: 0.78rem; line-height: 1.66; color: #dbeafe; cursor: pointer; }
 .dict-self-check-input { position: absolute; opacity: 0; pointer-events: none; }
 .dict-self-check-box { width: 18px; height: 18px; border-radius: 6px; border: 1px solid rgba(125,211,252,0.42); background: rgba(15,23,42,0.82); box-shadow: inset 0 0 0 1px rgba(15,23,42,0.6); }
 .dict-self-check-input:checked + .dict-self-check-box { background: linear-gradient(180deg, rgba(56,189,248,0.86), rgba(37,99,235,0.88)); border-color: rgba(56,189,248,0.92); box-shadow: 0 0 0 2px rgba(56,189,248,0.12); }
+@media (max-width: 760px) {
+  .dict-blank-head { flex-direction: column; }
+  .dict-blank-tag-list { justify-content: flex-start; }
+  .dict-blank-note-row { grid-template-columns: 1fr; gap: 0.24rem; }
+  .dict-blank-diagnosis-row { grid-template-columns: 1fr; }
+}
 .dict-self-check-toggle { justify-self: start; padding: 0.34rem 0.68rem; border-radius: 999px; border: 1px solid rgba(56,189,248,0.24); background: rgba(56,189,248,0.08); color: #bae6fd; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
 .dict-self-check-solution { display: grid; gap: 0.44rem; padding: 0.78rem 0.82rem; border-radius: 12px; background: rgba(30,41,59,0.72); border: 1px solid rgba(148,163,184,0.12); }
 .dict-self-check-step { display: grid; grid-template-columns: 20px 1fr; gap: 0.55rem; font-size: 0.76rem; line-height: 1.62; color: #dbeafe; }
@@ -652,6 +779,11 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   .eng-masterclass-grid,
   .eng-check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .topic-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dict-concept-explorer { grid-template-columns: 1fr; }
+  .dict-concept-explorer--nested { grid-template-columns: 1fr; }
+  .dict-concept-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dict-concept-section-tabs { grid-template-columns: 1fr; }
+  .dict-concept-drill-item { grid-template-columns: 1fr; gap: 0.4rem; }
 }
 @media(max-width:640px) {
   .eng-master-hero { margin-top: 0.85rem; padding: 0 0.75rem; }
@@ -677,13 +809,18 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   }
   .dict-tts-toolbar-head { align-items: stretch; }
   .dict-sentence-modal-trigger { width: 100%; justify-content: center; }
-  .dict-tts-line-buttons { gap: 0.38rem; margin-top: 0.55rem; }
+  .dict-tts-line-buttons { gap: 0.48rem; margin-top: 0.55rem; }
+  .dict-line-row { grid-template-columns: 1fr; gap: 0.55rem; }
+  .dict-line-tabs { gap: 0.38rem; }
+  .dict-line-toolbar { margin-top: 0; gap: 0.65rem; justify-content: flex-start; }
   .dict-tts-line-btn {
     padding: 0.28rem 0.58rem;
     font-size: 0.68rem;
   }
   .dict-practice-card { padding: 0.9rem; }
   .dict-practice-actions { justify-content: flex-start; }
+  .dict-pron-summary-grid,
+  .dict-concept-speak-grid { grid-template-columns: 1fr; }
   .dict-card-tts-controls { width: 100%; margin-right: 0; padding: 0.48rem 0.56rem; }
   .dict-card-tts-option { width: 100%; gap: 0.35rem; font-size: 0.7rem; }
   .dict-card-tts-option input[type=range] { width: 100%; flex: 1; }
@@ -694,11 +831,14 @@ input[type=range] { accent-color: var(--eng-primary); flex: 1; }
   .dict-answer-word { font-size: 0.64rem; }
   .dict-coach-grid { grid-template-columns: 1fr; }
   .dict-commentary-row { grid-template-columns: 1fr; gap: 0.18rem; }
+  .dict-concept-word-head { flex-direction: column; }
   .dict-pron-gap-row { grid-template-columns: 1fr; gap: 0.32rem; }
   .dict-self-check-item { grid-template-columns: 18px 1fr; }
   .dict-practice-actions { width: 100%; }
   .dict-practice-actions .btn-secondary,
   .dict-practice-actions .btn-primary { flex: 1 1 auto; }
+  .dict-line-group--meta { width: 100%; }
+  .dict-concept-nav { grid-template-columns: 1fr; }
   .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .topic-card { min-height: 84px; padding: 0.52rem 0.58rem; }
   #eng-s1 .dict-step-inline { align-items: flex-start; }

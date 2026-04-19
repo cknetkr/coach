@@ -6,7 +6,7 @@ owner_agent: codex
 master_plan_priority: 3순위
 master_plan_stage_entry: 2.계획
 created: 2026-04-18
-updated: 2026-04-18
+updated: 2026-04-19
 ---
 
 > 이 문서는 master-plan의 3순위 / 2.계획에 해당한다.
@@ -88,6 +88,19 @@ updated: 2026-04-18
 5. proper noun blank가 없다.
 6. 받아쓰기 렌더는 새 `sentenceEntry` 데이터만 우선 사용한다.
 7. `gradeDictation`는 `callClaude`를 호출하지 않고 `correct / partial / wrong` 판정을 포함한 로컬 채점만 사용한다.
+
+## 3.3.1 템플릿 운영 규칙
+
+- 기준 템플릿은 `D:/workbox/test/assets/js/coach-english-dictation-template.js`의 `window.ENG_DICTATION_SENTENCE_BASELINES['dot-s00']`이다.
+- 구조, 첨삭 톤, 카드 구성 실험은 먼저 `dot-s01`, `dot-s02`에서만 검증한다.
+- `dot-s01`, `dot-s02`에서 효과가 확인된 요소만 `dot-s00` 기준 템플릿에 역이식한다.
+- `dot-s03` 이후 문장은 항상 최신 `dot-s00` 기준 템플릿을 복제한 뒤 문장별 내용만 바꿔 확장한다.
+- blank 선정 원칙은 전 문장 공통으로 **고유명사 blank 금지**를 유지한다.
+- 최우선 판단 기준은 **1타 강사의 첨삭 느낌과 리드**다.
+  - `coachLine`에서 바로 경고/점수 연결이 보여야 한다.
+  - blank는 `호통 -> 사고경로 진단 -> 처방 -> 합격 기준` 순서로 읽혀야 한다.
+  - 데이터 우선순위는 `coachLine`, `diagnosis`, `passCriteria`, `routine`, `tags`, `notes.core/listen/trap`이다.
+- React/자동화 이식은 이 템플릿 규칙이 안정화된 뒤 후속 PLAN으로 분리한다.
 
 ## 3.4 작업 단위 (Work Units)
 

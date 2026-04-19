@@ -1,0 +1,524 @@
+{
+  "id": "dot-s02",
+  "topicId": "topic01-the-dot",
+  "order": 2,
+  "subject": "1과 P.13",
+  "title": "The Dot 그림책",
+  "text": "This award-winning picture book tells the story of a girl named Vashti.",
+  "tts": {
+    "label": "문장 2",
+    "text": "This award-winning picture book tells the story of a girl named Vashti.",
+    "rates": [1, 0.7, 0.5]
+  },
+  "guide": {
+    "t": "그림책이 어떤 이야기인지 소개하면서 주인공 이름까지 붙여 주는 줄거리 도입 문장입니다.",
+    "p": "This award-winning picture book / tells the story / of a girl named Vashti",
+    "m": "`award-winning` 하이픈 표현, 약한 `of a`, 그리고 `named`의 -ed를 자주 놓칩니다.",
+    "c": "`This award-winning picture book` / `tells the story` / `of a girl named Vashti` 세 덩어리로 나눠 듣습니다.",
+    "flowUnits": [
+      { "text": "디스", "tone": "b" },
+      { "text": "어워드위닝", "tone": "a" },
+      { "text": "픽처북", "tone": "c" },
+      { "text": "텔즈더스토리", "tone": "a" },
+      { "text": "어버걸", "tone": "d", "subtle": true },
+      { "text": "네임드", "tone": "b" },
+      { "text": "바슈티", "tone": "c" }
+    ],
+    "fullHeard": "\"디스 / 어워드위닝 픽처북 / 텔즈더스토리 / 어버걸 / 네임드 / 바슈티\"",
+    "chunkMeaning": [
+      { "en": "This award-winning picture book", "ko": "이 수상 경력 있는 그림책은" },
+      { "en": "tells the story", "ko": "이야기를 들려줍니다" },
+      { "en": "of a girl named Vashti", "ko": "바슈티라는 소녀의" }
+    ]
+  },
+  "commentary": {
+    "learningGoal": "`award-winning`, `tells`, `named Vashti` 세 포인트를 통해 복합형용사, 3인칭 동사, 고유명사 철자를 동시에 잡는 연습입니다.",
+    "pronunciation": {
+      "linking": "`story of a`는 거의 한 덩어리처럼 붙어 들립니다.",
+      "weakForm": "`of a`는 둘 다 약해져 중간 소리가 거의 사라진 것처럼 들립니다.",
+      "stress": "`award-winning`, `story`, `named`, `Vashti`가 귀에 걸리는 핵심입니다."
+    },
+    "pronunciationGap": [
+      {
+        "word": "award-winning",
+        "pos": "하이픈 형용사",
+        "known": {
+          "syllables": [
+            { "text": "어워드", "type": "normal" },
+            { "text": "위닝", "type": "stress" }
+          ],
+          "desc": "뜻은 알지만 하이픈 두 단어를 따로 듣는 소리",
+          "ttsText": "award-winning",
+          "ttsRate": 1
+        },
+        "actual": {
+          "syllables": [
+            { "text": "어워드", "type": "weak" },
+            { "text": "위닝", "type": "stress" }
+          ],
+          "hearPoint": "앞은 짧게 스치고 뒤 `winning` 쪽이 더 또렷하게 남습니다.",
+          "ttsText": "award-winning",
+          "ttsRate": 1,
+          "ttsRateSlow": 0.75
+        }
+      },
+      {
+        "word": "story of a",
+        "pos": "명사구 + 약형 연결",
+        "known": {
+          "syllables": [
+            { "text": "스토리", "type": "stress" },
+            { "text": "오브", "type": "normal" },
+            { "text": "어", "type": "normal" }
+          ],
+          "desc": "단어를 또박또박 따로 나눠 외운 소리",
+          "ttsText": "story of a",
+          "ttsRate": 1
+        },
+        "actual": {
+          "syllables": [
+            { "text": "스토리어버", "type": "merge" }
+          ],
+          "hearPoint": "`of a`가 붙어 약해지면 가운데가 거의 안 들리는 구간이 됩니다.",
+          "ttsText": "tells the story of a girl",
+          "ttsRate": 1,
+          "ttsRateSlow": 0.72
+        }
+      },
+      {
+        "word": "named Vashti",
+        "pos": "분사 + 고유명사",
+        "known": {
+          "syllables": [
+            { "text": "네임드", "type": "stress" },
+            { "text": "바슈티", "type": "normal" }
+          ],
+          "desc": "뜻은 쉬워도 끝 `-d`와 이름을 따로따로 듣는 소리",
+          "ttsText": "named Vashti",
+          "ttsRate": 1
+        },
+        "actual": {
+          "syllables": [
+            { "text": "네임드", "type": "stress" },
+            { "text": "배슈티", "type": "merge" }
+          ],
+          "hearPoint": "`named` 끝소리가 바로 뒤 이름으로 붙어 지나가므로 `name`으로만 적기 쉽습니다.",
+          "ttsText": "named Vashti",
+          "ttsRate": 1,
+          "ttsRateSlow": 0.75
+        }
+      }
+    ],
+    "wrongReasons": [
+      "`award-winning`은 뜻만 알고 하이픈이나 `winning` 철자를 놓치는 경우가 많습니다.",
+      "`tells`는 귀로는 원형처럼 들려도 단수 주어 뒤 3인칭 -s를 같이 잡아야 합니다.",
+      "`named Vashti`는 낯선 고유명사까지 이어져서 `named`의 -ed나 이름 철자를 동시에 놓치기 쉽습니다."
+    ],
+    "shadowingTip": "`This award-winning picture book / tells the story of / a girl named Vashti` 세 박을 유지한 채 끝까지 한 호흡으로 읽습니다.",
+    "selfCheck": [
+      {
+        "question": "`award-winning`을 하이픈까지 포함해 3초 안에 적을 수 있나요?",
+        "solutions": [
+          { "step": 1, "desc": "`award-winning book`, `award-winning movie`를 하이픈 포함으로 5회 적습니다." },
+          { "step": 2, "desc": "`winning`의 double n을 짚어 본 뒤, 같은 속도로 다시 받아쓰기 3회 연속을 시도합니다." }
+        ],
+        "goalTip": "하이픈과 double n을 한 번도 놓치지 않고 3회 연속 맞히면 통과입니다."
+      },
+      {
+        "question": "단수 주어 뒤 `tells`의 -s를 듣기와 문법으로 동시에 잡을 수 있나요?",
+        "solutions": [
+          { "step": 1, "desc": "`This book tells`, `The movie tells`, `The story tells`를 3세트 읽습니다." },
+          { "step": 2, "desc": "`tells the story`를 한 덩어리로 5회 듣고, `tell`과 구별되는 끝소리를 체크합니다." }
+        ],
+        "goalTip": "`tell`로 적지 않고 `tells`를 3회 연속 정확히 쓰면 통과입니다."
+      },
+      {
+        "question": "`named Vashti`에서 -ed와 고유명사 철자를 끝까지 복원할 수 있나요?",
+        "solutions": [
+          { "step": 1, "desc": "`named Vashti` 구간만 0.7×로 5회 듣고 `named` 끝 `d`를 먼저 표시합니다." },
+          { "step": 2, "desc": "`V-a-s-h-t-i`를 3회 낭독한 뒤 안 보고 이름만 받아쓰기 3회를 합니다." }
+        ],
+        "goalTip": "`named`와 `Vashti`를 함께 3회 연속 정확히 적을 때까지 반복합니다."
+      }
+    ]
+  },
+  "fullMeaning": {
+    "literal": "이 수상 경력이 있는 그림책은 바슈티라는 소녀의 이야기를 들려줍니다.",
+    "natural": "이 유명한 그림책은 바슈티라는 소녀 이야기를 담고 있어요.",
+    "context": "책 줄거리 소개에서 작품 성격과 주인공을 함께 설명할 때 바로 쓸 수 있는 문장입니다."
+  },
+  "examModes": {
+    "toeic": {
+      "learningGoal": "`tells`의 3인칭 단수와 `story of ...` 연결 구조를 토익식으로 빠르게 판별하는 연습입니다.",
+      "coachLine": "토익에서는 이 문장에서 `tells`의 어형, `award-winning` 복합 형용사, 그리고 `story of` 전치사 연결을 같이 물을 수 있습니다.",
+      "fastRule": "주어가 `This picture book`이면 동사는 `tells`, `story` 뒤 내용 연결은 `of`를 먼저 의심하세요.",
+      "quickChecks": [
+        {
+          "type": "Part 5",
+          "skill": "어형",
+          "stem": "This award-winning picture book (        ) the story of a girl named Vashti.",
+          "choices": [
+            { "label": "A", "text": "tell" },
+            { "label": "B", "text": "tells", "isAnswer": true },
+            { "label": "C", "text": "told" },
+            { "label": "D", "text": "telling" }
+          ],
+          "rationale": "주어가 단수 `This ... book`이므로 현재형 3인칭 단수 `tells`가 정답입니다.",
+          "trap": "`book`이 길게 꾸며져 있어서 복수처럼 착각하고 `tell`을 고르기 쉽습니다."
+        },
+        {
+          "type": "Part 5",
+          "skill": "전치사",
+          "stem": "tells the story (        ) a girl named Vashti",
+          "choices": [
+            { "label": "A", "text": "for" },
+            { "label": "B", "text": "of", "isAnswer": true },
+            { "label": "C", "text": "with" },
+            { "label": "D", "text": "to" }
+          ],
+          "rationale": "`the story of ...`가 자연스러운 연결입니다.",
+          "trap": "뒤에 사람이 나온다고 해서 `about` 느낌으로 다른 전치사를 고르기 쉽습니다."
+        }
+      ],
+      "grammarPoints": [
+        {
+          "label": "3인칭 단수 현재 tells",
+          "desc": "`This picture book tells ...`처럼 단수 주어 뒤 현재형 동사는 `-s`를 붙입니다.",
+          "wrongOptions": [
+            { "answer": "tell", "reason": "3인칭 단수 -s 누락" },
+            { "answer": "told", "reason": "시제 오답" },
+            { "answer": "telling", "reason": "진행형/분사 오답" }
+          ]
+        },
+        {
+          "label": "story of ...",
+          "desc": "`the story of + 명사`는 내용·주제를 이어 주는 대표 패턴입니다.",
+          "wrongOptions": [
+            { "answer": "for", "reason": "의미상 어색한 전치사" },
+            { "answer": "with", "reason": "도구/동반 의미 전치사와 혼동" }
+          ]
+        },
+        {
+          "label": "named + 사람",
+          "desc": "`a girl named Vashti`의 `named`는 앞 명사를 꾸며 주는 과거분사입니다.",
+          "wrongOptions": [
+            { "answer": "name", "reason": "분사형 -ed 누락" },
+            { "answer": "naming", "reason": "문장 구조에 맞지 않는 현재분사" }
+          ]
+        }
+      ],
+      "keyPatterns": [
+        "단수 주어 + tells",
+        "the story of + 명사",
+        "a girl named + 이름"
+      ],
+      "shadowingTip": "`This picture book tells the story of ...`를 통째로 외우면 토익 지문에서 줄거리 소개 문장을 훨씬 빨리 읽을 수 있습니다.",
+      "selfCheck": [
+        {
+          "question": "단수 주어 뒤 동사에 -s를 붙여야 하는 이유를 설명할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`This book tells`, `The story shows`, `The teacher says`를 각각 적습니다." },
+            { "step": 2, "desc": "주어가 단수일 때 동사에 왜 -s가 붙는지 소리 내어 설명합니다." }
+          ],
+          "goalTip": "길게 꾸며진 주어가 나와도 중심 명사를 보고 단수/복수를 바로 판별할 수 있어야 합니다."
+        },
+        {
+          "question": "`story of ...`를 듣고 전치사 `of`를 놓치지 않을 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`the story of a girl`, `the story of hope`, `the story of growth`를 3번씩 읽습니다." },
+            { "step": 2, "desc": "내용어 사이 짧은 전치사 `of`를 따로 표시하며 다시 읽습니다." }
+          ],
+          "goalTip": "짧은 전치사도 점수 포인트라는 감각이 생길 때까지 반복합니다."
+        }
+      ]
+    },
+    "schoolInterview": {
+      "learningGoal": "책 줄거리와 주인공 소개를 짧고 또렷하게 말하는 학교면접용 기본 문장을 익히는 것이 목표입니다.",
+      "coachLine": "학교 면접에서는 긴 줄거리보다 `어떤 책인지 + 누구 이야기인지`를 짧게 정리하는 편이 더 안정적입니다.",
+      "fastRule": "책 소개 1문장 + 주인공 설명 1문장만 안정적으로 말해도 내용 전달이 훨씬 좋아집니다.",
+      "answerFlow": [
+        { "label": "책 소개", "text": "This award-winning picture book tells the story of a girl named Vashti." },
+        { "label": "핵심 내용", "text": "She thinks she cannot draw, but she slowly discovers her creativity." },
+        { "label": "마무리", "text": "That is why this story is meaningful to many students." }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "기본형",
+          "text": "This award-winning picture book tells the story of a girl named Vashti. At first, she does not believe in herself. However, she slowly learns that creativity can grow from a small start.",
+          "coaching": "줄거리를 길게 늘이지 않고 인물 소개와 변화만 짧게 말하는 구성이 좋습니다."
+        }
+      ],
+      "followUps": [
+        { "label": "예상 질문 1", "text": "Who is Vashti? → She is the main character who learns to believe in herself." },
+        { "label": "예상 질문 2", "text": "Why is this book special? → Because it gives a simple but powerful message about creativity." }
+      ],
+      "recoveryLines": [
+        "Let me explain the main character more clearly.",
+        "What I mean is that Vashti changes through the story."
+      ],
+      "selfCheck": [
+        {
+          "question": "주인공 소개를 한 문장으로 바로 말할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`a girl named Vashti`를 5번 반복하며 인물 소개 패턴으로 익힙니다." },
+            { "step": 2, "desc": "`a boy named ...`, `a student named ...`로 바꿔 말합니다." }
+          ],
+          "goalTip": "처음 질문을 듣고도 주인공 소개 문장이 바로 나와야 합니다."
+        }
+      ]
+    },
+    "opic": {
+      "learningGoal": "오픽에서 책 내용을 소개할 때 줄거리 첫 문장을 자연스럽게 여는 연습이 목표입니다.",
+      "targetGrade": "IM~IH",
+      "coachLine": "오픽에서는 책 내용을 전부 설명하려 하기보다 `어떤 책인지`, `누구 이야기인지`를 깔끔하게 여는 한 문장이 더 중요합니다.",
+      "fastRule": "`This picture book tells the story of ...` 패턴을 외워 두면 책 주제 답변 시작이 훨씬 편해집니다.",
+      "answerFlow": [
+        { "label": "오프닝", "text": "This award-winning picture book tells the story of a girl named Vashti." },
+        { "label": "한 줄 설명", "text": "She starts with no confidence, but she gradually finds her creativity." },
+        { "label": "마무리", "text": "That is why I think this book is inspiring." }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "IM용",
+          "text": "This award-winning picture book tells the story of a girl named Vashti. She thinks she cannot draw, but she changes through her teacher's encouragement. I like this story because it is simple and inspiring.",
+          "coaching": "쉬운 단어로 줄거리와 이유를 3문장 안에 끊어 말하면 안정적입니다."
+        },
+        {
+          "label": "IH용",
+          "text": "This award-winning picture book tells the story of a girl named Vashti, who slowly discovers her creativity. Although the story looks simple, it sends a memorable message about confidence and growth. That is why I would recommend this book to others.",
+          "coaching": "관계절과 양보 표현을 한 번만 넣어도 답변 밀도가 올라갑니다."
+        }
+      ],
+      "followUps": [
+        { "label": "꼬리 질문 1", "text": "Why do you remember Vashti? → Because she changes from a timid girl into a confident artist." },
+        { "label": "꼬리 질문 2", "text": "What is the message of the book? → It tells us that creativity can begin with a very small step." }
+      ],
+      "recoveryLines": [
+        "Let me describe the story in a simpler way.",
+        "In short, it is a story about confidence and creativity."
+      ],
+      "selfCheck": [
+        {
+          "question": "`This picture book tells the story of ...`를 바로 시작할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "책, 영화, 드라마로 바꿔 같은 패턴을 5번씩 말합니다." },
+            { "step": 2, "desc": "`a girl named ...` 뒤 이름만 바꿔 3번 더 반복합니다." }
+          ],
+          "goalTip": "책 소개 질문이 나오면 2초 안에 시작 문장이 나올 때까지 연습합니다."
+        }
+      ]
+    },
+    "toeicSpeaking": {
+      "learningGoal": "토익스피킹에서 책 내용을 소개할 때 구조 있게 줄거리와 의미를 짧게 말하는 연습이 목표입니다.",
+      "targetScore": "Level 6~7",
+      "coachLine": "토익스피킹은 긴 줄거리보다 `대상 소개 -> 핵심 내용 -> 메시지` 구조가 먼저 들려야 점수가 납니다.",
+      "fastRule": "`book introduction -> main character -> message` 3칸 구조로 먼저 나눠 생각하세요.",
+      "responseFrames": [
+        { "label": "대상 소개", "text": "This award-winning picture book tells the story of a girl named Vashti." },
+        { "label": "핵심 내용", "text": "She begins with little confidence, but she gradually changes through encouragement." },
+        { "label": "마무리", "text": "For that reason, I think the book gives an inspiring message." }
+      ],
+      "sampleAnswers": [
+        {
+          "label": "토스형 답변",
+          "text": "This award-winning picture book tells the story of a girl named Vashti. At first, she lacks confidence, but she changes little by little. For that reason, I think this book gives students a very inspiring message.",
+          "coaching": "소개 -> 변화 -> 메시지 3단 구조로 짧게 가는 편이 더 안정적입니다."
+        }
+      ],
+      "scoringPoints": [
+        { "label": "구성", "text": "책 소개, 인물 변화, 메시지가 차례대로 들리면 답변 구조가 선명해집니다." },
+        { "label": "전달력", "text": "`award-winning`, `Vashti`, `message` 같은 핵심어를 또렷하게 말하는 것이 중요합니다." },
+        { "label": "연결어", "text": "`At first`, `but`, `For that reason` 같은 연결어를 챙기세요." }
+      ],
+      "recoveryLines": [
+        "Let me rephrase the story more clearly.",
+        "To put it simply, it is a story about a girl's growth."
+      ],
+      "selfCheck": [
+        {
+          "question": "줄거리 소개를 30초 안에 구조 있게 말할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "종이에 `소개 / 변화 / 메시지` 세 칸을 그리고 한 문장씩 채웁니다." },
+            { "step": 2, "desc": "같은 구조를 유지한 채 30초 안에 두 번 말합니다." }
+          ],
+          "goalTip": "시간 안에서도 책 설명 구조가 흔들리지 않을 때까지 반복합니다."
+        }
+      ]
+    },
+    "voca": {
+      "coachLine": "이 문장에서는 `award-winning`, `tells the story of`, `named Vashti`를 한 세트로 잡아야 줄거리 소개 문장을 안정적으로 쓸 수 있습니다.",
+      "fastRule": "단어 하나만 보지 말고 `award-winning picture book`, `tells the story of`, `a girl named ...`처럼 묶음 표현으로 외우세요.",
+      "quickChecks": [
+        {
+          "question": "`tells the story` 뒤에 가장 자연스럽게 붙는 전치사는?",
+          "answer": "`of`입니다. `the story of + 명사`가 기본 패턴입니다.",
+          "coaching": "내용 소개 문장에서 `story of ...`를 통째로 외워 두면 전치사 실수를 줄일 수 있습니다."
+        },
+        {
+          "question": "`named Vashti`에서 `named`는 어떤 역할인가요?",
+          "answer": "앞 명사 `a girl`을 꾸며 주는 과거분사입니다.",
+          "coaching": "`name`으로만 적지 말고, 인물 소개 패턴으로 `named + 이름`을 같이 기억하세요."
+        }
+      ],
+      "selfCheck": [
+        {
+          "question": "핵심 표현을 단어가 아니라 묶음으로 말할 수 있나요?",
+          "solutions": [
+            { "step": 1, "desc": "`award-winning picture book`, `the story of`, `a girl named Vashti`를 각각 3번씩 읽습니다." },
+            { "step": 2, "desc": "묶음 표현 그대로 새 문장 2개를 만들어 봅니다." }
+          ],
+          "goalTip": "핵심 표현이 덩어리째 떠오를 때까지 반복합니다."
+        }
+      ]
+    }
+  },
+  "vocabulary": [
+    {
+      "word": "award-winning",
+      "pronunciation": "[əˈwɔːrd ˌwɪnɪŋ]",
+      "pos": "형용사",
+      "isMust": true,
+      "meanings": ["수상 경력이 있는", "상을 받은"],
+      "exampleSentence": "It is an award-winning picture book loved by many children.",
+      "exampleContext": "작품의 가치나 인지도를 소개할 때 자주 쓰는 표현입니다.",
+      "synonyms": ["prize-winning", "acclaimed"],
+      "collocations": ["award-winning book", "award-winning movie", "award-winning author"],
+      "derivatives": ["award", "winning"],
+      "confusables": [
+        { "word": "well-known", "desc": "유명하다는 뜻은 비슷하지만, 실제 수상 경력을 직접 말하는 표현은 아닙니다." }
+      ],
+      "toeicNote": "복합 형용사와 하이픈 표기 문제로 확장하기 좋은 표현입니다.",
+      "opicNote": "책이나 영화, 장소를 소개할 때 고급스럽게 들리는 표현입니다.",
+      "ttsText": "award-winning"
+    },
+    {
+      "word": "tells the story of",
+      "pronunciation": "[telz ðə ˈstɔːri əv]",
+      "pos": "표현",
+      "isMust": true,
+      "meanings": ["~의 이야기를 들려주다", "~에 대한 이야기를 담다"],
+      "exampleSentence": "The movie tells the story of a young musician.",
+      "exampleContext": "줄거리 소개에서 가장 자주 쓰이는 패턴 중 하나입니다.",
+      "synonyms": ["is about", "describes"],
+      "collocations": ["tells the story of a girl", "tells the story of friendship", "tells the story of change"],
+      "derivatives": ["tell", "story"],
+      "confusables": [
+        { "word": "talks about", "desc": "의미는 비슷하지만 줄거리 소개 문장에서는 `tells the story of`가 더 자연스럽습니다." }
+      ],
+      "toeicNote": "`story of` 전치사 연결과 동사 `tells`의 3인칭 단수형을 함께 볼 수 있습니다.",
+      "opicNote": "책이나 영화 내용을 열 때 바로 꺼내 쓰기 좋은 만능 표현입니다.",
+      "ttsText": "tells the story of"
+    },
+    {
+      "word": "named",
+      "pronunciation": "[neɪmd]",
+      "pos": "과거분사",
+      "isMust": true,
+      "meanings": ["이름이 ~인", "~라고 불리는"],
+      "exampleSentence": "I met a student named Julia last week.",
+      "exampleContext": "사람이나 장소 이름을 덧붙여 소개할 때 자주 쓰입니다.",
+      "synonyms": ["called"],
+      "collocations": ["a girl named Vashti", "a boy named Tom", "a town named Brighton"],
+      "derivatives": ["name"],
+      "confusables": [
+        { "word": "name", "desc": "동사 원형이나 명사일 뿐, 앞 명사를 꾸며 주는 수식형은 `named`입니다." }
+      ],
+      "toeicNote": "분사형과 원형 선택 문제로 연결하기 좋습니다.",
+      "opicNote": "인물 소개에서 부담 없이 바로 쓸 수 있는 표현입니다.",
+      "ttsText": "named"
+    },
+    {
+      "word": "Vashti",
+      "pronunciation": "[ˈvɑːʃti]",
+      "pos": "고유명사",
+      "isMust": false,
+      "meanings": ["바슈티(주인공 이름)"],
+      "exampleSentence": "Vashti slowly becomes more confident.",
+      "exampleContext": "The Dot의 주인공 이름입니다.",
+      "synonyms": [],
+      "collocations": ["a girl named Vashti"],
+      "derivatives": [],
+      "confusables": [],
+      "toeicNote": "고유명사 철자 받아쓰기 훈련에 좋습니다.",
+      "opicNote": "줄거리 소개에서 이름을 또렷하게 말하면 전달력이 좋아집니다.",
+      "ttsText": "Vashti"
+    }
+  ],
+  "blanks": [
+    {
+      "tokenIndex": 10,
+      "answer": "named",
+      "levels": ["low", "normal", "hard"],
+      "pos": "과거분사 (앞 명사 수식: a girl named ...)",
+      "difficulty": {
+        "level": 2,
+        "basis": "뜻은 쉬워도 -ed를 놓치기 쉽고 문장 속 역할을 이해해야 합니다."
+      },
+      "hints": {
+        "lv1": "na___",
+        "lv2": "이름이 ~인 이라는 뜻으로 앞 명사를 꾸밉니다.",
+        "lv3": null
+      },
+      "wrongPatterns": [
+        { "answer": "name", "reason": "-ed 누락" },
+        { "answer": "namede", "reason": "철자 과잉" }
+      ],
+      "notes": {
+        "easy": "`named`는 '이름이 ~인'처럼 앞 명사를 짧게 꾸며 주는 말입니다.",
+        "role": "`a girl` 뒤에 붙어 어떤 소녀인지 설명하는 수식어입니다.",
+        "listen": "`of a girl named Vashti`에서 `girl` 뒤 약하게 붙는 -ed 끝소리를 챙깁니다.",
+        "trap": "뜻만 따라가면 `name`까지만 적고 -ed를 빠뜨리기 쉽습니다."
+      }
+    },
+    {
+      "tokenIndex": 7,
+      "answer": "of",
+      "levels": ["normal", "hard"],
+      "pos": "전치사 (story of ...)",
+      "difficulty": {
+        "level": 2,
+        "basis": "기능어라 약하게 지나가고 뒤의 a와 붙어 들립니다."
+      },
+      "hints": {
+        "lv1": "o_",
+        "lv2": "`story` 뒤에서 내용을 이어 주는 전치사입니다.",
+        "lv3": null
+      },
+      "wrongPatterns": [
+        { "answer": "for", "reason": "짧은 전치사 혼동" },
+        { "answer": "", "reason": "무응답 - 약형 구간 인식 실패" }
+      ],
+      "notes": {
+        "easy": "`of`는 '무엇의 이야기'처럼 내용을 이어 주는 연결말입니다.",
+        "role": "`the story` 뒤에서 뒤 명사구를 붙여 주는 전치사입니다.",
+        "listen": "`story of a`가 한 번에 붙어 지나가므로 `of`를 따로 의식해서 들어야 합니다.",
+        "trap": "앞뒤 내용어만 듣고 중간의 `of`를 통째로 빼먹는 경우가 많습니다."
+      }
+    },
+    {
+      "tokenIndex": 1,
+      "answer": "award-winning",
+      "levels": ["hard"],
+      "pos": "복합형용사 (명사 앞 수식)",
+      "difficulty": {
+        "level": 3,
+        "basis": "하이픈 복합어라 발음과 철자를 동시에 잡아야 합니다."
+      },
+      "hints": {
+        "lv1": "award-______",
+        "lv2": "상을 받은 이라는 뜻의 하이픈 형용사입니다.",
+        "lv3": null
+      },
+      "wrongPatterns": [
+        { "answer": "award wining", "reason": "하이픈 누락 + 철자 혼동" },
+        { "answer": "award-wining", "reason": "n 하나 누락" }
+      ],
+      "notes": {
+        "easy": "`award-winning`은 '상을 받은'이라는 뜻으로 책의 가치를 먼저 보여 줍니다.",
+        "role": "`picture book` 앞에서 책을 꾸미는 핵심 형용사입니다.",
+        "listen": "`This award-winning picture book` 첫 덩어리에서 길게 붙는 소리로 들어야 합니다.",
+        "trap": "하이픈을 빼먹거나 `winning` 철자를 흔히 틀립니다."
+      }
+    }
+  ]
+}

@@ -4,6 +4,8 @@ function createDictationBlankTemplate(config) {
     answer: config.answer,
     levels: Array.isArray(config.levels) ? config.levels : [],
     pos: config.pos,
+    coachLine: config.coachLine || '',
+    tags: Array.isArray(config.tags) ? config.tags : [],
     difficulty: {
       level: config.difficultyLevel,
       basis: config.basis,
@@ -15,17 +17,54 @@ function createDictationBlankTemplate(config) {
     },
     wrongPatterns: Array.isArray(config.wrongPatterns) ? config.wrongPatterns : [],
     notes: config.notes || null,
+    diagnosis: Array.isArray(config.diagnosis) ? config.diagnosis : [],
+    selfCheck: config.selfCheck || null,
   };
 }
 
+function normalizeDictationSelfCheck(commentary, guide) {
+  const items = Array.isArray(commentary?.selfCheck) ? commentary.selfCheck : [];
+  return items.map((item, index) => {
+    if (item && typeof item === 'object' && item.question) return item;
+    const question = String(item || '').trim();
+    if (!question) return null;
+    const reasons = Array.isArray(commentary?.wrongReasons) ? commentary.wrongReasons : [];
+    const reasonText = reasons[index] || guide?.m || '자주 틀리는 구간을 다시 확인합니다.';
+    return {
+      question,
+      solutions: [
+        { step: 1, desc: commentary?.shadowingTip || guide?.c || '문장을 덩어리로 다시 읽습니다.' },
+        { step: 2, desc: reasonText },
+      ],
+      goalTip: '이 질문에 바로 답하고, 같은 속도로 다시 받아쓸 수 있을 때까지 반복합니다.',
+    };
+  }).filter(Boolean);
+}
+
 function createDictationSentenceTemplate(config) {
+  const commentary = config.commentary
+    ? {
+        ...config.commentary,
+        selfCheck: normalizeDictationSelfCheck(config.commentary, config.guide || null),
+      }
+    : null;
   return {
     id: config.id,
     text: config.text,
     guide: config.guide || null,
-    commentary: config.commentary || null,
+    commentary,
     fullMeaning: config.fullMeaning || null,
+    examModes: config.examModes || null,
+    vocabulary: Array.isArray(config.vocabulary) ? config.vocabulary : [],
     blanks: Array.isArray(config.blanks) ? config.blanks : [],
+  };
+}
+
+function cloneDictationTemplateEntry(entry, overrides = {}) {
+  if (!entry) return null;
+  return {
+    ...JSON.parse(JSON.stringify(entry)),
+    ...overrides,
   };
 }
 
@@ -39,9 +78,23 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
         p: "Today / I'd like to introduce / The Dot by Peter Reynolds",
         m: "`I'd`와 `by`가 약하게 지나가고 `introduce` 철자를 흔히 놓칩니다.",
         c: "`Today` / `I'd like to introduce` / `The Dot by Peter Reynolds` 세 덩어리로 듣습니다.",
+        flowUnits: [
+          { text: '투데이', tone: 'a' },
+          { text: '아이들라이크터', tone: 'b' },
+          { text: '인트러듀-스', tone: 'c' },
+          { text: '더닷', tone: 'a' },
+          { text: '비', tone: 'd', subtle: true },
+          { text: '피러레이놀즈', tone: 'c' },
+        ],
+        fullHeard: '"투데이 / 아이들라이크터 / 인트러듀-스 / 더닷 / 비 / 피러레이놀즈"',
+        chunkMeaning: [
+          { en: 'Today', ko: '오늘' },
+          { en: "I'd like to introduce", ko: '소개하고 싶어요' },
+          { en: 'The Dot by Peter Reynolds', ko: "피터 레이놀즈의 그림책 '점'" },
+        ],
       },
       commentary: {
-        learningGoal: "`I'd like to` 도입 표현과 `by + 저자` 구조를 듣고 정확히 적는 연습입니다.",
+        learningGoal: "`I'd like to`, `introduce`, `by + 저자` 세 포인트를 통해 축약형, 발표 동사, 기능어 구조를 동시에 고정하는 연습입니다.",
         pronunciation: {
           linking: "`I'd like`는 거의 한 덩어리로 붙어 들립니다.",
           weakForm: "`by`는 문장 끝에서 짧게 스쳐 가서 빠뜨리기 쉽습니다.",
@@ -140,12 +193,40 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
         natural: "오늘은 피터 레이놀즈의 그림책 '점'을 소개할게요.",
         context: "책 소개 발표나 수업 발표를 시작할 때 바로 쓸 수 있는 도입 문장입니다.",
       },
+      vocabulary: [
+        {
+          word: "I'd like to",
+          pronunciation: '[aɪd laɪk tə]',
+          pos: '표현',
+          meanings: ['~하고 싶다', '~을 말씀드리고 싶다'],
+          exampleSentence: "I'd like to share an interesting story.",
+          collocations: ["I'd like to introduce", "I'd like to talk about"],
+        },
+        {
+          word: 'introduce',
+          pronunciation: '[ˌɪntrəˈduːs]',
+          pos: '동사',
+          meanings: ['소개하다', '도입하다'],
+          exampleSentence: 'Let me introduce my favorite author.',
+          collocations: ['introduce a book', 'introduce yourself'],
+        },
+        {
+          word: 'by',
+          pronunciation: '[baɪ]',
+          pos: '전치사',
+          meanings: ['~에 의해', '~의 저자로'],
+          exampleSentence: 'The novel was written by my favorite author.',
+          collocations: ['written by', 'a book by ~'],
+        },
+      ],
       blanks: [
         createDictationBlankTemplate({
           tokenIndex: 1,
           answer: "I'd",
           levels: ['low', 'normal', 'hard'],
           pos: "대명사+조동사 축약형 (I would → I'd)",
+          coachLine: '`Id`로 쓰는 순간 이 문장은 반만 들은 거다. 축약형 하나를 못 잡으면 받아쓰기와 수행 쓰기 둘 다 바로 흔들린다.',
+          tags: ['⭐핵심', '🔥함정-축약형'],
           difficultyLevel: 2,
           basis: '약하게 지나가는 축약형이라 apostrophe 인식이 필요합니다.',
           hints: {
@@ -161,7 +242,27 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`I'd like to ...`는 '...하고 싶어요'로 발표를 여는 아주 자주 쓰는 시작 표현입니다.",
             role: "뒤의 `like to introduce`를 여는 짧은 도입 축약형입니다.",
             listen: "`Today / I'd like to introduce` 흐름에서 `I'd`가 두 번째 덩어리의 출발점입니다.",
-            trap: "소리가 짧아서 `I`만 적거나 apostrophe를 빠뜨리기 쉽습니다.",
+            trap: "뜻은 아는데 손이 먼저 `I would`나 `Id`로 가는 경우가 많습니다. 축약형은 듣기와 쓰기를 따로 자동화해야 안 무너집니다.",
+          },
+          diagnosis: [
+            {
+              symptom: 'Id',
+              cause: "`I'd`가 통소리로만 저장돼 있어 apostrophe를 철자 정보로 복원하지 못합니다.",
+              fix: "`I would like to` ↔ `I'd like to` 교차 낭독 3세트 후, 받아쓰기에서는 축약형만 쓰는 루프로 고정합니다.",
+            },
+            {
+              symptom: 'I would',
+              cause: '들리는 소리보다 문법 풀이가 먼저 개입해 축약형을 풀어 적습니다.',
+              fix: '같은 문장을 3회 연속 `I would` 없이 적을 때까지 반복해 받아쓰기용 축약형 루프를 만듭니다.',
+            },
+          ],
+          selfCheck: {
+            question: "`I'd`를 듣고도 손이 먼저 `I would`나 `Id`로 가고 있지 않나요?",
+            solutions: [
+              { step: 1, desc: '원음 1회 듣고 받아쓴 뒤, 즉시 재생해서 `d` 끝소리 존재 여부를 비교합니다.' },
+              { step: 2, desc: '오답이면 0.7배속으로 `I\'d like to` 구간만 3회 반복해서 축약형 소리를 다시 고정합니다.' },
+            ],
+            goalTip: "같은 문장 3회 연속 받아쓰기에서 모두 `I'd`를 apostrophe 포함으로 적을 때까지 반복합니다.",
           },
         }),
         createDictationBlankTemplate({
@@ -169,6 +270,8 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
           answer: 'by',
           levels: ['normal', 'hard'],
           pos: '전치사 (저자 표시: by + 사람)',
+          coachLine: '`by`를 못 들으면 제목과 저자 구조가 통째로 무너집니다. 내용어만 적는 습관이 여기서 바로 들통납니다.',
+          tags: ['⭐핵심', '🔥함정-기능어', '🎯출제'],
           difficultyLevel: 2,
           basis: '기능어라 약하게 들리고 뒤 고유명사와 붙어 지나갑니다.',
           hints: {
@@ -184,7 +287,27 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`by`는 '~의 저자'를 표시하는 짧은 연결말입니다.",
             role: "`The Dot`과 저자 이름을 연결하는 전치사입니다.",
             listen: "`The Dot by Peter Reynolds`를 한 묶음으로 듣되 이름 앞 짧은 소리를 챙기면 됩니다.",
-            trap: "뒤 사람 이름에 신경이 쏠리면 `by`를 통째로 빼먹기 쉽습니다.",
+            trap: "뒤 이름에 끌리면 `by`를 통째로 빼먹고, 번역 회로가 먼저 돌면 `of`로 바꿔 적기 쉽습니다.",
+          },
+          diagnosis: [
+            {
+              symptom: '(무응답)',
+              cause: '뒤 고유명사에 신경이 쏠려 기능어를 청크 밖으로 밀어냅니다.',
+              fix: '`The Dot / by / Peter Reynolds`를 3박으로 끊어 `by`가 한 박을 차지하도록 쉐도잉합니다.',
+            },
+            {
+              symptom: 'of',
+              cause: '책 제목 뒤 이름을 소유 관계로 먼저 해석해 `~의` 회로가 먼저 돌아갑니다.',
+              fix: '`written by / created by / painted by`를 한 세트로 외워 저자·작성자 패턴을 따로 고정합니다.',
+            },
+          ],
+          selfCheck: {
+            question: '문장 속 약한 기능어 `by`를 첫 청취에서 바로 잡고 있나요?',
+            solutions: [
+              { step: 1, desc: '원음 1회 듣고 받아쓴 뒤 `The Dot by Peter Reynolds` 구간에서 `by`를 표시해 확인합니다.' },
+              { step: 2, desc: '오답이면 0.7배속으로 `The Dot / by / Peter Reynolds`만 5회 반복 청취합니다.' },
+            ],
+            goalTip: '3회 연속 받아쓰기에서 모두 `by`를 포함해 적을 때까지 반복합니다.',
           },
         }),
         createDictationBlankTemplate({
@@ -192,6 +315,8 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
           answer: 'introduce',
           levels: ['hard'],
           pos: '동사원형 (like to introduce)',
+          coachLine: '`introduce` 철자 한 글자 틀리면 이 문장 중심축이 무너집니다. 발표 도입 동사는 3초 안에 바로 써져야 합니다.',
+          tags: ['⭐핵심', '🎯출제-철자'],
           difficultyLevel: 1,
           basis: '핵심 내용어지만 발표 도입에서 매우 자주 쓰여 철자 자동화가 필요합니다.',
           hints: {
@@ -207,7 +332,27 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`introduce`는 '소개하다'라는 발표 핵심 동사입니다.",
             role: "`I'd like to` 뒤에서 실제 행동을 말하는 중심 동사입니다.",
             listen: "`I'd like to introduce`를 통째로 붙여 듣고 뒤 강세 있는 `-duce`를 확인합니다.",
-            trap: "뜻은 아는데 `introduce` 철자를 뒤섞는 실수가 잦습니다.",
+            trap: "뜻은 잡아도 철자 자동화가 안 되면 `introdece`, `introduse` 같은 오답으로 바로 무너집니다.",
+          },
+          diagnosis: [
+            {
+              symptom: 'introdece',
+              cause: '`-duce`를 소리대로만 적고 끝 철자 묶음을 규칙으로 저장하지 못합니다.',
+              fix: '`intro + duce`로 끊어 읽고 `introduce / produce / reduce` 3단어를 한 세트로 3회 낭독합니다.',
+            },
+            {
+              symptom: 'introduse',
+              cause: '끝 `/s/` 소리를 문자 그대로 받아 적고 `-duce` 철자 묶음을 통째로 저장하지 못합니다.',
+              fix: '`-duce` 고정 카드로 5회 쓰고 5회 읽은 뒤, 문장 안에서 받아쓰기 3회 연속 성공할 때까지 반복합니다.',
+            },
+          ],
+          selfCheck: {
+            question: '`introduce`를 보지 않고도 3초 안에 철자 전체를 복원할 수 있나요?',
+            solutions: [
+              { step: 1, desc: '원음 1회 듣고 받아쓴 뒤 정답과 비교해 `-duce` 부분이 흔들렸는지 체크합니다.' },
+              { step: 2, desc: '오답이면 `intro + duce`를 3회 끊어 읽고, 다시 문장 전체 받아쓰기로 돌아옵니다.' },
+            ],
+            goalTip: '눈 감고 철자 낭독 후 쓰기까지 3회 연속 모두 정확할 때까지 반복합니다.',
           },
         }),
       ],
@@ -222,21 +367,43 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
         c: '`This award-winning picture book` / `tells the story` / `of a girl named Vashti`로 나눠 듣습니다.',
       },
       commentary: {
-        learningGoal: '`story of ... named ...` 구조와 하이픈 형용사 `award-winning`을 듣고 구분하는 연습입니다.',
+        learningGoal: '`award-winning`, `tells`, `named Vashti` 세 포인트를 통해 복합형용사, 3인칭 동사, 고유명사 철자를 동시에 잡는 연습입니다.',
         pronunciation: {
           linking: '`story of a`는 빠르게 붙어 들립니다.',
           weakForm: '`of a`는 둘 다 약해져서 중간이 거의 사라진 것처럼 들릴 수 있습니다.',
-          stress: '`award-winning`, `story`, `named`가 귀에 걸리는 핵심입니다.',
+          stress: '`award-winning`, `story`, `named`, `Vashti`가 귀에 걸리는 핵심입니다.',
         },
         wrongReasons: [
-          "`named`를 그냥 `name`으로 적고 -ed를 빼먹는 경우가 많습니다.",
-          "`of a` 묶음을 놓쳐 문장 구조를 반만 적는 실수가 자주 납니다.",
+          "`award-winning`은 뜻만 알고 하이픈이나 `winning` 철자를 놓치는 경우가 많습니다.",
+          "`tells`는 귀로는 원형처럼 들려도 단수 주어 뒤 3인칭 -s를 같이 잡아야 합니다.",
+          "`named Vashti`는 낯선 고유명사까지 이어져서 `named`의 -ed나 이름 철자를 동시에 놓치기 쉽습니다.",
         ],
-        shadowingTip: "`tells the story of a girl named ...`를 끝까지 한 호흡으로 읽는 연습이 효과적입니다.",
+        shadowingTip: "`This award-winning picture book / tells the story of / a girl named Vashti` 세 박을 유지한 채 끝까지 한 호흡으로 읽습니다.",
         selfCheck: [
-          "`named`가 앞 명사를 꾸민다는 점을 설명할 수 있나요?",
-          "`of a`가 빠르게 약해져도 들을 수 있나요?",
-          "`award-winning` 하이픈 형용사를 철자까지 적을 수 있나요?",
+          {
+            question: '`award-winning`을 하이픈까지 포함해 3초 안에 적을 수 있나요?',
+            solutions: [
+              { step: 1, desc: '`award-winning book`, `award-winning movie`를 하이픈 포함으로 5회 적습니다.' },
+              { step: 2, desc: '`winning`의 double n 을 짚어 본 뒤, 같은 속도로 다시 받아쓰기 3회 연속을 시도합니다.' },
+            ],
+            goalTip: '하이픈과 double n 을 한 번도 놓치지 않고 3회 연속 맞히면 통과입니다.',
+          },
+          {
+            question: '단수 주어 뒤 `tells`의 -s를 듣기와 문법으로 동시에 잡을 수 있나요?',
+            solutions: [
+              { step: 1, desc: '`This book tells`, `The movie tells`, `The story tells`를 3세트 읽습니다.' },
+              { step: 2, desc: '`tells the story`를 한 덩어리로 5회 듣고, `tell`과 구별되는 끝소리를 체크합니다.' },
+            ],
+            goalTip: '`tell`로 적지 않고 `tells`를 3회 연속 정확히 쓰면 통과입니다.',
+          },
+          {
+            question: '`named Vashti`에서 -ed와 고유명사 철자를 끝까지 복원할 수 있나요?',
+            solutions: [
+              { step: 1, desc: '`named Vashti` 구간만 0.7×로 5회 듣고 `named` 끝 `d`를 먼저 표시합니다.' },
+              { step: 2, desc: '`V-a-s-h-t-i`를 3회 낭독한 뒤 안 보고 이름만 받아쓰기 3회를 합니다.' },
+            ],
+            goalTip: '`named`와 `Vashti`를 함께 3회 연속 정확히 적을 때까지 반복합니다.',
+          },
         ],
       },
       fullMeaning: {
@@ -250,6 +417,8 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
           answer: 'named',
           levels: ['low', 'normal', 'hard'],
           pos: '과거분사 (앞 명사 수식: a girl named ...)',
+          coachLine: '`name`으로 적는 순간 소리만 듣고 문장 역할을 놓친 거다. -ed 하나가 문장 구조를 가른다.',
+          tags: ['⭐핵심', '🔥함정-분사형'],
           difficultyLevel: 2,
           basis: '뜻은 쉬워도 -ed를 놓치기 쉽고 문장 속 역할을 이해해야 합니다.',
           hints: {
@@ -265,14 +434,23 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`named`는 '이름이 ~인'처럼 앞 명사를 짧게 꾸며 주는 말입니다.",
             role: "`a girl` 뒤에 붙어 어떤 소녀인지 설명하는 수식어입니다.",
             listen: "`of a girl named Vashti`에서 `girl` 뒤 약하게 붙는 -ed 끝소리를 챙깁니다.",
-            trap: "뜻만 따라가면 `name`까지만 적고 -ed를 빠뜨리기 쉽습니다.",
+            trap: "뜻만 따라가면 `name`까지만 적고 -ed를 빠뜨린다. 문장 기능을 못 보면 같은 실수를 계속 반복합니다.",
           },
+          diagnosis: [
+            {
+              symptom: 'name',
+              cause: '뜻은 잡았지만 분사형 역할을 못 봐서 손이 원형에서 멈춘다.',
+              fix: '`a girl named ~`, `a boy named ~`를 3세트 읽고, -ed까지 포함해 3회 연속 써야 통과로 본다.',
+            },
+          ],
         }),
         createDictationBlankTemplate({
           tokenIndex: 7,
           answer: 'of',
           levels: ['normal', 'hard'],
           pos: '전치사 (story of ...)',
+          coachLine: '`of` 빠지면 줄거리 문장이 반쪽 난다. 내용어만 적는 습관이 여기서 바로 들통난다.',
+          tags: ['⭐핵심', '🔥함정-기능어'],
           difficultyLevel: 2,
           basis: '기능어라 약하게 지나가고 뒤의 a와 붙어 들립니다.',
           hints: {
@@ -288,14 +466,23 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`of`는 '무엇의 이야기'처럼 내용을 이어 주는 연결말입니다.",
             role: "`the story` 뒤에서 뒤 명사구를 붙여 주는 전치사입니다.",
             listen: "`story of a`가 한 번에 붙어 지나가므로 `of`를 따로 의식해서 들어야 합니다.",
-            trap: "앞뒤 내용어만 듣고 중간의 `of`를 통째로 빼먹는 경우가 많습니다.",
+            trap: "앞뒤 내용어만 적으려다 `of`를 통째로 빼먹는다. 짧은 기능어를 못 챙기면 구조 듣기가 계속 흔들린다.",
           },
+          diagnosis: [
+            {
+              symptom: '(무응답)',
+              cause: '`story`와 `a girl`만 잡고 가운데 약한 연결말은 버린다.',
+              fix: '`story of a girl` 구간을 5회 반복 듣고, 매번 `of`에 표시를 남긴 뒤 다시 받아쓴다.',
+            },
+          ],
         }),
         createDictationBlankTemplate({
           tokenIndex: 1,
           answer: 'award-winning',
           levels: ['hard'],
           pos: '복합형용사 (명사 앞 수식)',
+          coachLine: 'award-winning에서 하이픈 빠지는 순간 뜻은 알아도 형태는 모르는 학생으로 찍힌다. 수행 쓰기에서 바로 감점이다.',
+          tags: ['⭐핵심', '🎯출제-철자', '⚠️혼동'],
           difficultyLevel: 3,
           basis: '하이픈 복합어라 발음과 철자를 동시에 잡아야 합니다.',
           hints: {
@@ -311,8 +498,20 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
             easy: "`award-winning`은 '상을 받은'이라는 뜻으로 책의 가치를 먼저 보여 줍니다.",
             role: "`picture book` 앞에서 책을 꾸미는 핵심 형용사입니다.",
             listen: "`This award-winning picture book` 첫 덩어리에서 길게 붙는 소리로 들어야 합니다.",
-            trap: "하이픈을 빼먹거나 `winning` 철자를 흔히 틀립니다.",
+            trap: "뜻만 보고 쓰면 `award winning`으로 쪼개거나 `wining`으로 줄여 쓴다. 하이픈과 double n 이 승부처다.",
           },
+          diagnosis: [
+            {
+              symptom: 'award winning',
+              cause: '복합형용사 한 덩어리라는 감각이 없어 단어 두 개를 따로 적는다.',
+              fix: '`award-winning book`, `award-winning film`을 하이픈 포함으로 5회 적고, 다음 받아쓰기 3회 모두 붙여 적는다.',
+            },
+            {
+              symptom: 'award-wining',
+              cause: '`winning` 철자가 자동화되지 않아 n 하나를 빼먹는다.',
+              fix: '`win -> winning`을 5회 소리 내고 double n을 짚은 뒤, 단독 철자 테스트 3회 모두 맞혀야 통과다.',
+            },
+          ],
         }),
       ],
     }),
@@ -1045,4 +1244,89 @@ window.ENG_DICTATION_TOPIC_OVERRIDES = {
       ],
     }),
   ],
+};
+
+const DOT_S00_BASELINE = {
+  id: 'dot-s00',
+  label: '영어 받아쓰기 기준 템플릿',
+  purpose: '문장 1, 2에서 검증된 blank 선정 원칙과 1타 첨삭 카드 흐름을 이후 문장 복제 기준으로 고정한다.',
+  sourceSentenceIds: ['dot-s01', 'dot-s02'],
+  rules: {
+    blankSelection: [
+      '고유명사 blank 금지',
+      '기능어 / 축약형 / 활용형 / 핵심 내용어 우선',
+      '문장 1개당 2~3개 blank를 기본값으로 두고, 쉬움은 전체 공개로 둔다',
+    ],
+    cardFlow: [
+      '정답 + 태그',
+      '1타 코멘트',
+      'CORE / LISTEN / TRAP',
+      '오답 진단표',
+      '합격 기준',
+    ],
+    priorityFields: [
+      'coachLine',
+      'diagnosis',
+      'selfCheck.question',
+      'selfCheck.solutions',
+      'selfCheck.goalTip',
+      'tags',
+      'notes.easy',
+      'notes.role',
+      'notes.listen',
+      'notes.trap',
+    ],
+  },
+  sentenceTemplate: {
+    guide: {
+      requiredFields: ['t', 'p', 'm', 'c', 'flowUnits', 'chunkMeaning'],
+      notes: [
+        'flowUnits는 실제 들리는 소리 기준으로 적는다',
+        'chunkMeaning은 발표 / 줄거리 단위로 2~4개로 자른다',
+      ],
+    },
+    commentary: {
+      requiredFields: ['learningGoal', 'pronunciation', 'pronunciationGap', 'selfCheck'],
+      selfCheckShape: ['question', 'solutions[step, desc]', 'goalTip'],
+    },
+    vocabulary: {
+      requiredFields: ['word', 'pronunciation', 'pos', 'meanings', 'exampleSentence', 'collocations'],
+    },
+    fullMeaning: {
+      requiredFields: ['literal', 'natural', 'context'],
+    },
+  },
+  blankBlueprints: {
+    contraction: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[0]?.blanks?.[0], {
+      blueprintKey: 'contraction',
+      sourceSentenceId: 'dot-s01',
+      note: "축약형 blank 기본형. `I'd`, `there's`, `can't` 계열에 우선 적용한다.",
+    }),
+    functionWord: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[1]?.blanks?.[1], {
+      blueprintKey: 'functionWord',
+      sourceSentenceId: 'dot-s02',
+      note: "`by`, `of`, `at` 같은 약한 기능어 blank 기본형.",
+    }),
+    formChange: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[1]?.blanks?.[0], {
+      blueprintKey: 'formChange',
+      sourceSentenceId: 'dot-s02',
+      note: '`named`, `believes`, `marks`처럼 형태 변화가 핵심인 blank 기본형.',
+    }),
+    spellingTrap: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[1]?.blanks?.[2], {
+      blueprintKey: 'spellingTrap',
+      sourceSentenceId: 'dot-s02',
+      note: '`award-winning`, `introduce`처럼 철자 자동화가 필요한 blank 기본형.',
+    }),
+  },
+  sampleReferences: {
+    dotS01: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[0]),
+    dotS02: cloneDictationTemplateEntry(window.ENG_DICTATION_TOPIC_OVERRIDES[0]?.[1]),
+  },
+};
+
+// Non-rendered sentence baseline.
+// Keep this separate from topic arrays so `dot-s00` can serve as the canonical
+// template name without adding an extra sentence card to the live UI.
+window.ENG_DICTATION_SENTENCE_BASELINES = {
+  'dot-s00': DOT_S00_BASELINE,
 };
