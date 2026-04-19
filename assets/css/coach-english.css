@@ -602,7 +602,8 @@ body[data-eng-page="dictation-exam"][data-theme="light"] .dict-sentence-modal .d
 body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn { background: rgba(255,255,255,0.9); color: #475569; border-color: rgba(148,163,184,0.2); }
 body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.active { color: #0369a1; background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.2); }
 .dict-sentence-modal__head { display: flex; justify-content: space-between; align-items: center; gap: 0.85rem; padding: 0.8rem 1rem 0.72rem; border-bottom: 1px solid rgba(148,163,184,0.14); }
-.dict-sentence-modal__head-main { display: flex; align-items: center; gap: 0.55rem; min-width: 0; flex: 1 1 auto; }
+.dict-sentence-modal__head-main { display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; min-width: 0; flex: 1 1 auto; }
+.dict-sentence-modal__head-copy { display: grid; gap: 0.12rem; min-width: 0; }
 .dict-sentence-modal__eyebrow { flex: 0 0 auto; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7dd3fc; }
 .dict-sentence-modal__title { display: block; flex: 0 0 auto; font-size: 1rem; color: #f8fafc; }
 .dict-sentence-modal__caption { min-width: 0; font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -611,6 +612,7 @@ body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.acti
 .dict-sentence-modal__font-btn { min-width: 0; padding: 0.34rem 0.58rem; font-size: 0.7rem; }
 .dict-sentence-modal__font-btn:disabled { opacity: 0.4; cursor: default; }
 .dict-sentence-modal__close { white-space: nowrap; }
+.dict-exam-back-link { white-space: nowrap; }
 .dict-sentence-modal__list { max-height: calc(92vh - 74px); overflow: auto; padding: 0.75rem 1rem 0.9rem; display: grid; gap: 0.65rem; }
 .dict-sentence-modal__empty { padding: 1rem; border: 1px dashed rgba(148,163,184,0.18); border-radius: 16px; color: var(--text-secondary); text-align: center; }
 .dict-sentence-modal__summary { display: grid; gap: 0.6rem; margin-bottom: 0.25rem; padding: 0.1rem 0.1rem 0.05rem; border-bottom: 1px solid rgba(148,163,184,0.12); }
@@ -676,6 +678,8 @@ body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.acti
 .dict-concept-tab span { display: -webkit-box; margin-top: 0.24rem; font-size: 0.68rem; line-height: 1.45; color: #94a3b8; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .dict-concept-tab:hover { border-color: rgba(125,211,252,0.28); background: rgba(30,41,59,0.7); transform: translateY(-1px); }
 .dict-concept-tab.active { border-color: rgba(56,189,248,0.34); background: linear-gradient(180deg, rgba(8,47,73,0.52), rgba(15,23,42,0.78)); box-shadow: 0 0 0 1px rgba(56,189,248,0.12) inset; }
+.dict-concept-mobile-picker { display: grid; gap: 0.28rem; }
+.dict-concept-mobile-picker span { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.05rem; text-transform: uppercase; color: #7dd3fc; }
 .dict-concept-body { display: grid; gap: 0.75rem; min-width: 0; }
 .dict-concept-body--full { grid-column: 1 / -1; }
 .dict-concept-section-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 0.15rem; }
@@ -935,7 +939,37 @@ body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.acti
   .dict-practice-actions .btn-secondary,
   .dict-practice-actions .btn-primary { flex: 1 1 auto; }
   .dict-line-group--meta { width: 100%; }
-  .dict-concept-nav { grid-template-columns: 1fr; }
+  .dict-concept-section-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .dict-concept-section-tab {
+    min-height: 0;
+    padding: 0.58rem 0.66rem;
+    border-radius: 12px;
+  }
+  .dict-concept-section-tab strong {
+    font-size: 0.72rem;
+  }
+  .dict-concept-section-tab span {
+    margin-top: 0.16rem;
+    font-size: 0.62rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .dict-concept-nav {
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+  }
+  .dict-concept-mobile-picker .field-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0.62rem;
+    font-size: 0.76rem;
+  }
   .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .topic-card { min-height: 84px; padding: 0.52rem 0.58rem; }
   #eng-s1 .dict-step-inline { align-items: flex-start; }
@@ -957,4 +991,243 @@ body[data-eng-page="dictation-exam"][data-theme="light"] .dict-tts-line-btn.acti
   .dict-sentence-modal__item-actions { width: 100%; justify-content: space-between; }
   .page-header--eng { gap: 0.55rem; }
   .page-header--eng .header-step-tabs { justify-content: flex-start; }
+
+  body:not([data-eng-page="dictation-exam"]) .dict-tts-toolbar {
+    margin-bottom: 0.75rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-practice-intro {
+    gap: 0.55rem;
+    margin-bottom: 0.7rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-practice-shortcut {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-row--sentence {
+    gap: 0.48rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-toolbar--sentence {
+    width: 100%;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-toolbar--sentence .dict-sentence-modal-trigger {
+    width: 100%;
+    justify-content: center;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-toolbar--controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    width: 100%;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-toolbar--controls > * {
+    width: 100%;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-group--meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    gap: 0.38rem;
+    padding: 0.62rem 0.68rem;
+    border: 1px solid rgba(148,163,184,0.12);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-group--meta .dict-line-group-label {
+    font-size: 0.62rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-group--meta .dict-level-switch {
+    width: 100%;
+    gap: 0.34rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-line-group--meta .dict-difficulty-chip.subtle {
+    width: 100%;
+    min-height: 0;
+    padding: 0.5rem 0.62rem;
+    white-space: normal;
+    line-height: 1.5;
+    border-radius: 12px;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+    padding: 0.62rem 0.68rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline .dict-card-tts-option {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline .dict-card-tts-option--voice {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline .dict-card-tts-option input[type=range] {
+    width: 100%;
+    min-width: 0;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline .dict-card-tts-option strong {
+    min-width: 2.1rem;
+    text-align: right;
+  }
+  body:not([data-eng-page="dictation-exam"]) .dict-top-tts-controls--inline .dict-card-tts-option--voice .field-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    padding: 0.78rem 0.85rem 0.72rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-main {
+    width: 100%;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-copy {
+    flex: 1 1 auto;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__eyebrow {
+    font-size: 0.6rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__title {
+    width: auto;
+    font-size: 1.08rem;
+    line-height: 1.3;
+    white-space: normal;
+    word-break: keep-all;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    justify-content: stretch;
+    gap: 0.45rem;
+    width: 100%;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-part-picker {
+    width: 100%;
+    min-width: 0;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-part-picker span {
+    display: none;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-part-picker .field-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.42rem 0.6rem;
+    font-size: 0.78rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-theme-toggle {
+    min-width: 0;
+    padding: 0.32rem 0.46rem;
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__font-controls {
+    justify-self: end;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__font-btn {
+    min-width: 36px;
+    padding: 0.42rem 0.48rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-back-link {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.3rem 0.48rem;
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__list {
+    padding: 0.78rem 0.82rem 1rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary {
+    gap: 0.68rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-config {
+    gap: 0.7rem;
+    padding: 0.68rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-config .dict-line-group--meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    gap: 0.42rem;
+    width: 100%;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-config .dict-line-group-label {
+    min-width: 0;
+    font-size: 0.62rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-config .dict-difficulty-chip.subtle {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+    line-height: 1.45;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-control-row {
+    gap: 0.68rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__summary-actions .btn-secondary {
+    width: 100%;
+    min-width: 0;
+    padding: 0.48rem 0.52rem;
+    font-size: 0.76rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-top-tts-controls--modal {
+    padding: 0.48rem 0.54rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-top-tts-controls--modal .dict-card-tts-option {
+    width: 100%;
+  }
+}
+
+@media(max-width:420px) {
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head {
+    padding: 0.72rem 0.78rem 0.68rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-main {
+    align-items: center;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-copy {
+    gap: 0.06rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__title {
+    font-size: 0.96rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__head-actions {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.38rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-part-picker .field-input {
+    font-size: 0.74rem;
+    padding: 0.38rem 0.52rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-theme-toggle {
+    grid-column: 1 / 2;
+    font-size: 0.58rem;
+    padding: 0.28rem 0.4rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__font-controls {
+    grid-column: 2 / 3;
+    grid-row: 2;
+  }
+  body[data-eng-page="dictation-exam"] .dict-sentence-modal__font-btn {
+    min-width: 32px;
+    padding: 0.34rem 0.4rem;
+    font-size: 0.64rem;
+  }
+  body[data-eng-page="dictation-exam"] .dict-exam-back-link {
+    font-size: 0.58rem;
+    padding: 0.26rem 0.38rem;
+  }
 }

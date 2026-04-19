@@ -2014,6 +2014,7 @@ function renderDictationConceptExplorer(lineIndex) {
   const sections = buildDictationConceptSections(sentenceEntry);
   const activeSection = sections.find((section) => section.key === state.section) || sections[0] || null;
   const cards = activeSection?.cards || [];
+  const isMobileConceptList = window.matchMedia('(max-width: 640px)').matches;
   if (activeSection && !cards.some((card) => card.key === state.activeTab)) {
     state.activeTab = cards[0]?.key || 'meaning';
   }
@@ -2039,18 +2040,29 @@ function renderDictationConceptExplorer(lineIndex) {
           `).join('')}
         </div>
         <div class="dict-concept-explorer dict-concept-explorer--nested">
-          <div class="dict-concept-nav">
-            ${cards.map((card) => `
-              <button
-                type="button"
-                class="dict-concept-tab${state.activeTab === card.key ? ' active' : ''}"
-                onclick="setDictationConceptTab(${lineIndex}, '${escapeDictationJsString(card.key)}')"
-              >
-                <strong>${escapeHtml(card.label)}</strong>
-                <span>${escapeHtml(card.summary)}</span>
-              </button>
-            `).join('')}
-          </div>
+          ${isMobileConceptList ? `
+            <label class="dict-concept-mobile-picker">
+              <span>항목 선택</span>
+              <select class="field-input" onchange="setDictationConceptTab(${lineIndex}, this.value)">
+                ${cards.map((card) => `
+                  <option value="${escapeHtml(card.key)}"${state.activeTab === card.key ? ' selected' : ''}>${escapeHtml(card.label)}</option>
+                `).join('')}
+              </select>
+            </label>
+          ` : `
+            <div class="dict-concept-nav">
+              ${cards.map((card) => `
+                <button
+                  type="button"
+                  class="dict-concept-tab${state.activeTab === card.key ? ' active' : ''}"
+                  onclick="setDictationConceptTab(${lineIndex}, '${escapeDictationJsString(card.key)}')"
+                >
+                  <strong>${escapeHtml(card.label)}</strong>
+                  <span>${escapeHtml(card.summary)}</span>
+                </button>
+              `).join('')}
+            </div>
+          `}
           <div class="dict-concept-body">
             ${buildDictationConceptExplorerBody(sentenceEntry, lineIndex, state.activeTab)}
           </div>

@@ -20,4 +20,6 @@ ${window.ENG_S5 || ''}
 const englishAppRoot = document.getElementById('eng-app');
 if (englishAppRoot) {
   englishAppRoot.innerHTML = ENGLISH_CONTENT;
+  const hashTab = window.location.hash.match(/^#eng-s([0-5])$/)?.[1];
+  switchSubTab('eng', hashTab || 's0');
 }

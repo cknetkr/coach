@@ -27,8 +27,11 @@
       <div class="dict-sentence-modal__dialog" role="region" aria-labelledby="dict-sentence-modal-title">
         <div class="dict-sentence-modal__head">
           <div class="dict-sentence-modal__head-main">
-            <div class="dict-sentence-modal__eyebrow">전체 문장</div>
-            <strong class="dict-sentence-modal__title" id="dict-sentence-modal-title">Part 1 전체 시험</strong>
+            <div class="dict-sentence-modal__head-copy">
+              <div class="dict-sentence-modal__eyebrow">전체 문장</div>
+              <strong class="dict-sentence-modal__title" id="dict-sentence-modal-title">Part 1 전체 시험</strong>
+            </div>
+            <a href="coach-english.html#eng-s1" class="btn-secondary dict-exam-back-link">본문 보기</a>
           </div>
           <div class="dict-sentence-modal__head-actions">
             <label class="dict-exam-part-picker" for="dict-exam-topic-select">
@@ -40,7 +43,6 @@
               <button type="button" class="btn-secondary dict-sentence-modal__font-btn" id="dict-sentence-font-decrease" onclick="adjustDictationSentenceModalFont(-1)">A-</button>
               <button type="button" class="btn-secondary dict-sentence-modal__font-btn" id="dict-sentence-font-increase" onclick="adjustDictationSentenceModalFont(1)">A+</button>
             </div>
-            <a href="coach-english.html" class="btn-secondary">영어 코치로</a>
           </div>
         </div>
         <div class="dict-sentence-modal__list" id="dict-sentence-modal-list"></div>
