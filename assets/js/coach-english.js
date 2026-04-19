@@ -37,7 +37,8 @@ const dictTTSState = {
   lines: [],
   currentIndex: -1,
   playingAll: false,
-  pendingNextIndex: -1
+  pendingNextIndex: -1,
+  isPaused: false,
 };
 const dictSentenceModalState = {
   open: false,
@@ -2244,12 +2245,22 @@ function updateDictationSentenceModalTrigger() {
   });
 }
 
+function syncDictationAllPlaybackToggle() {
+  const button = document.getElementById('dict-play-all-toggle');
+  if (!button) return;
+  button.disabled = !dictTTSState.lines.length;
+  button.textContent = dictTTSState.isPaused
+    ? '▶ 전체 듣기'
+    : (dictTTSState.currentIndex >= 0 ? '⏸ 일시정지' : '🔊 전체 듣기');
+}
+
 function renderDictationSentenceModalList() {
   const container = document.getElementById('dict-sentence-modal-list');
   if (!container) return;
   if (!dictTTSState.lines.length) {
     container.innerHTML = '<div class="dict-sentence-modal__empty">문장을 불러오면 여기서 전체 시험 페이지로 바로 풀 수 있습니다.</div>';
     syncDictationSentenceModalFontUI();
+    syncDictationAllPlaybackToggle();
     return;
   }
   const modeLabel = DICT_BLANK_MODE_LABELS[selectedDictBlankMode] || '단어';
@@ -2297,7 +2308,7 @@ function renderDictationSentenceModalList() {
           </label>
         </div>
         <div class="dict-sentence-modal__summary-actions">
-          <button type="button" class="btn-secondary" onclick="playDictationAll()">🔊 전체 듣기</button>
+          <button type="button" class="btn-secondary" id="dict-play-all-toggle" onclick="toggleDictationAllPlayback()">🔊 전체 듣기</button>
           <button type="button" class="btn-secondary dict-answer-toggle" id="dict-sentence-modal-answer-toggle" onclick="toggleDictationSentenceModalAnswers()">
             <span id="dict-sentence-modal-answer-toggle-label">${dictSentenceModalState.answersVisible ? '정답 전체 숨기기' : '정답 전체 보기'}</span>
           </button>
@@ -2318,6 +2329,7 @@ function renderDictationSentenceModalList() {
   setDictationSentenceModalAnswerRevealState(dictSentenceModalState.answersVisible);
   populateDictationVoices();
   syncDictationSentenceModalFontUI();
+  syncDictationAllPlaybackToggle();
 }
 
 function syncDictationSentenceModalHeader() {
@@ -2541,6 +2553,7 @@ function syncDictationTTSFromScript() {
   dictTTSState.currentIndex = -1;
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = dictTTSState.lines.length ? 0 : -1;
+  dictTTSState.isPaused = false;
   ensureDictationLineTTSSettings();
   updateDictationSentenceModalTrigger();
   renderDictationLineButtons();
@@ -2566,6 +2579,7 @@ function stopDictationTTS(options = {}) {
   dictTTSState.currentIndex = -1;
   dictTTSState.playingAll = false;
   dictTTSState.pendingNextIndex = dictTTSState.lines.length ? 0 : -1;
+  dictTTSState.isPaused = false;
   highlightDictationLineButton(-1);
   setActiveDictationSentenceModalItem(-1);
   if (!preserveStatus) {
@@ -2573,6 +2587,7 @@ function stopDictationTTS(options = {}) {
       dictTTSState.lines.length ? '' : '스크립트 생성 후 듣기 가능'
     );
   }
+  syncDictationAllPlaybackToggle();
 }
 
 function createDictationUtterance(text, index) {
@@ -2585,9 +2600,11 @@ function createDictationUtterance(text, index) {
   if (selectedVoice) utterance.voice = selectedVoice;
   utterance.onstart = () => {
     dictTTSState.currentIndex = index;
+    dictTTSState.isPaused = false;
     highlightDictationLineButton(index);
     setDictationTTSStatus(`문장 ${index + 1} 재생 중`, 'active');
     if (dictSentenceModalState.open) setActiveDictationSentenceModalItem(index);
+    syncDictationAllPlaybackToggle();
   };
   utterance.onend = () => {
     const nextIndex = index < dictTTSState.lines.length - 1 ? index + 1 : -1;
@@ -2605,16 +2622,20 @@ function createDictationUtterance(text, index) {
       return;
     }
     dictTTSState.playingAll = false;
+    dictTTSState.isPaused = false;
     setDictationTTSStatus(nextIndex >= 0 ? `문장 ${index + 1} 완료 · 답안 입력` : '마지막 문장 완료', 'active');
     setActiveDictationSentenceModalItem(-1);
+    syncDictationAllPlaybackToggle();
   };
   utterance.onerror = () => {
     dictTTSState.currentIndex = -1;
     dictTTSState.playingAll = false;
     dictTTSState.pendingNextIndex = index < dictTTSState.lines.length - 1 ? index + 1 : -1;
+    dictTTSState.isPaused = false;
     highlightDictationLineButton(-1);
     setDictationTTSStatus('듣기 오류 · 다시 시도', 'warn');
     setActiveDictationSentenceModalItem(-1);
+    syncDictationAllPlaybackToggle();
   };
   return utterance;
 }
@@ -2785,6 +2806,20 @@ function playDictationAll() {
   speakDictationText(dictTTSState.lines[0], 0);
 }
 
+function toggleDictationAllPlayback() {
+  if (!dictTTSState.lines.length) { showToast('먼저 받아쓰기 스크립트를 생성하십시오'); return; }
+  if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
+  if (dictTTSState.isPaused || window.speechSynthesis.paused) {
+    resumeDictationTTS();
+    return;
+  }
+  if (dictTTSState.currentIndex >= 0 && window.speechSynthesis.speaking) {
+    pauseDictationTTS();
+    return;
+  }
+  playDictationAll();
+}
+
 function playDictationSentence(index) {
   if (!dictTTSState.lines[index]) { showToast('해당 문장을 찾을 수 없습니다'); return; }
   if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
@@ -2810,17 +2845,21 @@ function pauseDictationTTS() {
   if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
   if (!window.speechSynthesis.speaking || window.speechSynthesis.paused) { showToast('현재 재생 중인 음성이 없습니다'); return; }
   window.speechSynthesis.pause();
+  dictTTSState.isPaused = true;
   setDictationTTSStatus('일시정지 · 이어듣기 가능', 'warn');
+  syncDictationAllPlaybackToggle();
 }
 
 function resumeDictationTTS() {
   if (!supportsDictationTTS()) { showToast('이 브라우저는 TTS를 지원하지 않습니다'); return; }
-  if (!window.speechSynthesis.paused) { showToast('이어들을 음성이 없습니다'); return; }
+  if (!dictTTSState.isPaused && !window.speechSynthesis.paused) { showToast('이어들을 음성이 없습니다'); return; }
   window.speechSynthesis.resume();
+  dictTTSState.isPaused = false;
   setDictationTTSStatus(
     dictTTSState.currentIndex >= 0 ? `문장 ${dictTTSState.currentIndex + 1} 재생 중` : '재생 중',
     'active'
   );
+  syncDictationAllPlaybackToggle();
 }
 
 function revealDictationAnswer(index) {
