@@ -107,8 +107,10 @@ function getDictationBlankTargetCount(level) {
 }
 
 function getDictationBlankModeSummary(mode) {
-  const label = DICT_BLANK_MODE_LABELS[mode] || '단어';
-  return `${label} 하 1개 · 중 2개 · 상 3개`;
+  if (mode === 'phrase') {
+    return '숙어 하 핵심구 1개 · 중 핵심+정보 2개 · 상 핵심+정보+연결 3개';
+  }
+  return '단어 하 핵심 내용어 1개 · 중 핵심+함정 2개 · 상 핵심+함정+구조 3개';
 }
 
 function isDictationExamStandalonePage() {
@@ -349,13 +351,14 @@ function indexIsBlankable(index, length) {
   return index > 0 && index < length - 1;
 }
 
-function getDictationBlankQuota(level, candidateCount, tokenCount) {
-  if (level === 'easy') return 0;
-  if (level === 'low') return Math.min(1, candidateCount);
-  if (level === 'normal') return Math.min(2, candidateCount);
-  if (tokenCount <= 5) return Math.min(2, candidateCount);
-  if (tokenCount <= 9) return Math.min(3, candidateCount);
-  return Math.min(4, candidateCount);
+function isLikelyProperNounBlank(token, tokenIndex, tokens) {
+  if (!token?.core) return false;
+  const startsWithUpper = /^[A-Z]/.test(token.core);
+  if (!startsWithUpper) return false;
+  if (tokenIndex === 0) return false;
+  const nextStartsWithUpper = /^[A-Z]/.test(tokens[tokenIndex + 1]?.core || '');
+  const prevLower = (tokens[tokenIndex - 1]?.core || '').toLowerCase();
+  return nextStartsWithUpper || prevLower === 'by' || prevLower === 'named';
 }
 
 function pickTopBlankCandidates(candidates, count, priorityKey) {
@@ -370,9 +373,9 @@ function buildDictationBlankCandidates(tokens) {
     .map((token, index) => {
       if (!token.core || !indexIsBlankable(index, tokens.length)) return null;
       const profile = getDictationBlankProfile(token.core, index, tokens);
+      if (isLikelyProperNounBlank(token, index, tokens)) return null;
       const score = [
         profile.isContraction ? 10 : 0,
-        profile.startsWithUpper ? 9 : 0,
         profile.endsWithEd ? 8 : 0,
         profile.endsWithEs ? 7 : 0,
         profile.endsWithS ? 6 : 0,
@@ -386,61 +389,162 @@ function buildDictationBlankCandidates(tokens) {
         profile.isConfusingWord ? 7 : 0,
         profile.lower.length >= 8 ? 2 : 0,
       ].reduce((sum, value) => sum + value, 0);
-      const contentPriority = score + (profile.looksVerb ? 5 : 0) + (profile.startsWithUpper ? 4 : 0) + (profile.looksNoun ? 2 : 0) - (profile.isFunctionWord ? 8 : 0);
-      const trapPriority = score + (profile.isFunctionWord ? 4 : 0) + (profile.isContraction ? 3 : 0);
-      return { index, token, profile, score, contentPriority, trapPriority };
+      const teacherBucket = (() => {
+        if (profile.isContraction || (profile.isFunctionWord && ['to', 'of', 'at', 'in', 'on', 'by', 'for', 'with', 'where', 'that'].includes(profile.lower))) {
+          return 'trap';
+        }
+        if (profile.endsWithEd || profile.endsWithEs || profile.endsWithS || profile.endsWithIng || profile.hasHyphen) {
+          return 'structure';
+        }
+        if (profile.looksVerb || profile.looksNoun || profile.looksAdjective || profile.lower.length >= 6) {
+          return 'core';
+        }
+        if (profile.isFunctionWord) return 'trap';
+        return 'core';
+      })();
+      const corePriority = score + (profile.looksVerb ? 6 : 0) + (profile.looksNoun ? 4 : 0) + (profile.looksAdjective ? 3 : 0) - (profile.isFunctionWord ? 10 : 0);
+      const trapPriority = score + (profile.isContraction ? 8 : 0) + (profile.isFunctionWord ? 6 : 0) + (profile.isConfusingWord ? 4 : 0);
+      const structurePriority = score + (profile.endsWithEd ? 6 : 0) + (profile.endsWithEs ? 5 : 0) + (profile.endsWithS ? 4 : 0) + (profile.endsWithIng ? 4 : 0) + (profile.hasHyphen ? 3 : 0);
+      return { index, token, profile, score, teacherBucket, corePriority, trapPriority, structurePriority };
     })
     .filter(Boolean);
 }
 
-function buildAutomaticDictationBlankIndices(tokens, level) {
-  const candidates = buildDictationBlankCandidates(tokens);
-  const quota = getDictationBlankQuota(level, candidates.length, tokens.length);
-  if (!quota) return [];
+function pickTeacherWordBlankCandidates(candidates, level) {
+  const selected = [];
+  const takeFromBucket = (bucket, priorityKey) => {
+    const next = pickTopBlankCandidates(
+      candidates.filter((candidate) => candidate.teacherBucket === bucket && !selected.some((item) => item.index === candidate.index)),
+      1,
+      priorityKey
+    )[0];
+    if (next) selected.push(next);
+  };
 
   if (level === 'low') {
-    return pickTopBlankCandidates(candidates, quota, 'contentPriority')
-      .map((candidate) => candidate.index)
-      .sort((a, b) => a - b);
+    takeFromBucket('core', 'corePriority');
+    if (!selected.length) takeFromBucket('structure', 'structurePriority');
+    if (!selected.length) takeFromBucket('trap', 'trapPriority');
+    return selected;
   }
 
-  if (level === 'normal') {
-    const selected = pickTopBlankCandidates(candidates, 1, 'contentPriority');
-    const remaining = candidates.filter((candidate) => !selected.some((item) => item.index === candidate.index));
-    selected.push(...pickTopBlankCandidates(remaining, Math.max(0, quota - selected.length), 'trapPriority'));
-    return selected.map((candidate) => candidate.index).sort((a, b) => a - b);
+  takeFromBucket('core', 'corePriority');
+  takeFromBucket('trap', 'trapPriority');
+
+  if (level === 'hard') {
+    takeFromBucket('structure', 'structurePriority');
   }
 
-  return pickTopBlankCandidates(candidates, quota, 'trapPriority')
+  const quota = getDictationBlankTargetCount(level);
+  if (selected.length < quota) {
+    const fallbackPriority = level === 'hard' ? 'structurePriority' : 'trapPriority';
+    selected.push(...pickTopBlankCandidates(
+      candidates.filter((candidate) => !selected.some((item) => item.index === candidate.index)),
+      quota - selected.length,
+      fallbackPriority
+    ));
+  }
+
+  return selected;
+}
+
+function buildAutomaticDictationBlankIndices(tokens, level) {
+  const candidates = buildDictationBlankCandidates(tokens);
+  if (!candidates.length) return [];
+  return pickTeacherWordBlankCandidates(candidates, level)
     .map((candidate) => candidate.index)
     .sort((a, b) => a - b);
 }
 
-function buildDictationPhraseChunkCandidates(sentenceEntry) {
+function buildAutomaticDictationPhraseChunkCandidates(tokens) {
+  const candidates = [];
+  for (let start = 0; start < tokens.length; start += 1) {
+    for (let size = 2; size <= 4; size += 1) {
+      const end = start + size - 1;
+      if (end >= tokens.length) continue;
+      const slice = tokens.slice(start, end + 1);
+      if (slice.some((token) => !token.core)) continue;
+      const profiles = slice.map((token, index) => getDictationBlankProfile(token.core, start + index, tokens));
+      const functionWordCount = profiles.filter((profile) => profile.isFunctionWord).length;
+      const verbLikeCount = profiles.filter((profile) => profile.looksVerb).length;
+      const capitalizedCount = profiles.filter((profile) => profile.startsWithUpper).length;
+      const contentCount = profiles.filter((profile) => !profile.isFunctionWord).length;
+      if (!contentCount) continue;
+      const score = (
+        (functionWordCount * 6)
+        + (verbLikeCount * 5)
+        + (capitalizedCount * 3)
+        + (profiles.some((profile) => profile.isContraction) ? 6 : 0)
+        + (profiles.some((profile) => profile.hasHyphen) ? 4 : 0)
+        + (size === 3 ? 2 : 0)
+        + (size === 4 ? 1 : 0)
+      );
+      if (score < 7) continue;
+      const teacherBucket = (() => {
+        if (verbLikeCount >= 1 && functionWordCount >= 1) return 'core';
+        if (functionWordCount >= 1) return 'link';
+        return 'info';
+      })();
+      candidates.push({
+        answer: slice.map((token) => token.core).join(' '),
+        pos: '자동 숙어/구',
+        tags: ['⭐숙어', 'AUTO'],
+        autoGenerated: true,
+        score,
+        teacherBucket,
+      });
+    }
+  }
+  return candidates
+    .sort((a, b) => (b.score - a.score) || (b.answer.split(' ').length - a.answer.split(' ').length))
+    .filter((candidate, index, arr) => arr.findIndex((item) => item.answer === candidate.answer) === index);
+}
+
+function buildDictationPhraseChunkCandidates(sentenceEntry, tokens = []) {
   const manual = Array.isArray(sentenceEntry?.phraseBlanks) ? sentenceEntry.phraseBlanks.filter(Boolean) : [];
   if (manual.length) return manual.map((item) => ({ ...item }));
   const chunks = String(sentenceEntry?.guide?.p || '')
     .split(/\s*\/\s*/)
     .map((chunk) => String(chunk || '').trim())
     .filter(Boolean);
-  return chunks.map((chunk) => ({
-    answer: chunk,
-    pos: '숙어/구',
-    tags: ['⭐숙어'],
+  if (chunks.length) {
+    return chunks.map((chunk) => ({
+      answer: chunk,
+      pos: '숙어/구',
+      tags: ['⭐숙어'],
+      notes: {
+        easy: '문장을 덩어리로 듣기 위한 핵심 구간입니다.',
+        role: '이 문장을 말할 때 한 번에 묶어야 하는 정보 블록입니다.',
+        listen: `\`${chunk}\`를 단어별로 쪼개지 말고 한 호흡으로 들으세요.`,
+        trap: '단어 하나씩 적으려 들면 중간 연결이 끊겨 전체 구간을 놓치기 쉽습니다.',
+      },
+      coachLine: `\`${chunk}\`는 통째로 들어야 합니다. 이 구간은 단어가 아니라 한 블록으로 적는다는 감각이 필요합니다.`,
+      selfCheck: {
+        question: `\`${chunk}\`를 한 번에 듣고 적을 수 있나요?`,
+        solutions: [
+          { step: 1, desc: '문장 전체 1회 청취 후, 이 구간만 먼저 적습니다.' },
+          { step: 2, desc: '오답이면 이 구간만 5회 연속 끊어 읽고 다시 받아씁니다.' },
+        ],
+        goalTip: '3회 연속 이 구간 전체를 정확히 적을 때까지 반복합니다.',
+      },
+    }));
+  }
+  return buildAutomaticDictationPhraseChunkCandidates(tokens).map((candidate) => ({
+    ...candidate,
     notes: {
-      easy: '문장을 덩어리로 듣기 위한 핵심 구간입니다.',
-      role: '이 문장을 말할 때 한 번에 묶어야 하는 정보 블록입니다.',
-      listen: `\`${chunk}\`를 단어별로 쪼개지 말고 한 호흡으로 들으세요.`,
-      trap: '단어 하나씩 적으려 들면 중간 연결이 끊겨 전체 구간을 놓치기 쉽습니다.',
+      easy: '문장 전체 의미를 덩어리로 묶어 듣기 위한 자동 숙어 구간입니다.',
+      role: '단어 하나씩이 아니라 문장 블록으로 복원해야 하는 구간입니다.',
+      listen: `\`${candidate.answer}\`를 한 덩어리로 이어 들어 보세요.`,
+      trap: '내용어만 따로 적으면 연결 구조가 끊겨서 구간 전체를 놓치기 쉽습니다.',
     },
-    coachLine: `\`${chunk}\`는 통째로 들어야 합니다. 이 구간은 단어가 아니라 한 블록으로 적는다는 감각이 필요합니다.`,
+    coachLine: `\`${candidate.answer}\`는 자동 추출된 핵심 구간입니다. 단어별이 아니라 묶음으로 적으세요.`,
     selfCheck: {
-      question: `\`${chunk}\`를 한 번에 듣고 적을 수 있나요?`,
+      question: `\`${candidate.answer}\`를 한 번에 받아쓸 수 있나요?`,
       solutions: [
-        { step: 1, desc: '문장 전체 1회 청취 후, 이 구간만 먼저 적습니다.' },
-        { step: 2, desc: '오답이면 이 구간만 5회 연속 끊어 읽고 다시 받아씁니다.' },
+        { step: 1, desc: '문장 전체를 1회 들은 뒤 이 구간만 먼저 적습니다.' },
+        { step: 2, desc: '오답이면 이 구간만 3회 반복해서 다시 받아씁니다.' },
       ],
-      goalTip: '3회 연속 이 구간 전체를 정확히 적을 때까지 반복합니다.',
+      goalTip: '이 구간을 3회 연속 정확히 적을 때까지 반복합니다.',
     },
   }));
 }
@@ -490,7 +594,7 @@ function resolveDictationPhraseDefinitions(sentenceEntry, tokens, level) {
   const targetCount = getDictationBlankTargetCount(level);
   if (!targetCount) return [];
   const usedRanges = [];
-  const candidates = buildDictationPhraseChunkCandidates(sentenceEntry)
+  const candidates = buildDictationPhraseChunkCandidates(sentenceEntry, tokens)
     .filter((blank) => !Array.isArray(blank.levels) || blank.levels.includes(level))
     .map((blank) => {
       const range = findDictationPhraseTokenRange(tokens, blank.answer, usedRanges);
@@ -505,13 +609,42 @@ function resolveDictationPhraseDefinitions(sentenceEntry, tokens, level) {
         hint: getDictationHint(blank.hints, level),
         score: scoreDictationPhraseCandidate(tokens, range),
         explanation: blank.notes || null,
+        teacherBucket: blank.teacherBucket || (
+          scoreDictationPhraseCandidate(tokens, range) >= 18 ? 'core' : 'info'
+        ),
       };
     })
-    .filter(Boolean)
-    .sort((a, b) => (b.score - a.score) || (a.startTokenIndex - b.startTokenIndex))
-    .slice(0, targetCount)
+    .filter(Boolean);
+
+  const selected = [];
+  const takePhraseBucket = (bucket) => {
+    const next = [...candidates]
+      .filter((candidate) => candidate.teacherBucket === bucket && !selected.some((item) => item.startTokenIndex === candidate.startTokenIndex && item.endTokenIndex === candidate.endTokenIndex))
+      .sort((a, b) => (b.score - a.score) || (a.startTokenIndex - b.startTokenIndex))[0];
+    if (next) selected.push(next);
+  };
+
+  if (level === 'low') {
+    takePhraseBucket('core');
+    if (!selected.length) takePhraseBucket('info');
+  } else if (level === 'normal') {
+    takePhraseBucket('core');
+    takePhraseBucket('info');
+  } else {
+    takePhraseBucket('core');
+    takePhraseBucket('info');
+    takePhraseBucket('link');
+  }
+
+  if (selected.length < targetCount) {
+    selected.push(...[...candidates]
+      .filter((candidate) => !selected.some((item) => item.startTokenIndex === candidate.startTokenIndex && item.endTokenIndex === candidate.endTokenIndex))
+      .sort((a, b) => (b.score - a.score) || (a.startTokenIndex - b.startTokenIndex))
+      .slice(0, targetCount - selected.length));
+  }
+
+  return selected
     .sort((a, b) => a.startTokenIndex - b.startTokenIndex);
-  return candidates;
 }
 
 function resolveDictationWordDefinitions(sentenceEntry, tokens, level) {
